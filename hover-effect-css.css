@@ -1,0 +1,26 @@
+/* Adicione este CSS ao seu arquivo de estilo existente */
+
+.project-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 16/9;
+    transition: all 0.3s ease; /* Adiciona transição suave para todos os efeitos */
+}
+
+/* Efeito quando o mouse passa por cima do cartão */
+.project-card:hover {
+    transform: translateY(-10px); /* Move o cartão 10px para cima */
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada e distante */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+}
+
+/* Opcional: efeito sutil de zoom na imagem ao passar o mouse */
+.project-card .project-image {
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image {
+    transform: scale(1.05); /* Aumenta ligeiramente a imagem */
+}
