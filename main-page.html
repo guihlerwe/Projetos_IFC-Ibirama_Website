@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -152,29 +153,41 @@
             padding: 5px 10px;
             color: white;
             font-size: 14px;
-            border-radius: 5px;
+            border-radius: 20px;
             background-color: #2e7d32;
         }
 
         .project-label.vermelho {
             background-color: #d32f2f;
         }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .project-card {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            aspect-ratio: 16/9;
+            /* Mantém proporção consistente para todos os cartões */
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <div class="logo">
                 <div class="grid-icon">
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
-                    <div class="grid-cell"></div>
+                    <img src="ïfc-logo.png">
+                    
                 </div>
                 Projetos do Campus Ibirama
             </div>
@@ -182,7 +195,7 @@
                 <div class="nav-item">Projetos</div>
                 <div class="nav-item">Monitoria</div>
                 <div class="nav-item">Sobre</div>
-                <div class="login-btn">Entrar/Cadastrar-se</div>
+                <div class="login-btn">Entrar ou Cadastrar-se</div>
             </div>
         </header>
 
@@ -197,93 +210,105 @@
             </div>
         </div>
 
+
+
         <div class="projects-grid">
             <!-- Primeira linha -->
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label vermelho">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
+
+
             <!-- Segunda linha -->
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
+
+
             <!-- Terceira linha -->
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
+
+
             <!-- Quarta linha -->
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
+
+
             <!-- Quinta linha -->
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
+
+
             <!-- Sexta linha (parcial) -->
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
-            
+
             <div class="project-card">
                 <img src="campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
@@ -291,4 +316,5 @@
         </div>
     </div>
 </body>
+
 </html>
