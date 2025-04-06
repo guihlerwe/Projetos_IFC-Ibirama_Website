@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Cadastro</title>
+</head>
+<body>
+
+    <div class="container-principal">
+        <div>
+            <h1 id="titulo">Cadastro de Aluno</h1>
+            <p id="subtitulo">Preencha seus dados pessoais</p>
+            <br>
+        </div>
+
+        <!-- Formulário -->
+        <form>
+            <fieldset class="grupo">
+                <div class="campo">
+                    <label for="nome">Nome</label>
+                    <input type="text" name="nome" id="nome" required>
+                </div>
+
+                <div class="campo">
+                    <label for="sobrenome">Sobrenome</label>
+                    <input type="text" name="sobrenome" id="sobrenome" required>
+                </div>
+            </fieldset>
+
+            <fieldset class="grupo">
+                <div class="campo">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input type="password" name="senha" id="senha" required>
+                </div>
+            </fieldset>
+
+            <div class="campo">
+                <label>Curso</label>
+                <label><input type="radio" name="tecnico" value="administracao" checked> Administração</label>
+                <label><input type="radio" name="tecnico" value="informatica"> Informática</label>
+                <label><input type="radio" name="tecnico" value="vestuario"> Vestuário</label>
+                <label><input type="radio" name="graduacao" value="moda"> Moda</label>
+            </div>
+
+            <button type="submit" class="botao">Cadastrar</button>
+        </form>
+    </div>
+
+</body>
+</html>
