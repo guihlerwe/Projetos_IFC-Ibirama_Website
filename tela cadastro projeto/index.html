@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Projetos do Campus Ibirama</title>
+    <title>Criar/Editar Projeto</title>
 </head>
 <body>
     <div class="container">
@@ -13,7 +13,7 @@
                 <div class="logo-icon">
                     <div class="pingo"></div><div></div><div></div><div></div>
                     <div></div><div></div><div></div><div></div>
-                    <div></div><div  class="transparente"></div><div></div><div></div>
+                    <div></div><div class="transparente"></div><div></div><div></div>
                 </div>
                 <div class="logo-text">Projetos do Campus Ibirama</div>
             </div>
@@ -24,73 +24,97 @@
                 <button class="login-btn">Entrar/Cadastrar-se</button>
             </div>
         </header>
-        
+
         <div class="banner">
-            <div class="C:\Users\aluno\Documents\GitHub\website-projetos-ifc\tela cadastro projeto\imagens\sem imagem.jpg"></div>
+            <label class="upload-banner">
+                <input type="file" accept="image/*" hidden required>
+                Clique para adicionar banner
+            </label>
         </div>
-        
-        <div class="project-info">
-            <div class="project-thumb">
-                <div class="project-thumb-icon">&#128247;</div>
-            </div>
-            <div class="project-header">
-                <div class="project-meta">
-                    <span class="project-type">Tipo</span> <!--precisa ter um campo selecionar-->
-                    <span class="project-year">Desde </span> <!--precisa ter um campo editável para o ano-->
+
+        <form class="project-form">
+            <div class="project-info">
+                <div class="project-thumb">
+                    <label class="upload-thumb">
+                        <input type="file" accept="image/*" hidden required>
+                        📷
+                    </label>
                 </div>
-                <h1 class="project-title">Nome do Projeto</h1>
-                <p class="project-coordinator">Coordenador(a):</p> <!--precisa ter um campo editável para o o nome-->
+                <div class="project-header">
+                    <div class="project-meta">
+                        <select class="project-type">
+                            <option value="">Tipo</option>
+                            <option value="Ensino">Ensino</option>
+                            <option value="Pesquisa">Pesquisa</option>
+                            <option value="Extensão">Extensão</option>
+                        </select>
+                        <input type="text" class="project-year" placeholder="Ano de início (ex: 2025)">
+                    </div>
+                    <input type="text" class="project-title" placeholder="Nome do Projeto">
+                    <input type="text" class="project-coordinator" placeholder="Coordenador(a)">
+                </div>
+                <input type="text" class="register-link" placeholder="Link p/ formulário de inscrição">
             </div>
-            <a href="#" class="register-link">Link p/ formulário de inscrição</a><!--precisa ter um campo editável para o link-->
-        </div>
-        
-        <div class="project-content">
-            <h2 class="section-title">Sobre (1500 max.)</h2>
-            <div class="project-description">Insira texto</div>
-            
-            <input type="text" class="project-link" placeholder="Insira Link do site">
-            
-            <div class="team-section">
-                <h2 class="section-title">Coordenadores(as)</h2>
-                <div class="team-members">
-                    <div class="team-member">
-                        <div class="member-avatar">
-                            <!--<img src="" alt="">*/-->
+
+            <div class="project-content">
+                <h2 class="section-title">Sobre (1500 max.)</h2>
+                <textarea class="project-description" maxlength="1500" placeholder="Descreva o projeto..."></textarea>
+
+                <input type="text" class="project-link" placeholder="Insira Link do site">
+
+                <div class="team-section">
+                    <h2 class="section-title">Coordenadores(as)</h2>
+                    <div class="team-members">
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <label>
+                                    <input type="file" accept="image/*" hidden>
+                                    📷
+                                </label>
+                            </div>
+                            <input type="text" class="member-name" placeholder="Nome do coordenador(a)">
                         </div>
-                        <span class="member-name">John Doe</span>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-avatar add-member"></div>
-                        <span class="member-name">Insira nome</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="team-section">
-                <h2 class="section-title">Bolsistas</h2>
-                <div class="team-members">
-                    <div class="team-member">
-                        <div class="member-avatar add-member"></div>
-                        <span class="member-name">Insira nome</span>
+                        <div class="team-member">
+                            <div class="member-avatar add-member">
+                                +
+                            </div>
+                            <input type="text" class="member-name" placeholder="Adicionar nome">
+                        </div>
                     </div>
                 </div>
+
+                <div class="team-section">
+                    <h2 class="section-title">Bolsistas</h2>
+                    <div class="team-members">
+                        <div class="team-member">
+                            <div class="member-avatar add-member">
+                                <label>
+                                    <input type="file" accept="image/*" hidden>
+                                    📷
+                                </label>
+                            </div>
+                            <input type="text" class="member-name" placeholder="Adicionar nome">
+                        </div>
+                    </div>
+                </div>
+
+                <input type="text" class="vacancies-link" placeholder="Se há vagas para bolsistas, cole o link para inscrição aqui">
+
+                <div class="contact-section">
+                    <h2 class="section-title">Contato com Projeto</h2>
+                    <input type="email" class="contact-field" placeholder="E-mail para o projeto">
+                    <input type="text" class="contact-field" placeholder="Número para contato (opcional)">
+                    <input type="text" class="contact-field" placeholder="Instagram do projeto (opcional)">
+                </div>
+
+                <button type="submit" class="submit-btn">Salvar Projeto</button>
             </div>
-            
-            <input type="text" class="vacancies-link" placeholder="Se há vagas cole link aqui">
-            
-            <div class="contact-section">
-                <h2 class="section-title">Contato com Projeto</h2>
-                <input type="text" class="contact-field" placeholder="E-mail para o projeto" value="E-mail para o projeto">
-                <input type="text" class="contact-field" placeholder="Número do projeto (opcional)" value="Número do projeto (opcional)">
-                <input type="text" class="contact-field" placeholder="Instagram do projeto (opcional)" value="Instagram do projeto (opcional)">
-            </div>
-        </div>
-        
+        </form>
+
         <footer>
             <span>Licença M.I.T.</span>
             <span>2025</span>
         </footer>
-
     </div>
 </body>
 </html>

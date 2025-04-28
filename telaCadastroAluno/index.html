@@ -4,11 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Cadastro</title>
+    <title>Cadastrar-se como aluno</title>
 </head>
 <body>
 
     <div class="container-principal">
+        <!-- Formulário -->
+        <header>
+            <div class="logo">
+                <div class="grid-icon">
+                    <!--<img src="" id="icone-ifc"> -->
+                    
+                </div>
+                Projetos do Campus Ibirama
+            </div>
+            <div class="navigation">
+                <div class="nav-item">Projetos</div>
+                <div class="nav-item">Monitoria</div>
+                <div class="nav-item">Sobre</div>
+                <div class="login-btn">Entrar ou Cadastrar-se</div>
+
+            </div>
+        </header>
+        
         <div>
             <h1 id="titulo">Cadastro de Aluno</h1>
             <p id="subtitulo">Preencha seus dados pessoais</p>
@@ -43,10 +61,10 @@
 
             <div class="campo">
                 <label>Curso</label>
-                <label><input type="radio" name="tecnico" value="administracao" checked> Administração</label>
-                <label><input type="radio" name="tecnico" value="informatica"> Informática</label>
-                <label><input type="radio" name="tecnico" value="vestuario"> Vestuário</label>
-                <label><input type="radio" name="graduacao" value="moda"> Moda</label>
+                <label><input type="radio" name="curso" value="administracao" checked> Administração</label>
+                <label><input type="radio" name="curso" value="informatica"> Informática</label>
+                <label><input type="radio" name="curso" value="vestuario"> Vestuário</label>
+                <label><input type="radio" name="curso" value="moda"> Moda</label>
             </div>
 
             <button type="submit" class="botao">Cadastrar</button>
