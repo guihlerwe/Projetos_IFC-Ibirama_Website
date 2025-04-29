@@ -207,3 +207,12 @@ header {
 .project-card:hover .project-image {
     transform: scale(1.05); /* Aumenta ligeiramente a imagem */
 }
+
+footer {
+    background-color: #333;
+    color: white;
+    font-size: 12px;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+}
