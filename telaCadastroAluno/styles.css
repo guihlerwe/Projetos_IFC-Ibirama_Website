@@ -142,3 +142,14 @@ fieldset.grupo .campo {
     text-shadow: none;
 }
 
+
+footer {
+    background-color: #333;
+    color: white;
+    font-size: 12px;
+    padding: 8px 20px;
+    display: flex;
+    align-items:flex-end;
+    justify-content: space-between;
+}
+
