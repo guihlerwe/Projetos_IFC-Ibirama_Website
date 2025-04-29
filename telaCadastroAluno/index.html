@@ -34,41 +34,40 @@
         </div>
 
         <!-- Formulário -->
-        <form>
-            <fieldset class="grupo">
-                <div class="campo">
-                    <label for="nome">Nome</label>
-                    <input type="text" name="nome" id="nome" required>
+         <div class="divformulario">
+            <form>
+                <fieldset class="grupo">
+                    <div class="campoEsquerda">
+                        <input type="text" name="nome" id="nome" placeholder="Nome" required>
+                    </div>
+    
+                    <div class="campoDireita">
+                        <input type="text" name="sobrenome" id="sobrenome" placeholder="Sobrenome" required>
+                    </div>
+                </fieldset>
+    
+                <fieldset class="grupo">
+                    <div class="campoEsquerda">
+                        <input type="email" name="email" id="email" placeholder="E-mail" required>
+                    </div>
+    
+                    <div class="campoDireita">
+                        <input type="password" name="senha" id="senha" placeholder="Senha" required>
+                    </div>
+                </fieldset>
+    
+                <div class="campoTurma">
+                    <label>Curso</label>
+                    <label><input type="radio" name="curso" value="administracao" checked> Administração</label>
+                    <label><input type="radio" name="curso" value="informatica"> Informática</label>
+                    <label><input type="radio" name="curso" value="vestuario"> Vestuário</label>
+                    <label><input type="radio" name="curso" value="moda"> Moda</label>
                 </div>
-
-                <div class="campo">
-                    <label for="sobrenome">Sobrenome</label>
-                    <input type="text" name="sobrenome" id="sobrenome" required>
-                </div>
-            </fieldset>
-
-            <fieldset class="grupo">
-                <div class="campo">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" required>
-                </div>
-
-                <div class="campo">
-                    <label for="senha">Senha</label>
-                    <input type="password" name="senha" id="senha" required>
-                </div>
-            </fieldset>
-
-            <div class="campo">
-                <label>Curso</label>
-                <label><input type="radio" name="curso" value="administracao" checked> Administração</label>
-                <label><input type="radio" name="curso" value="informatica"> Informática</label>
-                <label><input type="radio" name="curso" value="vestuario"> Vestuário</label>
-                <label><input type="radio" name="curso" value="moda"> Moda</label>
-            </div>
-
-            <button type="submit" class="botao">Cadastrar</button>
-        </form>
+    
+                <button type="submit" class="botao">Cadastrar</button>
+            </form>
+         </div>
+        
     </div>
 
 </body>

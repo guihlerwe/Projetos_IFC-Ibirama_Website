@@ -66,6 +66,11 @@ form {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin: 0 auto; /* Centraliza o formulário */
 }
+#divformulario{
+    align-items: center;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+}
 
 #titulo {
     font-family: sans-serif;
@@ -88,18 +93,47 @@ input, select, button {
     border-radius: 5px;
 }
 
-.campo {
+.campoDireita {
     margin-bottom: 1em;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
 }
 
-.campo label {
+.campoEsquerda {
+    margin-bottom: 1em;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+}
+
+.campoTurma {
+    margin-bottom: 1em;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+}
+
+.campoDireita label {
+    margin-bottom: 0.2em;
+    color: rgb(33, 66, 41);
+    display: block;
+}
+.campoEsquerda label {
     margin-bottom: 0.2em;
     color: rgb(33, 66, 41);
     display: block;
 }
 
-fieldset.grupo .campo {
+.campoEsquerda label {
+    margin-bottom: 0.2em;
+    color: rgb(33, 66, 41);
+    display: block;
+}
+
+fieldset.grupo .campoEsquerda {
     float: left;
+    margin-left: 1em;
+}
+fieldset.grupo .campoDireita {
+    float: right;
     margin-right: 1em;
 }
 
