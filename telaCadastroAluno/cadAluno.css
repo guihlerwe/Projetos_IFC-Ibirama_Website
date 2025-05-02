@@ -93,22 +93,20 @@ input, select, button {
     border-radius: 5px;
 }
 
+.campoEsquerda,
 .campoDireita {
     margin-bottom: 1em;
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
-    justify-content: center; /* Centraliza o conteúdo verticalmente */
-}
-
-.campoEsquerda {
-    margin-bottom: 1em;
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
-    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    width: 45%;
 }
 
 .campoTurma {
+    display: flex;
+    align-items: center;
     margin-bottom: 1em;
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
     justify-content: center; /* Centraliza o conteúdo verticalmente */
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .campoDireita label {
@@ -128,20 +126,23 @@ input, select, button {
     display: block;
 }
 
-fieldset.grupo .campoEsquerda {
-    float: left;
-    margin-left: 1em;
-}
-fieldset.grupo .campoDireita {
-    float: right;
-    margin-right: 1em;
+fieldset.grupo {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .campo input[type="text"],
 .campo input[type="email"],
 .campo input[type="password"],
 .campo select {
-    padding: 0.2em;
+    padding: 0.6em;
+    font-size: 1em;
     width: 100%; 
     border: 1px solid rgb(33, 66, 41);
     box-shadow: 2px 2px 2px rgb(33, 66, 41);
@@ -167,6 +168,8 @@ fieldset.grupo .campoDireita {
     box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     cursor: pointer;
+    display: block;
+    margin: 2em auto 1em auto;
 }
 
 .botao:hover {
@@ -186,4 +189,3 @@ footer {
     align-items:flex-end;
     justify-content: space-between;
 }
-

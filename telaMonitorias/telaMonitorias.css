@@ -20,14 +20,23 @@ body {
     margin: 0 auto;
     border: 1px solid #e0e0e0;
     min-height: 100vh;
+    margin-top: 70px; /* Ajuste esse valor dependendo da altura do seu header */
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 10px 20px;
     border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco translúcido */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
 }
 
 .logo {
