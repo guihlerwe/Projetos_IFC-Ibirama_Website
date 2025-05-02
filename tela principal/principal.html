@@ -27,21 +27,15 @@
             </div>
         </header>
 
-        <div class="barra-pesquisar">
-            <input type="text" class="input-pesquisar" placeholder="Pesquisar">
-            <button class="btn-filtrar pesquisa">Pesquisa</button>
-            <button class="btn-filtrar ensino">Ensino</button>
-            <button class="btn-filtrar extensao">Extensão</button>
-            <select class="categorias-filtrar">
-                <option value="">Categorias</option>
-                <option value="Ciências Exatas">Exatas</option>
-                <option value="Ciências Humanas">Humanas</option>
-                <option value="Linguagens">Linguagens</option>
-                <option value="Matemática">Matemática</option>
-                <option value="Administração">Administração</option>
-                <option value="Informática">Informática</option>
-                <option value="Vestuário/Moda">Vestuário/Moda</option>
-            </select>    
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Pesquisar">
+            <button class="filter-btn pesquisa">Pesquisa</button>
+            <button class="filter-btn ensino">Ensino</button>
+            <button class="filter-btn extensao">Extensão</button>
+            <div class="categories-dropdown">
+                Categorias
+                <div class="dropdown-arrow"></div>
+            </div>
         </div>
 
 
@@ -148,8 +142,13 @@
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
         </div>
+        <footer>
+            <span>Licença M.I.T.</span>
+            <span>2025</span>
+        </footer>
     </div>
-    <script src="./principal.js"></script>
+    <script src="./script.js"></script>
+
 
 </body>
 
