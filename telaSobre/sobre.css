@@ -81,16 +81,32 @@ header {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
-.nav-menu {
+.navegador {
     display: flex;
     gap: 15px;
+    align-items: center;
 }
 
 .nav-item {
     color: white;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 12px;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.projetos{
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.login-btn {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
 }
 
 .content {

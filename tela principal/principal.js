@@ -1,4 +1,4 @@
 document.querySelector(".login-btn").addEventListener("click", function() {
-  window.location.href = "../telaCadastroAluno/index.html";
+  window.location.href = "../telaCadastroAluno/cadAluno.html";
 });
 

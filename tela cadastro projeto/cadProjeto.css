@@ -48,9 +48,10 @@ header {
     height: 100%;
 }
 
-.nav-menu {
+.navegador {
     display: flex;
     gap: 15px;
+    align-items: center;
 }
 
 .nav-item {

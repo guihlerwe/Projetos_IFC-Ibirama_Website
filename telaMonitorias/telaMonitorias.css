@@ -1,0 +1,212 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+}
+
+#icone-ifc{
+    width: 50px;
+    height: 50x;
+    object-fit: cover;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 1px solid #e0e0e0;
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.grid-icon {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
+}
+
+.grid-cell {
+    background-color: #333;
+    width: 6px;
+    height: 6px;
+}
+
+.navegador {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-item {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.login-btn {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.barra-pesquisar {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.input-pesquisar {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: 200px;
+    margin-right: 15px;
+}
+
+.btn-filtrar {
+    padding: 6px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    background-color: #ffffff;
+}
+
+.btn-filtrar.tecnico:hover {
+    background-color:#2e7d32;
+    color: rgb(217, 233, 221);
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    text-shadow: none;
+}
+
+.btn-filtrar.geral:hover {
+    background-color:#d32f2f;
+    color: rgb(217, 233, 221);
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    text-shadow: none;
+}
+
+.categorias-filtrar {
+    padding: 6px 15px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dropdown-arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 0 20px 20px 20px;
+}
+
+@media (max-width: 600px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.project-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.project-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.project-label {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    color: white;
+    font-size: 14px;
+    border-radius: 20px;
+    background-color: #2e7d32;
+}
+
+.project-label.vermelho {
+    background-color: #d32f2f;
+}
+
+.project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.project-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 16/9;
+    /* Mantém proporção consistente para todos os cartões */
+}
+
+
+.project-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 16/9;
+    transition: all 0.3s ease; /* Adiciona transição suave para todos os efeitos */
+}
+
+/* Efeito quando o mouse passa por cima do cartão */
+.project-card:hover {
+    transform: translateY(-10px); /* Move o cartão 10px para cima */
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada e distante */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+}
+
+/* Opcional: efeito sutil de zoom na imagem ao passar o mouse */
+.project-card .project-image {
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image {
+    transform: scale(1.05); /* Aumenta ligeiramente a imagem */
+}
