@@ -72,6 +72,12 @@ header {
 .login-nav {
     padding: 5px 10px;
     cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.projetos-nav{
+    background-color: #eaeaea;
 }
 
 .login-btn {
