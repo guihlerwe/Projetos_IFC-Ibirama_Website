@@ -27,7 +27,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 15px 20px;
     border-bottom: 1px solid #e0e0e0;
     position: fixed;
     top: 0;
@@ -81,17 +81,7 @@ header {
     background-color: #eaeaea;
 }
 
-.nav-item {
-    padding: 5px 10px;
-    cursor: pointer;
-}
 
-.login-btn {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    cursor: pointer;
-}
 
 .barra-pesquisar {
     margin: 20px;
