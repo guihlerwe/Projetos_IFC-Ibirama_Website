@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="cadAluno.css">
-    <title>Cadastrar-se como aluno</title>
+    <link rel="stylesheet" href="loginAluno.css">
+    <title>Entrar</title>
 </head>
 <body>
 
@@ -28,25 +28,14 @@
         </header>
         
         <div>
-            <h1 id="titulo">Cadastro de Aluno</h1>
-            <p id="subtitulo">Preencha seus dados pessoais</p>
+            <h1 id="titulo"> Login </h1>
+            <p id="subtitulo">Informe os dados abaixo para concluir o login!</p>
             <br>
         </div>
-
-
 
         <!-- Formulário -->
          <div class="divformulario">
             <form>
-                <fieldset class="grupo">
-                    <div class="campoEsquerda">
-                        <input type="text" name="nome" class="campo" id="nome" placeholder="Nome" required>
-                    </div>
-    
-                    <div class="campoDireita">
-                        <input type="text" name="sobrenome" class="campo" id="sobrenome" placeholder="Sobrenome" required>
-                    </div>
-                </fieldset>
     
                 <fieldset class="grupo">
                     <div class="campoEsquerda">
@@ -58,21 +47,17 @@
                     </div>
                 </fieldset>
     
-                <div class="campoTurma">
-                    <label>Curso:</label>
-                    <label><input type="radio" name="curso" value="administracao" checked> Administração</label>
-                    <label><input type="radio" name="curso" value="informatica"> Informática</label>
-                    <label><input type="radio" name="curso" value="vestuario"> Vestuário</label>
-                    <label><input type="radio" name="curso" value="moda"> Moda</label>
-                </div>
-    
-                <button type="submit" class="botao">Cadastrar</button>
+                <button type="submit" class="botao">Entrar</button>
             </form>
+         </div>
+
+         <div class="cadastrar">
+            <p id="cadastro"> Ainda não possui cadastro? Clique aqui para cadastrar-se!</p>
          </div>
         
     </div>
 
 </body>
-<script src="./cadAluno.js"></script>
+<script src="./loginAluno.js"></script>
 
 </html>

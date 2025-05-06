@@ -1,5 +1,5 @@
 document.querySelector(".login-nav").addEventListener("click", function() {
-    window.location.href = "../telaCadastroAluno/cadAluno.html";
+    window.location.href = "../telaLoginAluno/loginAluno.html";
   });
   
   document.querySelector(".projetos-nav").addEventListener("click", function() {
