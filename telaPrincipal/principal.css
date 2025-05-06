@@ -9,11 +9,13 @@ body {
     background-color: #ffffff;
 }
 
-#icone-ifc{
-    width: 50px;
-    height: 50x;
-    object-fit: cover;
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
 }
+
 
 .container {
     max-width: 1200px;
@@ -36,7 +38,8 @@ header {
     left: 0;
     width: 100%;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Opcional: uma sombra para destacar */
 }
 
 .logo {
@@ -77,7 +80,7 @@ header {
     border-radius: 20px;
 }
 
-.projetos-nav{
+.projetos-nav {
     background-color: #eaeaea;
 }
 
@@ -118,23 +121,23 @@ header {
 }
 
 .btn-filtrar.pesquisa:hover {
-    background-color:blue ;
+    background-color: blue;
     color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
     text-shadow: none;
 }
 
 .btn-filtrar.ensino:hover {
-    background-color:#d32f2f ;
+    background-color: #d32f2f;
     color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
     text-shadow: none;
 }
 
 .btn-filtrar.extensao:hover {
-    background-color:#2e7d32;
+    background-color: #2e7d32;
     color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
     text-shadow: none;
 }
 
@@ -221,14 +224,18 @@ header {
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     aspect-ratio: 16/9;
-    transition: all 0.3s ease; /* Adiciona transição suave para todos os efeitos */
+    transition: all 0.3s ease;
+    /* Adiciona transição suave para todos os efeitos */
 }
 
 /* Efeito quando o mouse passa por cima do cartão */
 .project-card:hover {
-    transform: translateY(-10px); /* Move o cartão 10px para cima */
-    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada e distante */
-    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    transform: translateY(-10px);
+    /* Move o cartão 10px para cima */
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2);
+    /* Sombra mais pronunciada e distante */
+    cursor: pointer;
+    /* Muda o cursor para indicar que é clicável */
 }
 
 /* Opcional: efeito sutil de zoom na imagem ao passar o mouse */
@@ -237,5 +244,6 @@ header {
 }
 
 .project-card:hover .project-image {
-    transform: scale(1.05); /* Aumenta ligeiramente a imagem */
+    transform: scale(1.05);
+    /* Aumenta ligeiramente a imagem */
 }

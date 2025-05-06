@@ -9,10 +9,11 @@ body {
     background-color: #ffffff;
 }
 
-#icone-ifc{
-    width: 50px;
-    height: 50x;
-    object-fit: cover;
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
 }
 
 .container {
@@ -78,7 +79,7 @@ header {
 }
 
 .monitoria-nav{
-    background-color: #eaeaea;
+    background-color: #e0ffd8;
 }
 
 

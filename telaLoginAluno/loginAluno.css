@@ -185,11 +185,17 @@ fieldset.grupo {
     cursor : pointer;
 }
 
-#cadastro {
+.cadastro {
     font-family: sans-serif;
     color: rgb(33, 66, 41);
     text-align: center;
     margin-top: 50px;
+    cursor: pointer;
+}
+
+.cadastro.sublinhado{
+    text-decoration: underline;
+    margin-top: 8px;
 }
 
 footer {
