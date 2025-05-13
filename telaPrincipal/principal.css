@@ -81,7 +81,7 @@ header {
 }
 
 .projetos-nav {
-    background-color: #eaeaea;
+    background-color: #ffefef;
 }
 
 .login-btn {
@@ -149,7 +149,7 @@ header {
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
 }
 
 .dropdown-arrow {

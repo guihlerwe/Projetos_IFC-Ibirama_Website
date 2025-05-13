@@ -23,13 +23,13 @@ header {
     align-items: center;
     padding: 15px 20px;
     border-bottom: 1px solid #e0e0e0;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* Garante que fique acima de outros elementos */
-    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco translúcido */
-    backdrop-filter: blur(10px);
+    z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
 }
 
