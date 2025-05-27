@@ -2,7 +2,6 @@ body {
     background-color: #ffffff; 
     font-family: sans-serif;
     font-size: 1em;
-    color: rgb(33, 66, 41);
 }
 
 /* Ajustando o container */
@@ -27,10 +26,10 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* Garante que fique acima de outros elementos */
-    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco translúcido */
+    z-index: 1000; 
+    background-color: rgba(255, 255, 255, 0.8); 
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);/* Opcional: uma sombra para destacar */
 }
 
 /* Logo */
@@ -62,7 +61,6 @@ header {
 .login-nav {
     padding: 5px 10px;
     cursor: pointer;
-    border: 1px solid #ccc;
     border-radius: 20px;
 }
 

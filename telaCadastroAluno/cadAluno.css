@@ -2,7 +2,7 @@ body {
     background-color: #ffffff; 
     font-family: sans-serif;
     font-size: 1em;
-    color: rgb(33, 66, 41);
+    color: rgb(0, 0, 0);
 }
 
 /* Ajustando o container */
@@ -57,12 +57,11 @@ header {
 .login-nav {
     padding: 5px 10px;
     cursor: pointer;
-    border: 1px solid #ccc;
     border-radius: 20px;
 }
 
 .login-nav{
-    background-color: #eaeaea;
+    background-color: #eeeeee;
 }
 
 form {
@@ -84,7 +83,7 @@ form {
 #titulo {
     font-family: sans-serif;
     font-size: 2.5em;
-    color: rgb(58, 103, 62);
+    color: #000000;
     text-align: center;
     margin-top: 100px;
 }
@@ -167,7 +166,7 @@ fieldset.grupo {
 
 .botao {
     font-size: 1.2em;
-    background-color: rgb(33, 66, 41);
+    background-color: #349a46;
     border: 0;
     border-radius: 10px;
     color: #ffffff;
