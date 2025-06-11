@@ -22,7 +22,6 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid #e0e0e0;
     background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     position: fixed;
@@ -30,17 +29,23 @@ header {
     left: 0;
     width: 100%;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
+    transition: box-shadow 0.3s ease;
+
 }
 
+header.com-sombra{
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
+
+}
 /* Logo */
 
 
 #icone-ifc {
     width: 30px;
     height: 27px;
-    object-fit: auto;
-    margin-bottom: 10px;
+    object-fit: contain;
+    margin-bottom: 0;
+    margin-right: 10px;
 }
 
 /* Navegação */
@@ -171,8 +176,6 @@ fieldset.grupo {
     border-radius: 10px;
     color: #ffffff;
     padding: 0.4em 1em;
-    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
     cursor: pointer;
     display: block;
     margin: 2em auto 1em auto;

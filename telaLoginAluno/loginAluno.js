@@ -1,3 +1,5 @@
+const header = document.querySelector("header");
+
 document.querySelector(".projetos-nav").addEventListener("click", function() {
     window.location.href = "../telaPrincipal/principal.html";
   });
@@ -14,4 +16,10 @@ document.querySelector(".projetos-nav").addEventListener("click", function() {
     window.location.href = "../telaCadastroAluno/cadAluno.html";
   });
   
-  
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 0) {
+        header.classList.add("com-sombra");
+    } else {
+        header.classList.remove("com-sombra");
+    }
+  });

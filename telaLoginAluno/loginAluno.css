@@ -21,7 +21,6 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid #e0e0e0;
     position: fixed;
     top: 0;
     left: 0;
@@ -29,7 +28,13 @@ header {
     z-index: 1000; 
     background-color: rgba(255, 255, 255, 0.8); 
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);/* Opcional: uma sombra para destacar */
+    transition: box-shadow 0.3s ease;
+
+}
+
+header.com-sombra{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
 }
 
 /* Logo */
