@@ -115,7 +115,7 @@ header {
     text-align: center;
 }
 
-.project-header {
+.dadosProjeto {
     flex: 1;
 }
 
@@ -125,14 +125,14 @@ header {
     margin-bottom: 5px;
 }
 
-.project-type, .project-year {
+#categoria, #anoInicio {
     padding: 5px;
     font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.project-title, .project-coordinator, .register-link {
+#nome, #project-coordenador, #txtLinkInscricao {
     display: block;
     width: 100%;
     margin-top: 5px;

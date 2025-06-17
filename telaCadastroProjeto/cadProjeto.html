@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="cadProjeto.js"></script>
     <link rel="stylesheet" href="cadProjeto.css">
     <title>Criar/Editar Projeto</title>
 </head>
@@ -25,33 +26,33 @@
 
         <div class="banner">
             <label class="upload-banner">
-                <input type="file" accept="image/*" hidden required>
+                <input type="file" id="bannerProjeto" accept="image/*" hidden required>
                 Clique para adicionar banner
             </label>
         </div>
 
         <form class="project-form">
-            <div class="project-info">
+            <div class="projeto-info">
                 <div class="project-thumb">
                     <label class="upload-thumb">
-                        <input type="file" accept="image/*" hidden required>
+                        <input type="file" id="fotoCapa" accept="image/*" hidden required>
                         📷
                     </label>
                 </div>
-                <div class="project-header">
+                <div class="dadosProjeto">
                     <div class="project-meta">
-                        <select class="project-type">
+                        <select id="categoria">
                             <option value="">Tipo</option>
                             <option value="Ensino">Ensino</option>
                             <option value="Pesquisa">Pesquisa</option>
                             <option value="Extensão">Extensão</option>
                         </select>
-                        <input type="text" class="project-year" placeholder="Ano de início (ex: 2025)">
+                        <input type="text" id="anoInicio" placeholder="Ano de início (ex: 2025)">
                     </div>
-                    <input type="text" class="project-title" placeholder="Nome do Projeto">
-                    <input type="text" class="project-coordinator" placeholder="Coordenador(a)">
+                    <input type="text" id="nome" placeholder="Nome do Projeto">
+                    <input type="text" id="coordenador" placeholder="Coordenador(a)">
                 </div>
-                <input type="text" class="register-link" placeholder="Link p/ formulário de inscrição">
+                <input type="text" id="txtLinkInscricao" placeholder="Link p/ formulário de inscrição">
             </div>
 
             <div class="project-content">
@@ -91,7 +92,7 @@
                                     📷
                                 </label>
                             </div>
-                            <input type="text" class="member-name" placeholder="Adicionar nome">
+                            <input type="text" id="bolsista" placeholder="Adicionar nome">
                         </div>
                     </div>
                 </div>
