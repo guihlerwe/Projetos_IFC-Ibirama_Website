@@ -10,54 +10,67 @@ body {
 }
 
 .container {
-    width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
-    background-color: white;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-top: 70px;
 }
 
 header {
-    background-color: #333;
-    color: white;
-    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: box-shadow 0.3s ease;
 }
 
-.logo {
+header.com-sombra{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#logo {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.logo-icon {
+#icone-nav {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    width: 20px;
-    height: 20px;
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
 }
 
-.logo-icon div {
-    background-color: white;
-    width: 100%;
-    height: 100%;
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
 }
 
-.navegador {
+#navegador {
     display: flex;
     gap: 15px;
     align-items: center;
 }
 
-.nav-item {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
+#projetos-nav,
+#monitoria-nav,
+#sobre-nav,
+#login-nav {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 20px;
 }
 
 .login-btn {
@@ -70,7 +83,7 @@ header {
     cursor: pointer;
 }
 
-.banner {
+#banner {
     width: 100%;
     height: 150px;
     background-color: #555;
@@ -82,16 +95,16 @@ header {
     font-size: 16px;
 }
 
-.upload-banner {
+#upload-banner {
     cursor: pointer;
     text-align: center;
 }
 
-.project-form {
+#formulario {
     flex: 1;
 }
 
-.project-info {
+#info-projeto {
     padding: 0 20px;
     display: flex;
     gap: 20px;
@@ -99,7 +112,7 @@ header {
     align-items: center;
 }
 
-.project-thumb {
+#div-capa {
     width: 80px;
     height: 80px;
     background-color: #eee;
@@ -108,33 +121,43 @@ header {
     justify-content: center;
     align-items: center;
     font-size: 24px;
+
 }
 
-.upload-thumb {
+#upload-capa {
     cursor: pointer;
     text-align: center;
 }
 
-.dadosProjeto {
+#dados-projeto {
     flex: 1;
 }
 
-.project-meta {
+#div-eixo-ano {
     display: flex;
     gap: 10px;
     margin-bottom: 5px;
 }
 
-#categoria, #anoInicio {
+#eixo, #ano-inicio {
     padding: 5px;
     font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    width: 100px;
 }
 
-#nome, #project-coordenador, #txtLinkInscricao {
+#nome-projeto{
+    padding: 15px;
+    font-size: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 205px;
+}
+
+#txt-link-inscricao {
     display: block;
-    width: 100%;
+    width: 25%;
     margin-top: 5px;
     margin-bottom: 5px;
     padding: 8px;
@@ -143,16 +166,16 @@ header {
     border-radius: 5px;
 }
 
-.project-content {
+#conteudo {
     padding: 0 20px 20px 20px;
 }
 
-.section-title {
+#sobre {
     font-size: 18px;
     margin: 20px 0 10px;
 }
 
-.project-description {
+#descricao{
     width: 100%;
     min-height: 150px;
     padding: 10px;
@@ -160,7 +183,7 @@ header {
     border-radius: 5px;
 }
 
-.project-link, .vacancies-link {
+#site-projeto, .vacancies-link {
     width: 100%;
     padding: 8px;
     margin-top: 10px;
@@ -168,24 +191,24 @@ header {
     border-radius: 5px;
 }
 
-.team-section {
+.equipe {
     margin-top: 20px;
 }
 
-.team-members {
+.membros {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
 }
 
-.team-member {
+.membro {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100px;
 }
 
-.member-avatar {
+.foto-membro {
     width: 80px;
     height: 80px;
     background-color: #eee;
@@ -197,11 +220,13 @@ header {
     font-size: 24px;
 }
 
-.add-member {
+.add-membro {
     cursor: pointer;
 }
 
-.member-name {
+#nome-coordenador,
+#nome-bolsista,
+.nome-membro {
     width: 100%;
     text-align: center;
     padding: 5px;

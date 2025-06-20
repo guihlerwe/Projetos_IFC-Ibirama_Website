@@ -9,14 +9,6 @@ body {
     background-color: #ffffff;
 }
 
-#icone-ifc {
-    width: 30px;
-    height: 27px;
-    object-fit: auto;
-    margin-bottom: 10px;
-}
-
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -74,15 +66,13 @@ header {
     width: 100%;
     z-index: 1000;
     transition: box-shadow 0.3s ease;
-
-    /* Opcional: uma sombra para destacar */
 }
 
 header.com-sombra{
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
 }
-.logo {
+
+#logo {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -90,12 +80,19 @@ header.com-sombra{
     font-weight: bold;
 }
 
-.grid-icon {
+#icone-nav {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 2px;
     width: 24px;
     height: 24px;
+}
+
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
 }
 
 .grid-cell {
@@ -104,22 +101,22 @@ header.com-sombra{
     height: 6px;
 }
 
-.navegador {
+#navegador {
     display: flex;
     gap: 15px;
     align-items: center;
 }
 
-.projetos-nav,
-.monitoria-nav,
-.sobre-nav,
-.login-nav {
+#projetos-nav,
+#monitoria-nav,
+#sobre-nav,
+#login-nav {
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 20px;
 }
 
-.projetos-nav {
+#projetos-nav {
     background-color: #eeeeee;
     color: #000000;
 }

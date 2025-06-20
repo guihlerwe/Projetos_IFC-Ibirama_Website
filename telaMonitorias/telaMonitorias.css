@@ -9,13 +9,6 @@ body {
     background-color: #ffffff;
 }
 
-#icone-ifc {
-    width: 30px;
-    height: 27px;
-    object-fit: auto;
-    margin-bottom: 10px;
-}
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -57,6 +50,13 @@ header.com-sombra{
     grid-gap: 2px;
     width: 24px;
     height: 24px;
+}
+
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
 }
 
 .grid-cell {

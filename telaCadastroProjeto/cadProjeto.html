@@ -3,96 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="cadProjeto.js"></script>
     <link rel="stylesheet" href="cadProjeto.css">
     <title>Criar/Editar Projeto</title>
 </head>
 <body>
     <div class="container">
+
         <header>
-            <div class="logo">
-                <div class="logo-icon">
-                    
+            <div id="logo">
+                <div id="icone-nav">
+                    <img src="../telaPrincipal/icones/ifc-logo-preto.png" id="icone-ifc">
                 </div>
-                <div class="logo-text">Projetos do Campus Ibirama</div>
+                Projetos do Campus Ibirama
             </div>
-            <div class="navegador">
-                <a href="#" class="nav-item">Projetos</a>
-                <a href="#" class="nav-item">Monitoria</a>
-                <a href="#" class="nav-item">Sobre</a>
-                <a href="#" class="nav-item">Perfil</a>
+
+            <div id="navegador">
+                <div id="projetos-nav">Projetos</div>
+                <div id="monitoria-nav">Monitoria</div>
+                <div id="sobre-nav">Sobre</div>
+                <div id="login-nav">Entrar</div>
             </div>
         </header>
 
-        <div class="banner">
-            <label class="upload-banner">
-                <input type="file" id="bannerProjeto" accept="image/*" hidden required>
+        <div id="banner">
+            <label id="upload-banner">
+                <input type="file" id="banner-projeto" accept="image/*" hidden required>
                 Clique para adicionar banner
             </label>
         </div>
 
-        <form class="project-form">
-            <div class="projeto-info">
-                <div class="project-thumb">
-                    <label class="upload-thumb">
-                        <input type="file" id="fotoCapa" accept="image/*" hidden required>
+        <form id="formulario">
+            <div id="info-projeto">
+                <div id="div-capa">
+                    <label id="upload-capa">
+                        <input type="file" id="foto-capa" accept="image/*" hidden required>
                         📷
                     </label>
                 </div>
-                <div class="dadosProjeto">
-                    <div class="project-meta">
-                        <select id="categoria">
+                <div id="dados-projeto">
+                    <div class="div-eixo-ano">
+                        <select id="eixo">
                             <option value="">Tipo</option>
                             <option value="Ensino">Ensino</option>
                             <option value="Pesquisa">Pesquisa</option>
                             <option value="Extensão">Extensão</option>
                         </select>
-                        <input type="text" id="anoInicio" placeholder="Ano de início (ex: 2025)">
+                        <input type="text" id="ano-inicio" placeholder="Desde (ano)">
                     </div>
-                    <input type="text" id="nome" placeholder="Nome do Projeto">
-                    <input type="text" id="coordenador" placeholder="Coordenador(a)">
+                    <input type="text" id="nome-projeto" placeholder="Nome do Projeto">
                 </div>
-                <input type="text" id="txtLinkInscricao" placeholder="Link p/ formulário de inscrição">
+                <input type="text" id="txt-link-inscricao" placeholder="Link p/ formulário de inscrição">
             </div>
 
-            <div class="project-content">
-                <h2 class="section-title">Sobre (2000 max.)</h2>
-                <textarea class="project-description" maxlength="1500" placeholder="Descreva o projeto..."></textarea>
+            <div id="conteudo">
+                <h2 id="sobre">Sobre (2000 max.)</h2>
+                <textarea id="descricao" maxlength="1500" placeholder="Descreva o projeto..."></textarea>
 
-                <input type="text" class="project-link" placeholder="Insira Link do site">
+                <input type="text" id="site-projeto" placeholder="Insira Link do site">
 
-                <div class="team-section">
-                    <h2 class="section-title">Coordenadores(as)</h2>
-                    <div class="team-members">
-                        <div class="team-member">
-                            <div class="member-avatar">
+                <div class="equipe">
+                    <h2 class="titulo-equipe">Coordenadores(as)</h2>
+                    <div class="membros">
+                        <div class="membro">
+                            <div class="foto-membro">
                                 <label>
                                     <input type="file" accept="image/*" hidden>
                                     📷
                                 </label>
                             </div>
-                            <input type="text" class="member-name" placeholder="Nome do coordenador(a)">
+                            <input type="text" id="nome-coordenador" placeholder="Nome do coordenador(a)">
                         </div>
-                        <div class="team-member">
-                            <div class="member-avatar add-member">
+                        <div class="membro">
+                            <div class="foto-membro add-membro">
                                 +
                             </div>
-                            <input type="text" class="member-name" placeholder="Adicionar nome">
+                            <input type="text" class="nome-membro" placeholder="Adicionar nome">
                         </div>
                     </div>
                 </div>
 
-                <div class="team-section">
-                    <h2 class="section-title">Bolsistas</h2>
-                    <div class="team-members">
-                        <div class="team-member">
-                            <div class="member-avatar add-member">
+                <div class="equipe">
+                    <h2 class="titulo-equipe">Bolsistas</h2>
+                    <div class="membros">
+                        <div class="membro">
+                            <div class="foto-membro add-membro">
                                 <label>
                                     <input type="file" accept="image/*" hidden>
                                     📷
                                 </label>
                             </div>
-                            <input type="text" id="bolsista" placeholder="Adicionar nome">
+                            <input type="text" id="nome-bolsista" placeholder="Adicionar nome">
                         </div>
                     </div>
                 </div>
@@ -115,5 +115,7 @@
             <span>2025</span>
         </footer>
     </div>
+
+    <script src="./cadProjeto.js"></script>
 </body>
 </html>
