@@ -15,6 +15,7 @@ body {
     min-height: 100vh;
     margin-top: 70px;
 }
+/* footer */
 
 footer{
     padding-top: 5vh;
@@ -25,6 +26,13 @@ footer{
     margin-left: auto;
 }
 
+.footer-fabrica{
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+
+}
+
+
 @media only screen and (max-width: 950px) {
     footer{
         padding-left: 2vh;
@@ -32,17 +40,21 @@ footer{
 }
 
 li {
-  margin-bottom: 1.5px; /* Adiciona espaço entre os itens */
+  margin-bottom: 1.5px;
+      list-style-type: circle;
+
 }
 
 ul{
     
     margin-top: 2px;
-    list-style-type: none;
+    list-style-type: circle;
 }
 
 a {
     color: #ffffff;
+        list-style-type: circle;
+
 }
 
 a:hover {
@@ -201,7 +213,7 @@ header.com-sombra{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    padding: 0 20px 20px 20px;
+    padding:  20px 20px 20px;
 }
 
 .project-card {
@@ -209,57 +221,41 @@ header.com-sombra{
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.project-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-}
-
-.project-label {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    padding: 5px 10px;
-    color: white;
-    font-size: 14px;
-    border-radius: 20px;
-    background-color: rgba(46, 125, 50, 0.6); /* verde com opacidade */;
-    backdrop-filter: blur(10px);
-
-}
-
-.project-label.vermelho {
-    background-color: rgba(211, 47, 47, 0.6);;
-}
-
-.project-label.azul {
-    background-color: rgba(33, 150, 243, 0.6);
 }
 
 .project-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+}
+.project-label {
     position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.project-card {
-    position: relative;
-    border-radius: 10px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    padding: 5px 10px;
+    color: white;
+    font-size: 10px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    aspect-ratio: 16/9;
-    /* Mantém proporção consistente para todos os cartões */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: rgba(46, 125, 50, 0.6);
+    backdrop-filter: blur(10px);
+    width: auto;
+    max-width: fit-content; 
 }
-
+.project-label.vermelho {
+    background-color: rgba(211, 47, 47, 0.6);;
+}
+.project-label.azul {
+    background-color: rgba(33, 150, 243, 0.6);
+}
 
 .project-card {
     position: relative;
-    border-radius: 10px;
+    border-radius: 2vh;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     aspect-ratio: 16/9;
@@ -267,22 +263,101 @@ header.com-sombra{
     /* Adiciona transição suave para todos os efeitos */
 }
 
-/* Efeito quando o mouse passa por cima do cartão */
 .project-card:hover {
     transform: translateY(-10px);
-    /* Move o cartão 10px para cima */
     box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2);
-    /* Sombra mais pronunciada e distante */
     cursor: pointer;
-    /* Muda o cursor para indicar que é clicável */
 }
 
-/* Opcional: efeito sutil de zoom na imagem ao passar o mouse */
 .project-card .project-image {
     transition: transform 0.3s ease;
 }
 
 .project-card:hover .project-image {
     transform: scale(1.05);
-    /* Aumenta ligeiramente a imagem */
+}
+
+
+
+
+/* Celular*/
+@media screen and (max-width: 768px) {
+    
+    
+    header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100%;
+    transition: box-shadow 0.3s ease;
+    font-size: 0.5vh;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 2;
+    }
+
+    .projetos-nav,
+    .monitoria-nav,
+    .sobre-nav,
+    .login-nav {
+    padding: 6px 2px;
+    cursor: pointer;
+    border-radius: 20px;
+    }
+
+    .projetos-nav {
+    background-color: #eeeeee;
+    color: #000000;
+    padding: 0.6vh;
+    }
+
+    footer{
+    padding-top: 5vh;
+    padding-left: 2vh;
+    background-color: #2e7d32;
+    color: white;
+    margin-right: auto;
+    margin-left: auto;
+    -webkit-tap-highlight-color: transparent;
+
+    }
+    
+    .container{
+            display: inline-block;
+
+    }
+
+    .projects-grid {
+    display: block;
+    gap: 20px;
+    padding:  20px 20px 20px;   
+    padding-bottom: 15vh; 
+    -webkit-tap-highlight-color: transparent;
+    }
+
+    .project-card {
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+
+.container {
+    min-width: 76px;
+    margin: 0 auto;
+    min-height: 100vh   ;
+    margin-top: 70px;
+}
+    
+
+    
+
+    /* Opcional: uma sombra para destacar */
 }

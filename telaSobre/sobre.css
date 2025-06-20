@@ -9,6 +9,14 @@ body {
     background-color: #ffffff;
 }
 
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
+}
+
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -20,7 +28,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 1vh 2vh;
     background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     position: fixed;
@@ -29,8 +37,6 @@ header {
     width: 100%;
     z-index: 100%;
     transition: box-shadow 0.3s ease;
-
-    /* Opcional: uma sombra para destacar */
 }
 
 header.com-sombra{
@@ -199,7 +205,31 @@ header.com-sombra{
     .section-layout {
         flex-direction: column; /* empilha os itens */
         text-align: center;     /* centraliza o texto, opcional */
+        text-align: left;
     }
+    
+    header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100%;
+    transition: box-shadow 0.3s ease;
+    font-size: 0.5vh;
+
+    
+
+    
+
+    /* Opcional: uma sombra para destacar */
+}
+
 
     .section-image {
         width: 300vw; /* 30% da largura da tela */
