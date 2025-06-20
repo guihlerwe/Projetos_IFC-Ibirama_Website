@@ -41,12 +41,22 @@
                     </label>
                 </div>
                 <div id="dados-projeto">
-                    <div class="div-eixo-ano">
+                    <div class="div-eixo--categoria-ano">
                         <select id="eixo">
                             <option value="">Tipo</option>
                             <option value="Ensino">Ensino</option>
                             <option value="Pesquisa">Pesquisa</option>
                             <option value="Extensão">Extensão</option>
+                        </select>
+                        <select id="categoria">
+                            <option value="">Área de estudo</option>
+                            <option value="Ciencias Naturais">Ciências Naturais</option>
+                            <option value="Ciencias Humanas">Ciências Humanas</option>
+                            <option value="Linguagens">Linguagens</option>
+                            <option value="Matemática">Matemática</option>
+                            <option value="Administração">Administração</option>
+                            <option value="Informática">Informática</option>
+                            <option value="Vestuário">Vestuário</option>
                         </select>
                         <input type="text" id="ano-inicio" placeholder="Desde (ano)">
                     </div>
@@ -56,13 +66,13 @@
             </div>
 
             <div id="conteudo">
-                <h2 id="sobre">Sobre (2000 max.)</h2>
-                <textarea id="descricao" maxlength="1500" placeholder="Descreva o projeto..."></textarea>
+                <h2 class="subtitulo">Sobre (2000 max.)</h2>
+                <textarea id="descricao" maxlength="2000" placeholder="Descreva o projeto..."></textarea>
 
                 <input type="text" id="site-projeto" placeholder="Insira Link do site">
 
                 <div class="equipe">
-                    <h2 class="titulo-equipe">Coordenadores(as)</h2>
+                    <h2 class="subtitulo">Coordenadores(as)</h2>
                     <div class="membros">
                         <div class="membro">
                             <div class="foto-membro">
@@ -83,7 +93,7 @@
                 </div>
 
                 <div class="equipe">
-                    <h2 class="titulo-equipe">Bolsistas</h2>
+                    <h2 class="subtitulo">Bolsistas</h2>
                     <div class="membros">
                         <div class="membro">
                             <div class="foto-membro add-membro">
@@ -97,16 +107,16 @@
                     </div>
                 </div>
 
-                <input type="text" class="vacancies-link" placeholder="Se há vagas para bolsistas, cole o link para inscrição aqui">
+                <input type="text" id="link-bolsista" placeholder="Se há vagas para bolsistas, cole o link para inscrição aqui">
 
-                <div class="contact-section">
-                    <h2 class="section-title">Contato com Projeto</h2>
-                    <input type="email" class="contact-field" placeholder="E-mail para o projeto">
-                    <input type="text" class="contact-field" placeholder="Número para contato (opcional)">
-                    <input type="text" class="contact-field" placeholder="Instagram do projeto (opcional)">
+                <div id="contato">
+                    <h2 class="subtitulo">Contato com Projeto</h2>
+                    <input type="email" id="email" placeholder="E-mail para o projeto">
+                    <input type="text" id="numero-telefone" placeholder="Número para contato (opcional)">
+                    <input type="text" id="instagram" placeholder="Instagram do projeto (opcional)">
                 </div>
 
-                <button type="submit" class="submit-btn">Salvar Projeto</button>
+                <button type="submit" id="bt-criar-projeto">Criar Projeto</button>
             </div>
         </form>
 

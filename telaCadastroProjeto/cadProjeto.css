@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #f5f5f5;
+    background-color: white;
 }
 
 .container {
@@ -133,13 +133,13 @@ header.com-sombra{
     flex: 1;
 }
 
-#div-eixo-ano {
+#div-eixo-categoria-ano {
     display: flex;
     gap: 10px;
     margin-bottom: 5px;
 }
 
-#eixo, #ano-inicio {
+#eixo, #ano-inicio, #categoria {
     padding: 5px;
     font-size: 14px;
     border: 1px solid #ddd;
@@ -147,12 +147,16 @@ header.com-sombra{
     width: 100px;
 }
 
+#categoria{
+    width: 140px;
+}
+
 #nome-projeto{
     padding: 15px;
     font-size: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 205px;
+    width: 348px;
 }
 
 #txt-link-inscricao {
@@ -170,7 +174,7 @@ header.com-sombra{
     padding: 0 20px 20px 20px;
 }
 
-#sobre {
+.subtitulo {
     font-size: 18px;
     margin: 20px 0 10px;
 }
@@ -235,11 +239,14 @@ header.com-sombra{
     border-radius: 5px;
 }
 
-.contact-section {
+#contato {
     margin-top: 20px;
 }
 
-.contact-field {
+#email, 
+#numero-telefone, 
+#instagram, 
+#link-bolsista {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -247,7 +254,7 @@ header.com-sombra{
     border-radius: 5px;
 }
 
-.submit-btn {
+#bt-criar-projeto {
     margin-top: 20px;
     padding: 10px;
     width: 100%;
