@@ -171,11 +171,10 @@ header.com-sombra{
 
 .project-label {
     position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 85%;
+    position-area: block-start center;
     color: white;
-    font-size: 18px;
+    font-size: 14px;
     text-align: center;
 }
 

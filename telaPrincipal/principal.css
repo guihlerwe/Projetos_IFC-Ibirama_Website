@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Helvetica, sans-serif;
 }
 
 body {
@@ -10,61 +10,13 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    min-height: 100vh;
     margin-top: 70px;
 }
-/* footer */
-
-footer{
-    padding-top: 5vh;
-    padding-left: 25vh;
-    background-color: #2e7d32;
-    color: white;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.footer-fabrica{
-    padding-top: 2vh;
-    padding-bottom: 2vh;
-
-}
 
 
-@media only screen and (max-width: 950px) {
-    footer{
-        padding-left: 2vh;
-    }
-}
-
-li {
-  margin-bottom: 1.5px;
-      list-style-type: circle;
-
-}
-
-ul{
-    
-    margin-top: 2px;
-    list-style-type: circle;
-}
-
-a {
-    color: #ffffff;
-        list-style-type: circle;
-
-}
-
-a:hover {
-  color: blue; /* Altera a cor ao passar o mouse */
-}
-
-#Aluno{
-    color: rgb(255, 255, 255);
-}
-
+/*header*/
 header {
     display: flex;
     justify-content: space-between;
@@ -80,7 +32,7 @@ header {
     transition: box-shadow 0.3s ease;
 }
 
-header.com-sombra{
+header.com-sombra {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -146,6 +98,7 @@ header.com-sombra{
     border-radius: 10px;
 }
 
+/*page fuctions*/
 .barra-pesquisar {
     margin: 20px;
     display: flex;
@@ -161,7 +114,7 @@ header.com-sombra{
 }
 
 .btn-filtrar {
-    padding: 6px 15px;
+    padding: 6px 9px;
     border: 1px solid #ccc;
     border-radius: 20px;
     cursor: pointer;
@@ -191,7 +144,7 @@ header.com-sombra{
 }
 
 .categorias-filtrar {
-    padding: 6px 15px;
+    padding: 6px 9px;
     border-radius: 20px;
     border: 1px solid #ccc;
     background-color: white;
@@ -213,7 +166,7 @@ header.com-sombra{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    padding:  20px 20px 20px;
+    padding: 20px 20px 20px;
 }
 
 .project-card {
@@ -229,6 +182,7 @@ header.com-sombra{
     object-fit: cover;
     display: block;
 }
+
 .project-label {
     position: absolute;
     bottom: 5px;
@@ -244,11 +198,14 @@ header.com-sombra{
     background-color: rgba(46, 125, 50, 0.6);
     backdrop-filter: blur(10px);
     width: auto;
-    max-width: fit-content; 
+    max-width: fit-content;
 }
+
 .project-label.vermelho {
-    background-color: rgba(211, 47, 47, 0.6);;
+    background-color: rgba(211, 47, 47, 0.6);
+    ;
 }
+
 .project-label.azul {
     background-color: rgba(33, 150, 243, 0.6);
 }
@@ -278,86 +235,147 @@ header.com-sombra{
 }
 
 
+/* footer */
 
+footer {
+    padding-top: 5vh;
+    padding-left: 25vh;
+    background-color: #2e7d32;
+    color: white;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.footer-fabrica {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+
+}
+
+
+@media only screen and (max-width: 950px) {
+    footer {
+        padding-left: 2vh;
+    }
+}
+
+li {
+    margin-bottom: 1.5px;
+    list-style-type: circle;
+
+}
+
+ul {
+
+    margin-top: 2px;
+    list-style-type: circle;
+}
+
+a {
+    color: #ffffff;
+    list-style-type: circle;
+
+}
+
+a:hover {
+    color: blue;
+    /* Altera a cor ao passar o mouse */
+}
+
+#Aluno {
+    color: rgb(255, 255, 255);
+}
 
 /* Celular*/
 @media screen and (max-width: 768px) {
-    
-    
+
+
     header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 100%;
-    transition: box-shadow 0.3s ease;
-    font-size: 0.5vh;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100%;
+        transition: box-shadow 0.3s ease;
+        font-size: 0.5vh;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 2;
     }
 
     .projetos-nav,
     .monitoria-nav,
     .sobre-nav,
     .login-nav {
-    padding: 6px 2px;
-    cursor: pointer;
-    border-radius: 20px;
+        padding: 6px 2px;
+        cursor: pointer;
+        border-radius: 20px;
     }
 
     .projetos-nav {
-    background-color: #eeeeee;
-    color: #000000;
-    padding: 0.6vh;
+        background-color: #eeeeee;
+        color: #000000;
+        padding: 0.6vh;
     }
 
-    footer{
-    padding-top: 5vh;
-    padding-left: 2vh;
-    background-color: #2e7d32;
-    color: white;
-    margin-right: auto;
-    margin-left: auto;
-    -webkit-tap-highlight-color: transparent;
+    .project-label {
+        position: absolute;
+        position-area: block-start center;
+        color: white;
+        font-size: 22px;
+        border-radius: 18px;
+        background-color: rgba(46, 125, 50, 0.6);
+        backdrop-filter: blur(10px);
+        width: auto;
+        max-width: fit-content;
+    }
+
+    footer {
+        padding-top: 5vh;
+        padding-left: 2vh;
+        background-color: #2e7d32;
+        color: white;
+        margin-right: auto;
+        margin-left: auto;
+        -webkit-tap-highlight-color: transparent;
 
     }
-    
-    .container{
-            display: inline-block;
+
+    .container {
+        display: inline-block;
 
     }
 
     .projects-grid {
-    display: block;
-    gap: 20px;
-    padding:  20px 20px 20px;   
-    padding-bottom: 15vh; 
-    -webkit-tap-highlight-color: transparent;
+        display: block;
+        gap: 20px;
+        padding: 20px 20px 20px;
+        padding-bottom: 15vh;
+        -webkit-tap-highlight-color: transparent;
     }
 
     .project-card {
-    position: relative;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
 
-.container {
-    min-width: 76px;
-    margin: 0 auto;
-    min-height: 100vh   ;
-    margin-top: 70px;
-}
-    
+    .container {
+        min-width: 76px;
+        margin: 0 auto;
+        min-height: 100vh;
+        margin-top: 70px;
+    }
 
-    
+
+
 
     /* Opcional: uma sombra para destacar */
 }
