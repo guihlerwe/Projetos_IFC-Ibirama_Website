@@ -9,6 +9,15 @@ body {
     background-color: #ffffff;
 }
 
+#capa{
+    width: 100%; /* 30% da largura da tela */
+    max-height: 40vh;
+    aspect-ratio: 1 / 1; /* mantém o círculo */
+    border-radius: 50px 50px 0px 0px;
+    margin-top: 5vh;
+    object-fit: cover;
+}
+
 #icone-ifc {
     width: 30px;
     height: 27px;
@@ -60,12 +69,6 @@ header.com-sombra{
     height: 24px;
 }
 
-#icone-ifc {
-    width: 30px;
-    height: 27px;
-    object-fit: auto;
-    margin-bottom: 10px;
-}
 
 .logo-text {
     font-size: 22px;
@@ -131,7 +134,7 @@ header.com-sombra{
     width: 30vw; /* 30% da largura da tela */
     max-width: 280px; /* ainda assim limita pra não ficar gigante */
     aspect-ratio: 1 / 1; /* mantém o círculo */
-    border-radius: 50%;
+    border-radius: 15%;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -141,6 +144,7 @@ header.com-sombra{
     height: 100%;
     object-fit: cover;
 }
+
 
 .site-link {
     display: inline-flex;
@@ -233,9 +237,9 @@ header.com-sombra{
 
     .section-image {
         width: 300vw; /* 30% da largura da tela */
-        max-width: 400px; /* ainda assim limita pra não ficar gigante */
+        max-width: 100%; /* ainda assim limita pra não ficar gigante */
         margin-bottom: 20px;    /* dá um espacinho abaixo da imagem */
         aspect-ratio: 0;
-        border-radius: 15%;
+        border-radius: 50px;
     }
 }
