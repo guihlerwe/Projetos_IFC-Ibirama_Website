@@ -238,12 +238,11 @@ header.com-sombra {
 /* footer */
 
 footer {
-    padding-top: 5vh;
-    padding-left: 25vh;
     background-color: #2e7d32;
     color: white;
-    margin-right: auto;
-    margin-left: auto;
+   display: flex;
+    padding-top: 5vh;
+        padding-left: 2vh;
 }
 
 .footer-fabrica {
@@ -278,7 +277,7 @@ a {
 }
 
 a:hover {
-    color: blue;
+    color: rgb(43, 43, 255);
     /* Altera a cor ao passar o mouse */
 }
 
@@ -288,7 +287,6 @@ a:hover {
 
 /* Celular*/
 @media screen and (max-width: 768px) {
-
 
     header {
         display: flex;
@@ -329,34 +327,31 @@ a:hover {
         position: absolute;
         position-area: block-start center;
         color: white;
-        font-size: 22px;
-        border-radius: 18px;
+        font-size: 29px;
+        border-radius: 1/2;
         background-color: rgba(46, 125, 50, 0.6);
         backdrop-filter: blur(10px);
-        width: auto;
+        width: fit-content;
         max-width: fit-content;
     }
 
     footer {
+        display: flex;
         padding-top: 5vh;
         padding-left: 2vh;
         background-color: #2e7d32;
         color: white;
-        margin-right: auto;
-        margin-left: auto;
         -webkit-tap-highlight-color: transparent;
 
     }
 
     .container {
         display: inline-block;
-
     }
 
     .projects-grid {
         display: block;
-        gap: 20px;
-        padding: 20px 20px 20px;
+        padding: ;
         padding-bottom: 15vh;
         -webkit-tap-highlight-color: transparent;
     }
