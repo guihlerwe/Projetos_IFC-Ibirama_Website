@@ -37,7 +37,22 @@ header.com-sombra{
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
 
 }
-/* Logo */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.grid-icon {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
+}
 
 
 #icone-ifc {
@@ -171,7 +186,7 @@ fieldset.grupo {
 
 .botao {
     font-size: 1.2em;
-    background-color: #349a46;
+    background-color:rgb(38, 110, 51);
     border: 0;
     border-radius: 10px;
     color: #ffffff;

@@ -33,17 +33,16 @@ const numeroTelefone = document.getElementById("numero-telefone");
 const instagram = document.getElementById("instagram");
 const btCriarProjeto = document.getElementById("bt-criar-projeto");
 
-// cadAluno.js (ou cadastroProjeto.js)
 document.getElementById("botao").addEventListener("click", criarProjeto);
 
 function criarProjeto(event) {
   event.preventDefault();
 
   const projeto = {
-    nome: document.getElementById("txtNumero").value,
+    nome: document.getElementById("nome-projeto").value,
     eixo: document.getElementById("eixo").value,
     categoria: document.getElementById("categoria").value,
-    anoInicio: document.getElementById("anoInicio").value,
+    anoInicio: document.getElementById("ano-inicio").value,
     coordenador: document.getElementById("nome-coordenador").value,
     bolsista: document.getElementById("nome-bolsista").value,
     linkInscricao: document.getElementById("txt-link-inscricao").value,
