@@ -48,3 +48,14 @@ document.addEventListener("DOMContentLoaded", function () {
     container.appendChild(card);
   });
 });
+
+document.querySelector(".btn-filtrar.pesquisa").addEventListener("click", () => {
+  document.querySelectorAll(".project-card").forEach(card => {
+    card.style.display = card.classList.contains("pesquisa") ? "block" : "none";
+  });
+});
+
+card.addEventListener("click", () => {
+  localStorage.setItem("projetoSelecionado", JSON.stringify(projeto));
+  window.location.href = "../telaProjeto/projeto.html";
+});

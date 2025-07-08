@@ -33,28 +33,37 @@ const numeroTelefone = document.getElementById("numero-telefone");
 const instagram = document.getElementById("instagram");
 const btCriarProjeto = document.getElementById("bt-criar-projeto");
 
-btCriarProjeto.addEventListener ("click", function () {
-  const novoProjeto = {
-    Nome: nome.value,
-    Eixo: eixo.value,
-    Categoria: categoria.value,
-    AnoInicio: parseInt(anoIncio.value),
-    Coordenador: coordenador.value,
-    Bolsista: bolsista.value,
-    LinkInscrição: txtLinkInscricao.value,
-    Sobre: txtSobre.value,
-    LinkSite: txtLinkSite.value,
-    Email: email.value,
-    NumeroTelefone: parseInt(numeroTelefone.value),
-    Instagram: instagram.value,
+// cadAluno.js (ou cadastroProjeto.js)
+document.getElementById("botao").addEventListener("click", criarProjeto);
+
+function criarProjeto(event) {
+  event.preventDefault();
+
+  const projeto = {
+    nome: document.getElementById("txtNumero").value,
+    eixo: document.getElementById("eixo").value,
+    categoria: document.getElementById("categoria").value,
+    anoInicio: document.getElementById("anoInicio").value,
+    coordenador: document.getElementById("nome-coordenador").value,
+    bolsista: document.getElementById("nome-bolsista").value,
+    linkInscricao: document.getElementById("txt-link-inscricao").value,
+    sobre: document.getElementById("descricao").value,
+    linkSite: document.getElementById("site-projeto").value,
+    email: document.getElementById("email").value,
+    telefone: document.getElementById("numero-telefone").value,
+    instagram: document.getElementById("instagram").value,
   };
 
-  const projetosSalvos = JSON.parse(localStorage.getItem("projetos")) || [];
-  projetosSalvos.push(novoProjeto);
-  localStorage.setItem("projetos"; JSON.stringify(projetosSalvos));
-  
-  console.log("Projeto adicionado: ", projeto);
-});
+  salvarProjetoLocal(projeto);
+  alert("Projeto salvo com sucesso!");
+  // window.location.href = "../telaPrincipal/principal.html"; // redirecionar se quiser
+}
+
+function salvarProjetoLocal(projeto) {
+  let projetos = JSON.parse(localStorage.getItem("projetos")) || [];
+  projetos.push(projeto);
+  localStorage.setItem("projetos", JSON.stringify(projetos));
+}
 
 
 
