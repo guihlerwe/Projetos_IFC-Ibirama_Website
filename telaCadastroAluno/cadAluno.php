@@ -1,9 +1,36 @@
 <?php
+    // conectando com o banco
+    $host = 'localhost';
+    $usuario = 'root';
+    $senha = '';
+    $banco = 'website';
+
+    $conn = new mysqli($host, $usuario, $senha, $banco);
+
+    // verificando conexão
+    if ($conn->connect_error) {
+        die("Erro na conexão: " . $conn->connect_error);
+    }
+
+    // recebe os dados do formulário
     $nome = $_POST["nome"];
     $sobrenome = $_POST["sobrenome"];
     $email = $_POST["email"];
-    $senha = $_POST["senha"];
+    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); 
     $curso = $_POST["curso"];
 
-    echo("Seja bem-vindo $nome $sobrenome");
+    // inserção
+    $stmt = $conn->prepare("INSERT INTO pessoa (nome, sobrenome, email, senha, curso) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $nome, $sobrenome, $email, $senha, $curso);
+
+    if ($stmt->execute()) {
+        echo "Cadastro realizado com sucesso! Redirecionando...";
+        header("refresh:2; url=loginAluno.html");
+        exit();
+    } else {
+        echo "Erro ao cadastrar: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
 ?>
