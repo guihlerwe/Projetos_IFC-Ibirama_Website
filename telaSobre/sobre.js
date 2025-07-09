@@ -1,5 +1,5 @@
 document.querySelector(".login-nav").addEventListener("click", function() {
-  window.location.href = "../telaLoginAluno/loginAluno.html";
+  window.location.href = "../telaLogin/login.html";
 });
 
 document.querySelector(".monitoria-nav").addEventListener("click", function() {
