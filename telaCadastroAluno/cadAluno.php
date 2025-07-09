@@ -2,7 +2,7 @@
     // conectando com o banco
     $host = 'localhost';
     $usuario = 'root';
-    $senha = '';
+    $senha = 'root';
     $banco = 'website';
 
     $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -16,7 +16,8 @@
     $nome = $_POST["nome"];
     $sobrenome = $_POST["sobrenome"];
     $email = $_POST["email"];
-    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); 
+    $senha = $_POST['senha'];
+    //$senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); 
     $curso = $_POST["curso"];
 
     // inserção
@@ -25,7 +26,7 @@
 
     if ($stmt->execute()) {
         echo "Cadastro realizado com sucesso! Redirecionando...";
-        header("refresh:2; url=loginAluno.html");
+        header("refresh:2; url=../telaLoginAluno/loginAluno.html");
         exit();
     } else {
         echo "Erro ao cadastrar: " . $stmt->error;

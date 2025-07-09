@@ -54,13 +54,11 @@ header.com-sombra{
     height: 24px;
 }
 
-
 #icone-ifc {
     width: 30px;
     height: 27px;
-    object-fit: contain;
-    margin-bottom: 0;
-    margin-right: 10px;
+    object-fit: auto;
+    margin-bottom: 10px;
 }
 
 /* Navegação */
