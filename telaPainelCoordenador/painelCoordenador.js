@@ -9,7 +9,7 @@ document.querySelector("#sobre-nav").addEventListener("click", function() {
 });
 
 document.querySelector("#login-nav").addEventListener("click", function() {
-  window.location.href = "../telaLoginAluno/loginAluno.html";
+  window.location.href = "../telaLogin/login.html";
 });
 
 window.addEventListener("scroll", () => {

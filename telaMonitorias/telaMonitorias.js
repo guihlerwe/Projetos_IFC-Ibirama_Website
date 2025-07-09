@@ -1,7 +1,7 @@
 const header = document.querySelector("header");
 
 document.querySelector(".login-nav").addEventListener("click", function() {
-    window.location.href = "../telaLoginAluno/loginAluno.html";
+    window.location.href = "../telaLogin/login.html";
   });
   
   document.querySelector(".projetos-nav").addEventListener("click", function() {
