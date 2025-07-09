@@ -135,7 +135,7 @@ header.com-sombra {
     text-shadow: none;
 }
 
-.categorias-filtrar {
+#categorias-filtrar {
     padding: 6px 9px;
     border-radius: 20px;
     border: 1px solid #ccc;
@@ -232,9 +232,9 @@ header.com-sombra {
 footer {
     background-color: #2e7d32;
     color: white;
-   display: flex;
+    display: flex;
     padding-top: 5vh;
-        padding-left: 2vh;
+    padding-left: 2vh;
 }
 
 .footer-fabrica {
