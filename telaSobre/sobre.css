@@ -52,8 +52,7 @@ header.com-sombra{
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
 }
-
-.logo {
+#logo {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -61,14 +60,20 @@ header.com-sombra{
     font-weight: bold;
 }
 
-.logo-icon {
-   display: grid;
+#icone-nav {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 2px;
     width: 24px;
     height: 24px;
 }
 
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
+}
 
 .logo-text {
     font-size: 22px;

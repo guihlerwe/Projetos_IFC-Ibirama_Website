@@ -37,8 +37,7 @@ header.com-sombra{
 
 }
 
-/* Logo */
-.logo {
+#logo {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -46,10 +45,19 @@ header.com-sombra{
     font-weight: bold;
 }
 
+#icone-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
+}
+
 #icone-ifc {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
 }
 
 /* Navegação */
