@@ -59,27 +59,3 @@ card.addEventListener("click", () => {
   localStorage.setItem("projetoSelecionado", JSON.stringify(projeto));
   window.location.href = "../telaProjeto/projeto.html";
 });
-
-const nome = sessionStorage.getItem("usuarioLogado");
-const tipo = sessionStorage.getItem("tipoUsuario");
-
-if (nome) {
-    document.getElementById("login-nav").style.display = "none";
-    document.getElementById("user-menu").classList.remove("hidden");
-    document.getElementById("user-button").textContent = `👤 ${nome}`;
-    
-    if (tipo === "coordenador") {
-        document.getElementById("dropdown").innerHTML = `
-            <div onclick="location.href='../telaCadProjeto/cadProjeto.html'">Criar projeto</div>
-            <div onclick="location.href='../telaPainelCoodernador/painelCoodernador.html'">Seus projetos</div>
-            <div onclick="location.href='#'">Dados da conta</div>
-        `;
-    } else if (tipo === "bolsista") {
-        document.getElementById("dropdown").innerHTML = `
-            <div onclick="location.href='../telaPainelBolsista/painelBolsista.html'">Seus projetos</div>
-            <div onclick="location.href='#'">Dados da conta</div>
-        `;
-    } else {
-        document.getElementById("user-button").style.cursor = "default";
-    }
-}

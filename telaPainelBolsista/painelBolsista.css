@@ -15,6 +15,8 @@ body {
     margin-top: 70px;
 }
 
+
+/*header*/
 header {
     display: flex;
     justify-content: space-between;
@@ -57,6 +59,12 @@ header.com-sombra {
     margin-bottom: 10px;
 }
 
+.grid-cell {
+    background-color: #333;
+    width: 6px;
+    height: 6px;
+}
+
 #navegador {
     display: flex;
     gap: 15px;
@@ -65,8 +73,7 @@ header.com-sombra {
 
 #projetos-nav,
 #monitoria-nav,
-#sobre-nav,
-#login-nav {
+#sobre-nav {
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 20px;
@@ -199,7 +206,7 @@ header.com-sombra {
     text-shadow: none;
 }
 
-#categorias-filtrar {
+.categorias-filtrar {
     padding: 6px 9px;
     border-radius: 20px;
     border: 1px solid #ccc;
@@ -296,9 +303,9 @@ header.com-sombra {
 footer {
     background-color: #2e7d32;
     color: white;
-    display: flex;
+   display: flex;
     padding-top: 5vh;
-    padding-left: 2vh;
+        padding-left: 2vh;
 }
 
 .footer-fabrica {

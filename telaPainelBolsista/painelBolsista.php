@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'bolsista') {
+    header("Location: ../telaLogin/login.html");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -5,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="hover-effect.css">
-    <link rel="stylesheet" href="principal.css">
+    <link rel="stylesheet" href="painelBolsista.css">
     <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1, user-scalable=no">
     <title>Projetos do Campus Ibirama</title>
 </head>
@@ -25,7 +34,7 @@
                 <div id="projetos-nav">Projetos</div>
                 <div id="monitoria-nav">Monitoria</div>
                 <div id="sobre-nav">Sobre</div>
-                <div id="login-nav">Entrar</div>
+                <?php include '../telaPrincipal/menuUsuario.php'; ?>
             </div>
         </header>
 
@@ -35,7 +44,7 @@
             <button class="btn-filtrar ensino">Ensino</button>
             <button class="btn-filtrar extensao">Extensão</button>
             
-            <select id="categorias-filtrar">
+            <select class="categorias-filtrar">
                 <option >Categorias</option>
                 <option value="Ciências Exatas">Exatas</option>
                 <option value="Ciências Humanas">Humanas</option>
@@ -51,92 +60,92 @@
 
         <div class="projects-grid">
             <div class="project-card pesquisa">
-                <img src="img/peixario.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/peixario.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label azul">Projeto Peixário</div>
             </div>
 
             <div class="project-card extensao">
-                <img src="img/oficinaLinguistica.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/oficinaLinguistica.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label verde">Oficinas de Linguística Para Educadores</div>
             </div>
 
             <div class="project-card ensino">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label vermelho">Projeto bla bla bla bla</div>
             </div>
 
 
             <div class="project-card ensino">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label vermelho">Projeto bla bla bla bla</div>
             </div>
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
 
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Lorem ipsurrrrrrrrr</div>
             </div>
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Proje</div>
             </div>
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
 
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
 
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
 
             <div class="project-card">
-                <img src="img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <div class="project-label">Projeto bla bla bla bla</div>
+            </div>
+
+            <div class="project-card">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <div class="project-label">Projeto bla bla bla bla</div>
+            </div>
+
+
+            <div class="project-card">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
+                <div class="project-label">Projeto bla bla bla bla</div>
+            </div>
+
+            <div class="project-card">
+                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Projeto bla bla bla bla</div>
             </div>
         </div> 
@@ -158,6 +167,6 @@
             <span>2025</span>					
     </div>
     </footer>
-    <script src="./principal.js"></script>
+    <script src="./painelBolsista.js"></script>
 </body>
 </html>

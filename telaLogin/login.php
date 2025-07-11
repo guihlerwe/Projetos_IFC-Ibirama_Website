@@ -38,9 +38,11 @@
             
             echo($usuario['nome']);
             if ($usuario['tipo'] == 'coordenador') {
-                    header("Location: ../painelCoordenador/painel.html"); 
+                header("Location: ../telaPainelCoordenador/painelCoordenador.php"); 
+            } elseif ($usuario['tipo'] === 'bolsista') {
+                header("Location: ../telaPainelBolsista/painelBolsista.php");
             } else {
-                    header("Location: ../telaPrincipal/principal.html");
+                    header("Location: ../telaPrincipal/principal.php");
             }
 
         //} else {

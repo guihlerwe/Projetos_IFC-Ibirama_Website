@@ -1,0 +1,66 @@
+Create Database website;
+
+USE website;
+
+DROP TABLE IF EXISTS `projeto`;
+
+CREATE TABLE `projeto` (
+  `idProjeto` INT NOT NULL AUTO_INCREMENT,
+  `anoInicio` INT NOT NULL,
+  `nome` VARCHAR(45) NOT NULL,
+  `textoSobre` VARCHAR(2500) NOT NULL,
+  `linkParaInscricao` VARCHAR(100) DEFAULT NULL,
+  `linkSite` VARCHAR(100) DEFAULT NULL,
+  `linkBolsista` VARCHAR(100) DEFAULT NULL,
+  `linkInstagram` VARCHAR(100) DEFAULT NULL,
+  `email` VARCHAR(45) DEFAULT NULL,
+  `numero` VARCHAR(45) DEFAULT NULL,
+  `tipo` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idProjeto`)
+);
+
+DROP TABLE IF EXISTS `pessoa`;
+
+CREATE TABLE `pessoa` (
+  `idPessoa` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
+  `sobrenome` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `senha` VARCHAR(255) NOT NULL, 
+  `curso` ENUM('administracao', 'informatica', 'vestuario', 'moda', 'ciencias-naturais', 'ciencias-humanas', 'linguagens', 'matematica'),
+  `tipo` ENUM('aluno', 'bolsista', 'coordenador', 'colaborador') DEFAULT 'aluno',
+  PRIMARY KEY (`idPessoa`)
+);
+
+DROP TABLE IF EXISTS `pessoa_projeto`;
+
+CREATE TABLE `pessoa_projeto` (
+  `idPessoa` INT NOT NULL,
+  `idProjeto` INT NOT NULL,
+  `tipoPessoa` VARCHAR(45) DEFAULT NULL,
+  PRIMARY KEY (`idPessoa`, `idProjeto`),
+  FOREIGN KEY (`idProjeto`) REFERENCES `projeto`(`idProjeto`) ON DELETE CASCADE,
+  FOREIGN KEY (`idPessoa`) REFERENCES `pessoa`(`idPessoa`) ON DELETE CASCADE
+);
+
+INSERT INTO pessoa (nome, sobrenome, email, senha, curso, tipo)
+VALUES (
+  'Gabriel', 
+  'Gonino', 
+  'gonino@ifc.edu.br', 
+  '4567', 
+  'ciencias-naturais', 
+  'coordenador'
+  );
+  
+INSERT INTO pessoa (nome, sobrenome, email, senha, curso, tipo)
+VALUES (
+  'Sabrina', 
+  'Constante', 
+  'sabrina@gmail.com', 
+  '2222', 
+  'vestuario', 
+  'bolsista'
+  );
+
+SELECT * from pessoa
