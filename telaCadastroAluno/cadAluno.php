@@ -26,7 +26,7 @@
 
     if ($stmt->execute()) {
         echo "Cadastro realizado com sucesso! Redirecionando...";
-        header("refresh:2; url=../telaLoginAluno/loginAluno.html");
+        header("refresh:2; url=../telaLogin/login.html");
         exit();
     } else {
         echo "Erro ao cadastrar: " . $stmt->error;

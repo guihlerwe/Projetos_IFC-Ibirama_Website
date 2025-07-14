@@ -1,15 +1,23 @@
 const header = document.querySelector("header");
 
-document.querySelector(".projetos-nav").addEventListener("click", function() {
-    window.location.href = "../telaPrincipal/principal.html";
-  });
+document.querySelector(".projetos-nav").addEventListener("click", function () {
+  const tipo = sessionStorage.getItem("tipoUsuario");
+
+  if (tipo === "coordenador") {
+      window.location.href = "../telaPainelCoordenador/painelCoordenador.php";
+  } else if (tipo === "bolsista") {
+      window.location.href = "../telaPainelBolsista/painelBolsista.php";
+  } else {
+      window.location.href = "../telaPrincipal/principal.php";
+  }
+});
   
   document.querySelector(".monitoria-nav").addEventListener("click", function() {
-    window.location.href = "../telaMonitorias/telaMonitorias.html";
+    window.location.href = "../telaMonitorias/telaMonitorias.php";
   });
   
   document.querySelector(".sobre-nav").addEventListener("click", function() {
-    window.location.href = "../telaSobre/sobre.html";
+    window.location.href = "../telaSobre/sobre.php";
   });
 
   document.querySelector(".cadastrar").addEventListener("click", function() {

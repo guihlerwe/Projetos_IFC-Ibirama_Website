@@ -1,3 +1,9 @@
+<?php
+session_start();
+$nome = $_SESSION['nome'] ?? '';
+$tipo = $_SESSION['tipo'] ?? '';
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -9,6 +15,10 @@
 </head>
 
 <body>
+    <script>
+        sessionStorage.setItem('usuarioLogado', '<?php echo $nome; ?>');
+        sessionStorage.setItem('tipoUsuario', '<?php echo $tipo; ?>');
+    </script>
     <div class="container">
         <header>
             <div id="logo">
@@ -23,7 +33,7 @@
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div class="login-nav">Entrar</div>
+                <?php include '../telaPrincipal/menuUsuario.php'; ?>
             </div>
         </header>
         

@@ -1,8 +1,11 @@
 const header = document.querySelector("header");
 
-document.querySelector(".login-nav").addEventListener("click", function() {
+const loginBtn = document.querySelector(".login-nav");
+if (loginBtn) {
+  loginBtn.addEventListener("click", function () {
     window.location.href = "../telaLogin/login.html";
-});
+  });
+}
   
 document.querySelector(".projetos-nav").addEventListener("click", function () {
   const tipo = sessionStorage.getItem("tipoUsuario");
@@ -15,9 +18,10 @@ document.querySelector(".projetos-nav").addEventListener("click", function () {
       window.location.href = "../telaPrincipal/principal.php";
   }
 });
+
   
 document.querySelector(".sobre-nav").addEventListener("click", function() {
-    window.location.href = "../telaSobre/sobre.html";
+    window.location.href = "../telaSobre/sobre.php";
 });
 
 window.addEventListener("scroll", () => {

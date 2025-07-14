@@ -1,11 +1,11 @@
 const header = document.querySelector("header");
 
 document.querySelector("#monitoria-nav").addEventListener("click", function() {
-  window.location.href = "../telaMonitorias/telaMonitorias.html";
+  window.location.href = "../telaMonitorias/telaMonitorias.php";
 });
 
 document.querySelector("#sobre-nav").addEventListener("click", function() {
-  window.location.href = "../telaSobre/sobre.html";
+  window.location.href = "../telaSobre/sobre.php";
 });
 
 document.querySelector("#login-nav").addEventListener("click", function() {
