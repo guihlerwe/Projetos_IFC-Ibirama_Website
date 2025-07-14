@@ -1,8 +1,12 @@
 body {
-    background-color: #ffffff; 
+    background-color: transparent;
+    position: relative;
+    z-index: 0;
     font-family: sans-serif;
     font-size: 1em;
-    color: rgb(0, 0, 0);
+    overflow: hidden;
+    padding: 1em;
+
 }
 
 /* Ajustando o container */
@@ -12,7 +16,11 @@ body {
     min-height: 100vh; /* Garante que o container ocupe toda a altura da tela */
     align-items: center; /* Centraliza o conteúdo horizontalmente */
     justify-content: center; /* Centraliza o conteúdo verticalmente */
-    margin-top: 70px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* margin-top: 70px; */
 
 }
 
@@ -34,7 +42,7 @@ header {
 }
 
 header.com-sombra{
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
 
 }
 
@@ -85,11 +93,11 @@ header.com-sombra{
 form {
     width: 100%;
     max-width: 600px; 
-    padding: 20px;
-    background-color: #fff;
-    border-radius:20px;
+    padding: 0.8em;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5em;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 0 auto; 
 }
 
 #divformulario{
@@ -99,16 +107,14 @@ form {
 }
 
 #titulo {
-    font-family: sans-serif;
     font-size: 2.5em;
     color: #000000;
     text-align: center;
-    margin-top: 100px;
+    margin-top: 0.3em;
 }
 
 #subtitulo {
-    font-family: sans-serif;
-    color: rgb(33, 66, 41);
+    color: rgb(0, 0, 0);
     text-align: center;
 }
 
@@ -120,10 +126,17 @@ input, select, button {
     border-radius: 5px;
 }
 
-.campoEsquerda,
-.campoDireita {
-    margin-bottom: 10px;
-    width: 45%;
+.grupo-campos {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.1em;
+  box-sizing: border-box;
+}
+
+.grupo-campos .campoEsquerda,
+.grupo-campos .campoDireita {
+  width: calc(50% - 0.5em); 
+  box-sizing: border-box;
 }
 
 .campoTurma {
@@ -131,9 +144,6 @@ input, select, button {
     align-items: center;
     margin-bottom: 1em;
     justify-content: center; 
-    width: 93%;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 20px;
 }
 
@@ -149,13 +159,13 @@ input, select, button {
     padding: 8px;
     font-size: 16px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 1.5vh;
 }
 
 fieldset.grupo {
     display: flex;
     justify-content: center;
-    gap: 3em;
+    gap: 2em;
     flex-wrap: wrap;
     align-items: flex-start;
     margin-left: auto;
@@ -186,7 +196,7 @@ fieldset.grupo {
     font-size: 1.2em;
     background-color:rgb(38, 110, 51);
     border: 0;
-    border-radius: 10px;
+    border-radius: 1.5vh;
     color: #ffffff;
     padding: 0.4em 1em;
     cursor: pointer;
@@ -211,4 +221,47 @@ footer {
     display: flex;
     align-items:flex-end;
     justify-content: space-between;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/telaLogin/img/image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(8px);
+    z-index: -1;
+}
+
+@media screen and (max-width: 768px) {
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        width: 100%;
+        z-index: 100%;
+        transition: box-shadow 0.3s ease;
+        font-size: 0.3vh;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 2;
+    }
+
+    #logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: bold;
+    }
 }
