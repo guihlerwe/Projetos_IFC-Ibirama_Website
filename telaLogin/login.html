@@ -29,31 +29,31 @@
         
 
         <!-- Formulário -->
-         <div class="divformulario">
-            
-            <form action="login.php" method="POST">            
-            <div class="imagem-container">
-           <img src="../telaPrincipal/img/campus-image.jpg" id="foto-ifc">
-            <h1 class="titulo-sobre-imagem">Login</h1>
+        <div class="container-formulario">
+            <div class="divformulario">
+                <form action="login.php" method="POST">            
+                    <div class="imagem-container">
+                        <img src="../telaPrincipal/img/campus-image.jpg" id="foto-ifc">
+                        <h1 class="titulo-sobre-imagem">Login</h1>
+                    </div>
+                    <p id="subtitulo">Preencha os dados para entrar.</p>
+                    <fieldset class="grupo">
+                        <div class="campoEsquerda">
+                            <input type="email" name="email" class="campo" id="email" placeholder="E-mail" required>
+                        </div>
+                        <div class="campoDireita">
+                            <input type="password" name="senha" class="campo" id="senha" placeholder="Senha" required>
+                        </div>
+                    </fieldset>
+                    <button type="submit" class="botao">Entrar</button>
+                </form>
             </div>
-            <p id="subtitulo">Preencha os dados para entrar.</p>
-                <fieldset class="grupo">
-                    <div class="campoEsquerda">
-                        <input type="email" name="email" class="campo" id="email" placeholder="E-mail" required>
-                    </div>
-    
-                    <div class="campoDireita">
-                        <input type="password" name="senha" class="campo" id="senha" placeholder="Senha" required>
-                    </div>
-                </fieldset>
-    
-                <button type="submit" class="botao">Entrar</button>
-            </form>
-         </div>
+            <div class="cadastrar">
+                <p class="cadastro">Ainda não possui cadastro?</p>
+                <p class="cadastro sublinhado">Clique aqui para cadastrar-se!</p>
+            </div>
+        </div>
 
-         <div class="cadastrar">
-            <p class="cadastro">Ainda não possui cadastro?</p> <p class="cadastro sublinhado">Clique aqui para cadastrar-se!</p>
-         </div>
         
     </div>
 

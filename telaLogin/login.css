@@ -150,7 +150,7 @@ form {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20%;
+    margin-top: 0;
     padding-bottom: 2em;
 }
 
@@ -252,12 +252,19 @@ fieldset.grupo {
     cursor : pointer;
 }
 
-.cadastro {
-    font-family: sans-serif;
+.container-formulario {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cadastrar {
     color: rgb(255, 255, 255);
-    text-align: center;
-    margin-top: 5px;
-    cursor: pointer;
 }
 
 .cadastro.sublinhado{
