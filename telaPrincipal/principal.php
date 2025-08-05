@@ -163,10 +163,15 @@ $tipo = $_SESSION['tipo'] ?? '';
             <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
             <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
         </ul>
-
+    </div>
+    <div class="Sobre">
+        <h2>Sobre este site</h2>
+        <p>Aut voluptatem vitae 33 dolores illo aut enim nobis id nihil omnis non autem voluptas sed aspernatur doloribus et ducimus praesentium. Aut explicabo voluptas a ipsam velit quo sunt quam sed officia necessitatibus ex distinctio Quis. Et totam aliquam qui sunt repudiandae qui sint quam rem omnis consequatur ut voluptatem quod sit quia commodi.
+    </p>
+    </div>
         <span id="License">Licença M.I.T.</span>
             <span>2025</span>					
-    </div>
+    
     </footer>
     <script src="./principal.js"></script>
 </body>

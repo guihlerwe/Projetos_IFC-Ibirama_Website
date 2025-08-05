@@ -214,13 +214,17 @@ fieldset.grupo {
 
 
 footer {
-    background-color: #333;
+    background-color: #2e7d32;
     color: white;
-    font-size: 12px;
-    padding: 8px 20px;
     display: flex;
-    align-items:flex-end;
-    justify-content: space-between;
+    padding-top: 5vh;
+    padding-left: 2vh;
+}
+
+.footer-fabrica {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+
 }
 
 body::before {
@@ -261,6 +265,34 @@ body::before {
         display: flex;
         align-items: center;
         gap: 10px;
+        font-size: 15px;
+        font-weight: bold;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        width: 100%;
+        z-index: 100%;
+        transition: box-shadow 0.3s ease;
+        font-size: 0.3vh;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 2;
+    }
+
+    #logo {
+        display: flex;
+        align-items: center;
+        gap: 1px;
         font-size: 15px;
         font-weight: bold;
     }

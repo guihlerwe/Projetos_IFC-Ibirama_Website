@@ -298,7 +298,8 @@ footer {
     color: white;
     display: flex;
     padding-top: 5vh;
-    padding-left: 2vh;
+    padding-left: 18vh;
+    padding-bottom: 5vh;
 }
 
 .footer-fabrica {
