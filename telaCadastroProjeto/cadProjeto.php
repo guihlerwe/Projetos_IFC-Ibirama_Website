@@ -33,20 +33,23 @@ $tipo = $_SESSION['tipo'] ?? '';
         </div>
     </header>
 
-    <div id="banner">
-        <label id="upload-banner">
-            <input type="file" id="banner-projeto" name="banner" accept="image/*" hidden required>
-            Clique para adicionar banner
-        </label>
-    </div>
-
     <form id="formulario" action="cadastrarBD.php" method="POST" enctype="multipart/form-data">
+        
+        <!-- BANNER AGORA DENTRO DO FORMULÁRIO -->
+        <div id="banner" style="position: relative; width: 100%; height: 200px; background-color: #f0f0f0; overflow: hidden;">
+            <label id="upload-banner" style="display: block; width: 100%; height: 100%; cursor: pointer; position: relative;">
+                <input type="file" id="banner-projeto" name="banner" accept="image/*" hidden>
+                <span id="banner-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; color: #666; font-size: 16px;">Clique para adicionar banner</span>
+                <img id="banner-preview" style="display: none;">
+            </label>
+        </div>
 
         <div id="info-projeto">
             <div id="div-capa">
                 <label id="upload-capa">
                     <input type="file" id="foto-capa" name="capa" accept="image/*" hidden required>
-                    📷
+                    <span id="capa-icon">📷</span>
+                    <img id="capa-preview" style="display: none;">
                 </label>
             </div>
             <div id="dados-projeto">
@@ -86,8 +89,8 @@ $tipo = $_SESSION['tipo'] ?? '';
                     <div class="membro">
                         <div class="foto-membro">
                             <label>
-                                <input type="file" accept="image/*" hidden>
-                                📷
+                                <input type="file" name="foto-coordenador" accept="image/*" hidden>
+                                <span>📷</span>
                             </label>
                         </div>
                         <input type="text" id="nome-coordenador" name="nome-coordenador" placeholder="Nome do coordenador(a)">
@@ -101,8 +104,8 @@ $tipo = $_SESSION['tipo'] ?? '';
                     <div class="membro">
                         <div class="foto-membro">
                             <label>
-                                <input type="file" accept="image/*" hidden>
-                                📷
+                                <input type="file" name="foto-bolsista" accept="image/*" hidden>
+                                <span>📷</span>
                             </label>
                         </div>
                         <input type="text" id="nome-bolsista" name="nome-bolsista" placeholder="Adicionar nome">
@@ -123,6 +126,7 @@ $tipo = $_SESSION['tipo'] ?? '';
         </div>
     </form>
 </div>
+
 <script src="./cadProjeto.js"></script>
 </body>
 </html>
