@@ -1,10 +1,10 @@
 console.log('Iniciando cadProjeto.js...');
 
-// Aguardar carregamento completo da página
+// esperando carregar página completa
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM carregado!');
     
-    // Navegação
+    // link para as outras telas
     const loginBtn = document.querySelector(".login-nav");
     if (loginBtn) {
         loginBtn.addEventListener("click", function () {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // PREVIEW DO BANNER
+    // permite vizualizar a foto escolhida pro banner antes de cadastrar
     const bannerInput = document.getElementById('banner-projeto');
     if (bannerInput) {
         bannerInput.addEventListener('change', function(e) {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const bannerText = document.getElementById('banner-text');
             
             if (file) {
-                // Validar tipo de arquivo
+                // tipo de arquivo permitido
                 const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
                 if (!tiposPermitidos.includes(file.type)) {
                     alert('Por favor, selecione apenas arquivos de imagem (JPG, PNG, GIF, WebP)');
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Validar tamanho (5MB max)
+                // tamanho permitido
                 if (file.size > 5 * 1024 * 1024) {
                     alert('A imagem deve ter no máximo 5MB');
                     this.value = '';
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // PREVIEW DA CAPA
+    // mesma funcionalidade para a capa
     const capaInput = document.getElementById('foto-capa');
     if (capaInput) {
         capaInput.addEventListener('change', function(e) {
@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const capaIcon = document.getElementById('capa-icon');
             
             if (file) {
-                // Validar tipo de arquivo
                 const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
                 if (!tiposPermitidos.includes(file.type)) {
                     alert('Por favor, selecione apenas arquivos de imagem (JPG, PNG, GIF, WebP)');
@@ -107,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Validar tamanho (2MB max para capa)
                 if (file.size > 2 * 1024 * 1024) {
                     alert('A imagem da capa deve ter no máximo 2MB');
                     this.value = '';
@@ -141,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // PREVIEW PARA FOTO DO COORDENADOR - MANTENDO COMPORTAMENTO ORIGINAL
+    // mesma funcionalidade para a foto do coordenador
     const coordenadorInput = document.querySelector('input[name="foto-coordenador"]');
     if (coordenadorInput) {
         coordenadorInput.addEventListener('change', function(e) {
@@ -150,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const label = this.parentElement;
             
             if (file) {
-                // Validar arquivo
                 const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
                 if (!tiposPermitidos.includes(file.type)) {
                     alert('Por favor, selecione apenas arquivos de imagem para a foto do coordenador');
@@ -164,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Remover preview anterior
                 const previewExistente = label.querySelector('.preview-coordenador');
                 if (previewExistente) {
                     previewExistente.remove();
@@ -182,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         border-radius: 50%;
                     `;
                     
-                    // Esconder o ícone
+                    // esconde a câmera
                     const icone = label.querySelector('span');
                     if (icone) {
                         icone.style.display = 'none';
@@ -192,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 reader.readAsDataURL(file);
             } else {
-                // Remover preview
+                // possibilita remover
                 const preview = label.querySelector('.preview-coordenador');
                 if (preview) {
                     preview.remove();
@@ -205,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // PREVIEW PARA FOTO DO BOLSISTA - MANTENDO COMPORTAMENTO ORIGINAL
+    // mesma funcionalidade para a foto do bolsista
     const bolsistaInput = document.querySelector('input[name="foto-bolsista"]');
     if (bolsistaInput) {
         bolsistaInput.addEventListener('change', function(e) {
@@ -214,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const label = this.parentElement;
             
             if (file) {
-                // Validar arquivo
                 const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
                 if (!tiposPermitidos.includes(file.type)) {
                     alert('Por favor, selecione apenas arquivos de imagem para a foto do bolsista');
@@ -228,7 +223,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Remover preview anterior
                 const previewExistente = label.querySelector('.preview-bolsista');
                 if (previewExistente) {
                     previewExistente.remove();
@@ -246,7 +240,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         border-radius: 50%;
                     `;
                     
-                    // Esconder o ícone
                     const icone = label.querySelector('span');
                     if (icone) {
                         icone.style.display = 'none';
@@ -256,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 reader.readAsDataURL(file);
             } else {
-                // Remover preview
                 const preview = label.querySelector('.preview-bolsista');
                 if (preview) {
                     preview.remove();
@@ -269,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // CONTADOR DE CARACTERES PARA DESCRIÇÃO
+    // conta a quantidade de caracteres
     const descricaoTextarea = document.getElementById('descricao');
     if (descricaoTextarea) {
         const contador = document.createElement('div');
@@ -296,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // VALIDAÇÃO DO FORMULÁRIO
+    // faz a validação do formulário 
     const formulario = document.getElementById('formulario');
     if (formulario) {
         formulario.addEventListener('submit', function(e) {
@@ -307,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const categoria = document.getElementById('categoria').value;
             const capa = document.getElementById('foto-capa').files[0];
             
-            // Validações obrigatórias
+            // verifica se as variáveis obrigatórias estão preenchidas
             if (!nomeProjeto) {
                 alert('Nome do projeto é obrigatório!');
                 e.preventDefault();
@@ -334,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('Validações OK, enviando formulário...');
             
-            // Mostrar indicador de carregamento
+            // mostra que o projeto está sendo criado
             const botaoSubmit = document.getElementById('bt-criar-projeto');
             if (botaoSubmit) {
                 botaoSubmit.textContent = 'Criando projeto...';
@@ -345,32 +337,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // VALIDAÇÃO DE URLs
+    // verificando se o site é mesmo um site
     const siteInput = document.getElementById('site-projeto');
     if (siteInput) {
         siteInput.addEventListener('blur', function() {
             if (this.value && !this.value.match(/^https?:\/\/.+/)) {
                 alert('Link do site deve começar com http:// ou https://');
-                this.focus();
-            }
-        });
-    }
-
-    const linkBolsistaInput = document.getElementById('link-bolsista');
-    if (linkBolsistaInput) {
-        linkBolsistaInput.addEventListener('blur', function() {
-            if (this.value && !this.value.match(/^https?:\/\/.+/)) {
-                alert('Link para bolsista deve começar com http:// ou https://');
-                this.focus();
-            }
-        });
-    }
-
-    const linkInscricaoInput = document.getElementById('txt-link-inscricao');
-    if (linkInscricaoInput) {
-        linkInscricaoInput.addEventListener('blur', function() {
-            if (this.value && !this.value.match(/^https?:\/\/.+/)) {
-                alert('Link de inscrição deve começar com http:// ou https://');
                 this.focus();
             }
         });

@@ -46,16 +46,9 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <div class="section-layout">
                     <div>
                         <p class="section-text">
-                            Lorem ipsum dolor sit amet. Ea sunt quam cum impedit aliquid sed commodi culpa et maiores quia. Non unde dolor sit veritatis ipsum ut dolores adipisci aut aliquid veniam qui dolore dicta.
-                        </p>
-                        <p class="section-text">
-                            Et maiores recusandae eum deserunt voluptas sit voluptatibus exercitationem vel deserunt tempore At veritatis molestiae qui mollitia doloremque qui ullam perspiciatis. Cum corrupti maxime ut consequatur architecto et assumenda libero eos expedita voluptas.
-                        </p>
-                        <p class="section-text">
-                            Vel dolorem aliquid aut consequatur dolorum et autem tempora aut facere maxime in nihil rerum. At illo deserunt non quas dolor qui perspiciatis facere ex adipisci ullam qui dolorum voluptate ex velit voluptas et eveniet sint.
-                        </p>
-                        <p class="section-text">
-                            In sint laborum vel nisi quas quo facilis dolorum sed corporis nobis. Et quibusdam iusto 33 veniam harum eum dicta suscipit ex repellendus unde qui consequatur obcaecati ut totam sint aut exercitationem amet. Eos doloremque omnis in ipsam vero qui dolore possimus.
+                            O Campus Ibirama inaugurado em 2010, contém os cursos de Tecnologia da Informação, Administração e Vestuário para os Discentes. No cenário atual Brasileiro esses cursos são cada vez mais requeridos e importantes para a geração de inovações tecnológicas, transformações empresariais, e avanços internacional na moda.
+
+                            Hoje o campus é formado por mais de dezenas de profissionais, que garantem uma educação de excelência, com métodos de aprendizados contemporâneos e engajadores aos alunos tanto nas matérias dos Cursos quanto nas do Ensino Médio.
                         </p>
                         <a href="https://ibirama.ifc.edu.br/" class="site-link">
                             <img class="site-link-icon" src = "../telaPrincipal/img/ifc-logo-colorida.png" viewBox="0 0 24 24" fill="currentColor"> 
@@ -78,11 +71,9 @@ $tipo = $_SESSION['tipo'] ?? '';
                     <div>
                         <h2 class="section-title">Este site e o projeto de TCC</h2>
                         <p class="section-text">
-                            Aut voluptatem vitae 33 dolores illo aut enim nobis id nihil omnis non autem voluptas sed aspernatur doloribus et ducimus praesentium. Aut explicabo voluptas a ipsam velit quo sunt quam sed officia necessitatibus ex distinctio Quis. Et totam aliquam qui sunt repudiandae qui sint quam rem omnis consequatur ut voluptatem quod sit quia commodi.
-                        </p>
-                        <p class="section-text">
-                            Et impedit alias qui provident alias quo perferendis adipisci At laudantium assumenda ut internos cupiditate et consequatur quidem. Est officia illo aut iste laboriosam ut rerum voluptas sit omnis nostrum et nulla itaque non dolores fugiat. Et consectetur expedita est corporis dolor non quaerat accusamus est optio incidunt aut dolorum repudiandae id fugit libero id maiores perferendis.
-                        </p>
+Este site foi criado de uma necessidade que Gabriella e Guilherme encontraram ao entrar no IFC – Campus Ibirama, o conhecimento de projetos ativos que os interessassem e os horários  das monitorias do conteúdos que precisavam. Já que a divulgação dos mesmos não era tão efetiva, gerando uma falta de alunos e um grande tempo gasto dos bolsistas, tendo que passar de sala em sala para a divulgação dos projetos de ensino e extensão.
+
+  Portanto, com o objetivo de divulgar e dar igualdade ao acesso das informações dos projetos ativos de ensino, pesquisa, extensão – e das monitorias, este site reúne todos os projetos deixando visível se há inscrições abertas para participação e vagas para bolsista ou voluntários ao alcance de clique, e reúne as monitorias e seus horários, email dos monitores . Além de disponibilizar as descrições, as datas, as categorias de áreas de interesse em que os projetos se encaixam, os meios de contato com os realizadores do projeto, os coordenadores, os bolsistas e o link para o site do projeto (se o projeto ter). Contudo este TCC integrou diversos conhecimentos aprendidos no curso de Tecnologia de Informação, provando a capacidade de solução de problemas de Gabriella e Guilherme.                        </p>
 
                         <div>
 

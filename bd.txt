@@ -15,7 +15,14 @@ CREATE TABLE `projeto` (
   `linkInstagram` VARCHAR(100) DEFAULT NULL,
   `email` VARCHAR(45) DEFAULT NULL,
   `numero` VARCHAR(45) DEFAULT NULL,
+  `categoria` VARCHAR(45) NOT NULL,
   `tipo` VARCHAR(45) NOT NULL,
+  `nomeCoordenador` VARCHAR(255) NOT NULL,
+  `fotoCoordenador` VARCHAR(255),
+  `nomeBolsista` VARCHAR(255),
+  `fotoBolsista` VARCHAR(255),
+  `banner` VARCHAR(255),
+  `capa` VARCHAR(255),
   PRIMARY KEY (`idProjeto`)
 );
 
@@ -64,3 +71,6 @@ VALUES (
   );
 
 SELECT * from pessoa
+
+SELECT * from projeto
+

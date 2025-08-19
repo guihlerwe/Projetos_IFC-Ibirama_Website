@@ -158,7 +158,8 @@ $tipo = $_SESSION['tipo'] ?? '';
         <ul id="menu-aluno" >
             <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
             <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
-            <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
+            <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e 
+                Programas Estudantis</a></li>
             <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
             <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
             <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
@@ -166,7 +167,12 @@ $tipo = $_SESSION['tipo'] ?? '';
     </div>
     <div class="Sobre">
         <h2>Sobre este site</h2>
-        <p>Aut voluptatem vitae 33 dolores illo aut enim nobis id nihil omnis non autem voluptas sed aspernatur doloribus et ducimus praesentium. Aut explicabo voluptas a ipsam velit quo sunt quam sed officia necessitatibus ex distinctio Quis. Et totam aliquam qui sunt repudiandae qui sint quam rem omnis consequatur ut voluptatem quod sit quia commodi.
+        <p> O Campus Ibirama, inaugurado em 2010, oferece cursos de Tecnologia da Informação, Administração e Vestuário, 
+            que são importantes para inovações e negócios. Com dezenas de profissionais, proporciona uma educação de qualidade. 
+
+            Gabriella e Guilherme criaram um site para facilitar o acesso a informações sobre projetos e monitorias,
+            que antes eram pouco divulgados. O site reúne dados sobre inscrições, horários de monitorias e contatos 
+            dos responsáveis pelos projetos, mostrando a aplicação de conhecimentos do curso de Tecnologia da Informação.
     </p>
     </div>
         <span id="License">Licença M.I.T.</span>

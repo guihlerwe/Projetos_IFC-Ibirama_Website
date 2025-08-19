@@ -35,7 +35,6 @@ $tipo = $_SESSION['tipo'] ?? '';
 
     <form id="formulario" action="cadastrarBD.php" method="POST" enctype="multipart/form-data">
         
-        <!-- BANNER AGORA DENTRO DO FORMULÁRIO -->
         <div id="banner" style="position: relative; width: 100%; height: 200px; background-color: #f0f0f0; overflow: hidden;">
             <label id="upload-banner" style="display: block; width: 100%; height: 100%; cursor: pointer; position: relative;">
                 <input type="file" id="banner-projeto" name="banner" accept="image/*" hidden>

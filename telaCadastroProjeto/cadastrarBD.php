@@ -1,42 +1,33 @@
 <?php
 session_start();
 
-// Ativar exibição de erros para debug
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Configuração do banco de dados
+// banco de dados
 $host = 'localhost';
 $usuario = 'root';
 $senha = 'root';
 $banco = 'website';
 
-// Conexão com o banco
+// conexão com o banco
 $conn = new mysqli($host, $usuario, $senha, $banco);
 if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
 
-// Configuração do charset
 $conn->set_charset("utf8");
 
-// Configuração do diretório de imagens
+// pasta que guarda as imagens
 $pastaImagens = '../telaPrincipal/img/';
 
-// Verificar se o diretório existe, se não, criar
-if (!is_dir($pastaImagens)) {
-    if (!mkdir($pastaImagens, 0755, true)) {
-        die("Erro: Não foi possível criar o diretório de imagens.");
-    }
-}
-
-// Função para salvar imagens
+// função que salva as imagens
 function salvarImagem($campoArquivo, $pastaDestino) {
     if (isset($_FILES[$campoArquivo]) && $_FILES[$campoArquivo]['error'] === UPLOAD_ERR_OK) {
         $nomeTemp = $_FILES[$campoArquivo]['tmp_name'];
         $nomeOriginal = basename($_FILES[$campoArquivo]['name']);
         
-        // Validar tipo de arquivo
+        // tipo de arquivo
         $tiposPermitidos = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $extensao = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
         
@@ -44,7 +35,7 @@ function salvarImagem($campoArquivo, $pastaDestino) {
             return null;
         }
         
-        // Gerar nome único
+        // nome único para as imagens
         $nomeFinal = uniqid() . '-' . time() . '.' . $extensao;
         $caminhoCompleto = $pastaDestino . $nomeFinal;
 
@@ -55,44 +46,32 @@ function salvarImagem($campoArquivo, $pastaDestino) {
     return null;
 }
 
-// Verificar se é POST
+// verifica se é POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Erro: Método de requisição inválido.");
 }
 
-// Debug: mostrar dados recebidos
-echo "<h3>Debug - Dados POST recebidos:</h3>";
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";
-
-echo "<h3>Debug - Arquivos recebidos:</h3>";
-echo "<pre>";
-print_r($_FILES);
-echo "</pre>";
-
-// Processar uploads de imagens
+// processa uploads de imagens
 $nomeBanner = salvarImagem('banner', $pastaImagens);
 $nomeCapa = salvarImagem('capa', $pastaImagens);
 $fotoCoordenador = salvarImagem('foto-coordenador', $pastaImagens);
 $fotoBolsista = salvarImagem('foto-bolsista', $pastaImagens);
 
-// Capturar dados do formulário com validação
+// captura dados do formulário com validação
 $nomeProjeto = trim($_POST["nome-projeto"] ?? '');
 $tipo = $_POST["eixo"] ?? '';
 $categoria = $_POST["categoria"] ?? '';
 
-// Processar ano de início - extrair apenas números
 $anoInicioRaw = trim($_POST["ano-inicio"] ?? '');
 $anoInicio = null;
 if (!empty($anoInicioRaw)) {
-    // Extrair apenas números do campo
+    // extrai apenas números da variável ano-inicio
     preg_match('/\d{4}/', $anoInicioRaw, $matches);
     if (!empty($matches)) {
         $anoInicio = (int)$matches[0];
-        // Validar se é um ano válido (entre 1900 e ano atual + 10)
+        // valida se é um ano válido 
         $anoAtual = date('Y');
-        if ($anoInicio < 1900 || $anoInicio > ($anoAtual + 10)) {
+        if ($anoInicio < 2010 || $anoInicio > ($anoAtual)) {
             $anoInicio = null;
         }
     }
@@ -107,16 +86,7 @@ $instagram = trim($_POST["instagram"] ?? '');
 $nomeCoordenador = trim($_POST["nome-coordenador"] ?? '');
 $nomeBolsista = trim($_POST["nome-bolsista"] ?? '');
 
-// Debug: mostrar dados processados
-echo "<h3>Debug - Dados processados:</h3>";
-echo "Nome: " . $nomeProjeto . "<br>";
-echo "Tipo: " . $tipo . "<br>";
-echo "Categoria: " . $categoria . "<br>";
-echo "Ano: " . $anoInicio . "<br>";
-echo "Banner: " . ($nomeBanner ?: 'Não enviado') . "<br>";
-echo "Capa: " . ($nomeCapa ?: 'Não enviado') . "<br>";
-
-// Validações básicas
+// validações das variaveis obrigatórias
 if (empty($nomeProjeto)) {
     die("Erro: Nome do projeto é obrigatório.");
 }
@@ -135,12 +105,7 @@ if (!$result) {
     die("Erro: Tabela 'projeto' não encontrada. " . $conn->error);
 }
 
-echo "<h3>Debug - Estrutura da tabela:</h3>";
-while ($row = $result->fetch_assoc()) {
-    echo $row['Field'] . " (" . $row['Type'] . ")<br>";
-}
-
-// Preparar e executar a query
+// prepara e executa a consulta
 $stmt = $conn->prepare("
     INSERT INTO projeto 
     (nome, tipo, categoria, anoInicio, linkParaInscricao, textoSobre, linkSite, email, numero, linkInstagram, capa, banner, nomeCoordenador, fotoCoordenador, nomeBolsista, fotoBolsista, linkBolsista) 
@@ -148,16 +113,15 @@ $stmt = $conn->prepare("
 ");
 
 if (!$stmt) {
-    die("Erro na preparação da query: " . $conn->error);
+    die("Erro na preparação da consulta: " . $conn->error);
 }
 
-// Bind dos parâmetros - usando "i" para integer no anoInicio
 $stmt->bind_param(
     "sssisssssssssssss",
     $nomeProjeto, 
     $tipo, 
     $categoria, 
-    $anoInicio,  // Este agora é um integer ou null
+    $anoInicio,  
     $txtLinkInscricao,
     $txtSobre, 
     $txtLinkSite, 
@@ -173,17 +137,12 @@ $stmt->bind_param(
     $txtLinkBolsista
 );
 
-echo "<h3>Executando query...</h3>";
-
 if ($stmt->execute()) {
     echo "<div style='color: green; font-weight: bold;'>✅ Projeto cadastrado com sucesso!</div>";
-    echo "<p>ID do projeto: " . $stmt->insert_id . "</p>";
     
     // Remover o redirect para ver se há outros erros
-    echo "<p><a href='../telaPainelCoordenador/painelCoordenador.php'>Voltar ao painel</a></p>";
+    echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPainelCoordenador/painelCoordenador.php';</script>";
     
-    // Descomente a linha abaixo quando estiver funcionando
-    // echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPainelCoordenador/painelCoordenador.php';</script>";
 } else {
     echo "<div style='color: red; font-weight: bold;'>❌ Erro ao cadastrar projeto:</div>";
     echo "<p>Erro MySQL: " . $stmt->error . "</p>";

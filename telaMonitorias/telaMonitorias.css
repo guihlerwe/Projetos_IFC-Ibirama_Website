@@ -6,6 +6,7 @@
 }
 
 body {
+    font-family: "Helvetica";
     background-color: #ffffff;
 }
 
@@ -286,10 +287,48 @@ header.com-sombra{
 }
 
 footer {
-    background-color: #333;
-    color: white;
-    font-size: 12px;
-    padding: 8px 20px;
+    background-color: #e7e7e7;
+    color: rgb(0, 0, 0);
     display: flex;
-    justify-content: space-between;
+    padding-top: 5vh;
+    padding-left: 40vh;
+    padding-bottom: 5vh;
+}
+
+.footer-fabrica {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+
+}
+
+.Sobre{
+    padding-left: 5vh;
+    padding-right: 100vh;
+}
+
+h1{
+    padding-bottom: 5vh;
+}
+
+ul a{
+    color: rgb(0, 0, 0);
+}
+
+a:hover {
+  color: red; /* Color on hover */
+  text-decoration: underline; /* Optional: add underline on hover */
+}
+
+
+
+#License{
+    padding-top: 60vh;
+}
+
+#gab{
+    color: rgb(184, 0, 0);
+}
+
+#gui{
+    color:green;
 }
