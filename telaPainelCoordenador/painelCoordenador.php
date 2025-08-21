@@ -5,6 +5,26 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'coordenador') {
     header("Location: ../telaLogin/login.html");
     exit();
 }
+
+$nome = $_SESSION['nome'] ?? '';
+$tipo = $_SESSION['tipo'] ?? '';
+
+// Conexão com o banco de dados
+$host = 'localhost';
+$usuario = 'root';
+$senha = 'root';
+$banco = 'website';
+
+$conn = new mysqli($host, $usuario, $senha, $banco);
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
+}
+
+$conn->set_charset("utf8");
+
+// Buscar todos os projetos cadastrados (igual à tela principal)
+$sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto ORDER BY nome ASC";
+$resultado = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -20,6 +40,10 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'coordenador') {
 </head>
 
 <body>
+    <script>
+        sessionStorage.setItem('usuarioLogado', '<?php echo $nome; ?>');
+        sessionStorage.setItem('tipoUsuario', '<?php echo $tipo; ?>');
+    </script>
     <div class="container">
 
         <header>
@@ -39,115 +63,61 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'coordenador') {
         </header>
 
         <div class="barra-pesquisar">
-            <input type="text" class="input-pesquisar" placeholder="Pesquisar">
-            <button class="btn-filtrar pesquisa">Pesquisa</button>
-            <button class="btn-filtrar ensino">Ensino</button>
-            <button class="btn-filtrar extensao">Extensão</button>
+            <input type="text" class="input-pesquisar" placeholder="Pesquisar" id="input-pesquisa">
+            <button class="btn-filtrar pesquisa" data-filtro="pesquisa">Pesquisa</button>
+            <button class="btn-filtrar ensino" data-filtro="ensino">Ensino</button>
+            <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
+            <button class="btn-filtrar todos" data-filtro="">Todos</button>
             
-            <select class="categorias-filtrar">
-                <option >Categorias</option>
-                <option value="Ciências Exatas">Exatas</option>
-                <option value="Ciências Humanas">Humanas</option>
-                <option value="Linguagens">Linguagens</option>
-                <option value="Matemática">Matemática</option>
-                <option value="Administração">Administração</option>
-                <option value="Informática">Informática</option>
-                <option value="Vestuário/Moda">Vestuário/Moda</option>
+            <select id="categorias-filtrar">
+                <option value="">Categorias</option>
+                <option value="ciencias_naturais">Ciências Naturais</option>
+                <option value="ciencias_humanas">Ciências Humanas</option>
+                <option value="linguagens">Linguagens</option>
+                <option value="matematica">Matemática</option>
+                <option value="administracao">Administração</option>
+                <option value="informatica">Informática</option>
+                <option value="vestuario">Vestuário</option>
             </select>    
         </div>
 
-
-
         <div class="projects-grid">
-            <div class="project-card pesquisa">
-                <img src="../telaPrincipal/img/peixario.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label azul">Projeto Peixário</div>
-            </div>
-
-            <div class="project-card extensao">
-                <img src="../telaPrincipal/img/oficinaLinguistica.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label verde">Oficinas de Linguística Para Educadores</div>
-            </div>
-
-            <div class="project-card ensino">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Projeto bla bla bla bla</div>
-            </div>
-
-
-            <div class="project-card ensino">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Lorem ipsurrrrrrrrr</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Proje</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../telaPrincipal/img/campus-image.jpg" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Projeto bla bla bla bla</div>
-            </div>
+            <?php
+            if ($resultado->num_rows > 0) {
+                while($projeto = $resultado->fetch_assoc()) {
+                    // Determinar a classe de cor baseada no tipo
+                    $corClass = '';
+                    switch($projeto['tipo']) {
+                        case 'pesquisa':
+                            $corClass = 'azul';
+                            break;
+                        case 'ensino':
+                            $corClass = 'verde';
+                            break;
+                        case 'extensao':
+                            $corClass = 'vermelho';
+                            break;
+                    }
+                    
+                    // Caminho da imagem de capa
+                    $imagemCapa = !empty($projeto['capa']) ? '../telaPrincipal/img/' . $projeto['capa'] : '../telaPrincipal/img/campus-image.jpg';
+                    
+                    // Limitar o texto do nome para não quebrar o layout
+                    $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];
+                    
+                    echo '<div class="project-card ' . $projeto['tipo'] . ' categoria-' . $projeto['categoria'] . '" data-id="' . $projeto['idProjeto'] . '" data-tipo="' . $projeto['tipo'] . '" data-categoria="' . $projeto['categoria'] . '">';
+                    echo '<img src="' . $imagemCapa . '" alt="' . htmlspecialchars($projeto['nome']) . '" class="project-image">';
+                    echo '<div class="project-label ' . $corClass . '">' . htmlspecialchars($nomeExibido) . '</div>';
+                    echo '</div>';
+                }
+            } else {
+                // Caso não tenha projetos cadastrados, mostrar mensagem
+                echo '<div class="no-projects">';
+                echo '<p>Nenhum projeto cadastrado ainda.</p>';
+                echo '<p><a href="../telaCadastroProjeto/cadProjeto.php">Clique aqui para cadastrar o primeiro projeto</a></p>';
+                echo '</div>';
+            }
+            ?>
         </div> 
     </div>
 
@@ -170,3 +140,7 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'coordenador') {
     <script src="./painelCoordenador.js"></script>
 </body>
 </html>
+
+<?php
+$conn->close();
+?>

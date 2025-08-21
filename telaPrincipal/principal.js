@@ -1,85 +1,107 @@
 const header = document.querySelector("header");
 
+// Navegação entre páginas
 document.querySelector("#monitoria-nav").addEventListener("click", function() {
-  window.location.href = "../telaMonitorias/telaMonitorias.php";
+    window.location.href = "../telaMonitorias/telaMonitorias.php";
 });
 
 document.querySelector("#sobre-nav").addEventListener("click", function() {
-  window.location.href = "../telaSobre/sobre.php";
+    window.location.href = "../telaSobre/sobre.php";
 });
 
-document.querySelector("#login-nav").addEventListener("click", function() {
-  window.location.href = "../telaLogin/login.html";
-});
-
+// Efeito de sombra no header ao fazer scroll
 window.addEventListener("scroll", () => {
-  if (window.scrollY > 0) {
-      header.classList.add("com-sombra");
-  } else {
-      header.classList.remove("com-sombra");
-  }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const projetosSalvos = JSON.parse(localStorage.getItem("projetos")) || [];
-  const container = document.querySelector(".projects-grid");
-
-  projetosSalvos.forEach(projeto => {
-    const card = document.createElement("div");
-    card.classList.add("project-card", projeto.Categoria.toLowerCase());
-
-    const imagem = document.createElement("img");
-    imagem.src = projeto.LinkSite || "campus-image.jpg"; // caso não tenha imagem
-    imagem.alt = projeto.Nome;
-    imagem.classList.add("project-image");
-
-    const label = document.createElement("div");
-    label.classList.add("project-label");
-
-    // Cor de acordo com o eixo
-    if (projeto.Eixo === "pesquisa") label.classList.add("azul");
-    if (projeto.Eixo === "ensino") label.classList.add("verde");
-    if (projeto.Eixo === "extensao") label.classList.add("vermelho");
-
-    label.textContent = projeto.Nome;
-
-    card.appendChild(imagem);
-    card.appendChild(label);
-    container.appendChild(card);
-  });
-});
-
-document.querySelector(".btn-filtrar.pesquisa").addEventListener("click", () => {
-  document.querySelectorAll(".project-card").forEach(card => {
-    card.style.display = card.classList.contains("pesquisa") ? "block" : "none";
-  });
-});
-
-card.addEventListener("click", () => {
-  localStorage.setItem("projetoSelecionado", JSON.stringify(projeto));
-  window.location.href = "../telaProjeto/projeto.html";
-});
-
-const nome = sessionStorage.getItem("usuarioLogado");
-const tipo = sessionStorage.getItem("tipoUsuario");
-
-if (nome) {
-    document.getElementById("login-nav").style.display = "none";
-    document.getElementById("user-menu").classList.remove("hidden");
-    document.getElementById("user-button").textContent = `👤 ${nome}`;
-    
-    if (tipo === "coordenador") {
-        document.getElementById("dropdown").innerHTML = `
-            <div onclick="location.href='../telaCadProjeto/cadProjeto.html'">Criar projeto</div>
-            <div onclick="location.href='../telaPainelCoodernador/painelCoodernador.html'">Seus projetos</div>
-            <div onclick="location.href='#'">Dados da conta</div>
-        `;
-    } else if (tipo === "bolsista") {
-        document.getElementById("dropdown").innerHTML = `
-            <div onclick="location.href='../telaPainelBolsista/painelBolsista.html'">Seus projetos</div>
-            <div onclick="location.href='#'">Dados da conta</div>
-        `;
+    if (window.scrollY > 0) {
+        header.classList.add("com-sombra");
     } else {
-        document.getElementById("user-button").style.cursor = "default";
+        header.classList.remove("com-sombra");
     }
+});
+
+// Funcionalidade quando o DOM carregar
+document.addEventListener("DOMContentLoaded", function () {
+    
+    // Gerenciar menu do usuário logado
+    const nome = sessionStorage.getItem("usuarioLogado");
+    const tipo = sessionStorage.getItem("tipoUsuario");
+
+    if (nome) {
+        const loginNav = document.getElementById("login-nav");
+        if (loginNav) {
+            loginNav.style.display = "none";
+        }
+    }
+
+    // Adicionar evento de clique nos cards de projeto
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const projetoId = this.getAttribute('data-id');
+            // Redirecionar para página de detalhes do projeto
+            window.location.href = `../telaProjeto/projeto.php?id=${projetoId}`;
+        });
+    });
+
+    // Funcionalidade de filtros
+    setupFiltros();
+    setupPesquisa();
+});
+
+function setupFiltros() {
+    // Filtros por tipo de projeto
+    const botoesFiltro = document.querySelectorAll('.btn-filtrar[data-filtro]');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    botoesFiltro.forEach(botao => {
+        botao.addEventListener('click', function() {
+            const filtro = this.getAttribute('data-filtro');
+            
+            // Remover classe ativa de todos os botões
+            botoesFiltro.forEach(btn => btn.classList.remove('filtro-ativo'));
+            // Adicionar classe ativa ao botão clicado
+            this.classList.add('filtro-ativo');
+            
+            projectCards.forEach(card => {
+                if (filtro === '' || card.classList.contains(filtro)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Filtro por categoria
+    const selectCategoria = document.getElementById('categorias-filtrar');
+    selectCategoria.addEventListener('change', function() {
+        const categoriaFiltro = this.value;
+        
+        projectCards.forEach(card => {
+            if (categoriaFiltro === '' || card.getAttribute('data-categoria') === categoriaFiltro) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
+
+function setupPesquisa() {
+    const inputPesquisa = document.getElementById('input-pesquisa');
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    inputPesquisa.addEventListener('input', function() {
+        const termoPesquisa = this.value.toLowerCase();
+        
+        projectCards.forEach(card => {
+            const nomeLabel = card.querySelector('.project-label');
+            const nomeProjeto = nomeLabel.textContent.toLowerCase();
+            
+            if (nomeProjeto.includes(termoPesquisa)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
 }

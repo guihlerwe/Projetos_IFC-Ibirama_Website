@@ -60,7 +60,35 @@ $fotoBolsista = salvarImagem('foto-bolsista', $pastaImagens);
 // captura dados do formulário com validação
 $nomeProjeto = trim($_POST["nome-projeto"] ?? '');
 $tipo = $_POST["eixo"] ?? '';
-$categoria = $_POST["categoria"] ?? '';
+
+//  categoria IMEDIATAMENTE após receber do formulário
+$categoriaOriginal = $_POST["categoria"] ?? '';
+
+// Mapear valores do formulário para os valores do ENUM
+// Mapear valores do formulário para os valores do ENUM
+$categoriasMap = [
+    'ciencias_naturais' => 'ciencias-naturais',      // underscore → hífen
+    'ciencias_humanas' => 'ciencias-humanas',        // underscore → hífen
+    'linguagens' => 'linguagens',                    // igual
+    'matematica' => 'matematica',                    // igual
+    'administracao' => 'administracao',              // igual
+    'informatica' => 'informatica',                  // igual
+    'vestuario' => 'vestuario',                      // igual
+    'moda' => 'moda',                                // igual
+    
+    // Manter também os valores com acentos caso venham do formulário
+    'Ciências Naturais' => 'ciencias-naturais',
+    'Ciências Humanas' => 'ciencias-humanas',
+    'Linguagens' => 'linguagens',
+    'Matemática' => 'matematica',
+    'Administração' => 'administracao',
+    'Informática' => 'informatica',
+    'Vestuário' => 'vestuario',
+    'Moda' => 'moda'
+];
+
+// Converter o valor recebido para o formato do banco
+$categoria = $categoriasMap[$categoriaOriginal] ?? strtolower(str_replace(' ', '-', $categoriaOriginal));
 
 $anoInicioRaw = trim($_POST["ano-inicio"] ?? '');
 $anoInicio = null;
@@ -120,7 +148,7 @@ $stmt->bind_param(
     "sssisssssssssssss",
     $nomeProjeto, 
     $tipo, 
-    $categoria, 
+    $categoria,  // <- AGORA USA O VALOR JÁ MAPEADO
     $anoInicio,  
     $txtLinkInscricao,
     $txtSobre, 
@@ -140,7 +168,6 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     echo "<div style='color: green; font-weight: bold;'>✅ Projeto cadastrado com sucesso!</div>";
     
-    // Remover o redirect para ver se há outros erros
     echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPainelCoordenador/painelCoordenador.php';</script>";
     
 } else {
