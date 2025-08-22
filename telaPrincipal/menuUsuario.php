@@ -26,16 +26,16 @@ if ($tipo === "coordenador") {
     echo '
         <a href="../telaCadastroProjeto/cadProjeto.php">Criar projeto</a>
         <a href="#">Seus projetos</a>
-        <a href="#">Dados da conta</a>
+        <a href="../telaDadosConta/contaUsuario.html">Dados da conta</a>
     ';
 } elseif ($tipo === "bolsista") {
     echo '
         <a href="#">Seus projetos</a>
-        <a href="#">Dados da conta</a>
+        <a href="../telaDadosConta/contaUsuario.html">Dados da conta</a>
     ';
 } else { // aluno
     echo '
-        <a href="#">Dados da conta</a>
+        <a href="../telaDadosConta/contaUsuario.html">Dados da conta</a>
     ';
 }
 

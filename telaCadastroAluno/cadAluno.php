@@ -18,11 +18,10 @@
     $email = $_POST["email"];
     $senha = $_POST['senha'];
     //$senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); 
-    $curso = $_POST["curso"];
 
     // inserção
-    $stmt = $conn->prepare("INSERT INTO pessoa (nome, sobrenome, email, senha, curso) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $nome, $sobrenome, $email, $senha, $curso);
+    $stmt = $conn->prepare("INSERT INTO pessoa (nome, sobrenome, email, senha) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $nome, $sobrenome, $email, $senha);
 
     if ($stmt->execute()) {
         echo "Cadastro realizado com sucesso! Redirecionando...";

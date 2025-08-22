@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Conta</title>
+    <link rel="stylesheet" href="contaUsuario.css">
+</head>
+<body>
+    <header>
+            <div class="logo">
+                <div class="grid-icon">
+                    <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                </div>
+                Projetos do Campus Ibirama
+            </div>
+            <div class="navigation">
+                <div class="projetos-nav">Projetos</div>
+                <div class="monitoria-nav">Monitoria</div>
+                <div class="sobre-nav">Sobre</div>
+                <div class="login-nav">Entrar</div>
+
+            </div>
+        </header>
+    <main class="container-perfil">
+        
+        <h1>Minha Conta</h1>
+
+        <!-- Parte superior: foto + formulário -->
+        <section class="secao-superior">
+            <!-- Foto -->
+            <div class="secao-foto">
+                <img src="../telaPrincipal/sem_foto_perfil.png" alt="Foto de Perfil" class="foto-perfil">
+                <button class="btn">Alterar Foto</button>
+            </div>
+
+
+            <!-- Formulário -->
+            <form class="formulario-perfil">
+                <label>
+                    Nome:
+                    <input type="text" name="nome" placeholder="Digite seu nome">
+                </label>
+
+                <label>
+                    Sobrenome:
+                    <input type="text" name="sobrenome" placeholder="Digite seu sobrenome">
+                </label>
+
+                <label>
+                    E-mail:
+                    <input type="email" name="email" placeholder="Digite seu e-mail">
+                </label>
+
+                <label>
+                    Senha:
+                    <input type="password" name="senha" placeholder="Digite sua senha">
+                </label>
+            </form>
+        </section>
+
+        <!-- Descrição -->
+        <section class="secao-descricao">
+            <label>
+                Descrição:
+                <textarea class="campo-descricao" maxlength="300" placeholder="Escreva algo sobre você..."></textarea>
+            </label>
+            <div class="contador-caracteres">0/300</div>
+        </section>
+
+        <!-- Botões -->
+        <div class="area-botoes">
+            <button class="btn editar">Editar</button>
+            <button class="btn excluir">Excluir Conta</button>
+        </div>
+    </main>
+</body>
+</html>

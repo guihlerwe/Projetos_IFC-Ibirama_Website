@@ -1,0 +1,215 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: box-shadow 0.3s ease;
+
+}
+
+header.com-sombra{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
+
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.grid-icon {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
+}
+
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
+}
+
+/* Navegação */
+.navigation {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding-right: 30px;
+}
+
+.projetos-nav,
+.monitoria-nav,
+.sobre-nav,
+.login-nav {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.login-nav{
+    background-color: #eeeeee;
+}
+
+/* Container principal */
+.container-perfil {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container-perfil h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+}
+
+/* ===================== PARTE SUPERIOR ===================== */
+.secao-superior {
+    display: flex;
+    gap: 2em;
+    align-items: flex-start;
+    margin-bottom: 2em;
+}
+
+.secao-foto {
+    flex-shrink: 0;
+    min-width: 200px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.foto-perfil {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+    margin-bottom: 12px;
+}
+
+/* Formulário */
+.formulario-perfil {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+}
+
+.formulario-perfil label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    color: #444;
+}
+
+.formulario-perfil input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1.5px solid #ccc;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+/* ===================== DESCRIÇÃO ===================== */
+.secao-descricao {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.secao-descricao label{
+    margin-top: 20px;
+    width: 100%;
+    font-weight: bold;
+    color: #444;
+}
+
+.campo-descricao {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    resize: vertical;
+    text-align: justify;
+    background-color: #f9f9f9;
+    font-size: 14px;
+}
+
+.contador-caracteres {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* ===================== BOTÕES ===================== */
+.area-botoes {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 2em;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn.editar {
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn.excluir {
+    background-color: #e53935;
+    color: white;
+}
+
+/* ===================== RESPONSIVIDADE ===================== */
+@media (max-width: 768px) {
+    .secao-superior {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .formulario-perfil {
+        width: 100%;
+    }
+}
