@@ -99,10 +99,9 @@ $resultado = $conn->query($sql);
                             break;
                     }
                     
-                    // Caminho da imagem de capa
                     $imagemCapa = !empty($projeto['capa']) ? '../telaPrincipal/img/' . $projeto['capa'] : '../telaPrincipal/img/campus-image.jpg';
                     
-                    // Limitar o texto do nome para não quebrar o layout
+                    // limite do nome para não quebrar o layout
                     $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];
                     
                     echo '<div class="project-card ' . $projeto['tipo'] . ' categoria-' . $projeto['categoria'] . '" data-id="' . $projeto['idProjeto'] . '" data-tipo="' . $projeto['tipo'] . '" data-categoria="' . $projeto['categoria'] . '">';

@@ -1,0 +1,480 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: white;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+    margin-top: 70px;
+}
+
+/* Header - mantém o mesmo estilo da página de cadastro */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: box-shadow 0.3s ease;
+}
+
+header.com-sombra {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#icone-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
+}
+
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
+}
+
+#navegador {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#projetos-nav,
+#monitoria-nav,
+#sobre-nav,
+#login-nav {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#projetos-nav:hover,
+#monitoria-nav:hover,
+#sobre-nav:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 22px;
+    height: 16px;
+}
+
+.hamburger-icon span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: black;
+    border-radius: 3px;
+}
+
+.menu-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-btn {
+    background-color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    right: 0;
+    border-radius: 10px;
+}
+
+.menu-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+    border-radius: 10px;
+}
+
+.dropdown-content a:hover {
+    background-color: #e0e0e0;
+    color: black;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+/* Banner */
+#banner {
+    width: 100%;
+    height: 200px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+#banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#banner-placeholder {
+    color: #666;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Informações principais do projeto */
+#info-projeto {
+    padding: 0 20px;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+#div-capa {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+#capa-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#dados-projeto {
+    flex: 1;
+    min-width: 300px;
+}
+
+#tags-projeto {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.tag-tipo,
+.tag-categoria,
+.tag-ano {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.tag-tipo {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.tag-categoria {
+    background-color: #ffedea;
+    color: #932413;
+}
+
+.tag-ano {
+    background-color: #e8f5e8;
+    color: #388e3c;
+}
+
+#nome-projeto {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    line-height: 1.2;
+    margin: 0;
+}
+
+#link-inscricao {
+    align-self: flex-start;
+}
+
+/* Botões de link */
+.btn-link {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #006620;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-link:hover {
+    background-color: #004d18;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 102, 32, 0.3);
+}
+
+.bolsa-link {
+    background-color: #ff6b35;
+}
+
+.bolsa-link:hover {
+    background-color: #e55a2b;
+}
+
+/* Detalhes do projeto */
+#detalhes-projeto {
+    padding: 0 20px 40px 20px;
+}
+
+.secao {
+    margin-bottom: 30px;
+}
+
+.subtitulo {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #006620;
+    padding-bottom: 5px;
+}
+
+.texto-sobre {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.7;
+    text-align: justify;
+}
+
+.link-site {
+    display: inline-block; 
+    color: #417144;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 15px;
+    background-color: #f0f7ff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.link-site:hover {
+    background-color: #e3f2fd;
+    transform: translateX(5px);
+}
+
+.equipe-container {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.equipe-categoria {
+    min-width: 200px;
+}
+
+.titulo-equipe {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 15px;
+    font-weight: normal;
+}
+
+.membros {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.membro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 120px;
+}
+
+.foto-membro {
+    width: 80px;
+    height: 80px;
+    background-color: #eee;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 24px;
+    overflow: hidden;
+    border: 3px solid #f0f0f0;
+}
+
+.foto-membro img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nome-membro {
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.contatos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contato-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.contato-item:hover {
+    background-color: #e9ecef;
+}
+
+.icone-contato {
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+}
+
+.link-contato {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.link-contato:hover {
+    color: #006620;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-top: 60px;
+    }
+    
+    header {
+        padding: 10px 15px;
+    }
+    
+    #logo {
+        font-size: 16px;
+    }
+    
+    #navegador {
+        gap: 10px;
+    }
+    
+    #info-projeto {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    #div-capa {
+        width: 120px;
+        height: 120px;
+    }
+    
+    #nome-projeto {
+        font-size: 24px;
+    }
+    
+    .equipe-container {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    #detalhes-projeto {
+        padding: 0 15px 30px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #banner {
+        height: 150px;
+    }
+    
+    #nome-projeto {
+        font-size: 20px;
+    }
+    
+    .subtitulo {
+        font-size: 18px;
+    }
+    
+    .contatos {
+        gap: 10px;
+    }
+    
+    .contato-item {
+        padding: 10px 12px;
+    }
+}

@@ -15,6 +15,8 @@ body {
     margin-top: 70px;
 }
 
+
+/*header*/
 header {
     display: flex;
     justify-content: space-between;
@@ -57,6 +59,12 @@ header.com-sombra {
     margin-bottom: 10px;
 }
 
+.grid-cell {
+    background-color: #333;
+    width: 6px;
+    height: 6px;
+}
+
 #navegador {
     display: flex;
     gap: 15px;
@@ -65,13 +73,11 @@ header.com-sombra {
 
 #projetos-nav,
 #monitoria-nav,
-#sobre-nav,
-#login-nav {
+#sobre-nav {
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 20px;
 }
-
 .menu-btn {
     background: none;
     border: none;
@@ -169,7 +175,6 @@ header.com-sombra {
     margin-right: 15px;
 }
 
-
 .btn-filtrar, #categorias-filtrar {
     padding: 6px 9px;
     border: 1px solid #ccc;
@@ -180,14 +185,14 @@ header.com-sombra {
 }
 
 .btn-filtrar.pesquisa:hover {
-    background-color: blue;
+    background-color: rgba(33, 150, 243, 0.85);
     color: rgb(217, 233, 221);
     box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
     text-shadow: none;
 }
 
 .btn-filtrar.ensino:hover {
-    background-color: #2e7d32;
+    background-color: #417144;
     color: rgb(217, 233, 221);
     box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
     text-shadow: none;
@@ -195,6 +200,14 @@ header.com-sombra {
 
 .btn-filtrar.extensao:hover {
     background-color: #d32f2f;
+    color: rgb(217, 233, 221);
+    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
+}
+
+
+.btn-filtrar.todos:hover {
+    background-color: #838383;
     color: rgb(217, 233, 221);
     box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
     text-shadow: none;
@@ -286,10 +299,9 @@ header.com-sombra {
 footer {
     background-color: #2e7d32;
     color: white;
-    display: flex;
+   display: flex;
     padding-top: 5vh;
-    padding-left: 18vh;
-    padding-bottom: 5vh;
+        padding-left: 2vh;
 }
 
 .footer-fabrica {
@@ -422,9 +434,9 @@ a:hover {
 
 /* Botão de filtro ativo */
 .btn-filtrar.filtro-ativo {
-    background-color: #007bff;
+    background-color: #adadad;
     color: white;
-    border-color: #007bff;
+    border-color: #adadad;
 }
 
 /* Estilo para quando não há projetos */
@@ -441,7 +453,7 @@ a:hover {
 }
 
 .no-projects a {
-    color: #007bff;
+    color: #adadad;
     text-decoration: none;
     font-weight: bold;
 }
@@ -461,9 +473,8 @@ a:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Cores específicas para cada tipo de projeto */
 .project-label.verde {
-    background-color: rgba(46, 125, 50, 0.85);
+    background-color: #417144;
 }
 
 .project-label.azul {
@@ -474,18 +485,6 @@ a:hover {
     background-color: rgba(211, 47, 47, 0.85);
 }
 
-/* Botão "Todos" para limpar filtros */
-.btn-filtrar.todos {
-    background-color: #f8f9fa;
-    border-color: #dee2e6;
-}
-
-.btn-filtrar.todos:hover {
-    background-color: #e9ecef;
-    border-color: #adb5bd;
-}
-
-/* Melhorias na responsividade */
 @media screen and (max-width: 768px) {
     .projects-grid {
         grid-template-columns: 1fr;
