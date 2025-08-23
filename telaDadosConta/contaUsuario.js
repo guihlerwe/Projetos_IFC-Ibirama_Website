@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 async function carregarDadosUsuario() {
     try {
         mostrarLoading(true);
-        const response = await fetch('perfilUsuario.php', {
+        const response = await fetch('contaBD.php', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -196,7 +196,7 @@ async function salvarAlteracoes() {
         formData.append('email', email);
         formData.append('descricao', descricao);
         
-        const response = await fetch('perfilUsuario.php', {
+        const response = await fetch('contaBD.php', {
             method: 'POST',
             body: formData
         });
@@ -227,7 +227,7 @@ async function uploadFoto(arquivo) {
         formData.append('acao', 'upload_foto');
         formData.append('foto', arquivo);
         
-        const response = await fetch('perfilUsuario.php', {
+        const response = await fetch('contaBD.php', {
             method: 'POST',
             body: formData
         });
@@ -259,7 +259,7 @@ async function removerFoto() {
         const formData = new FormData();
         formData.append('acao', 'remover_foto');
         
-        const response = await fetch('perfilUsuario.php', {
+        const response = await fetch('contaBD.php', {
             method: 'POST',
             body: formData
         });
@@ -290,7 +290,7 @@ async function excluirConta() {
         const formData = new FormData();
         formData.append('acao', 'excluir_conta');
         
-        const response = await fetch('perfilUsuario.php', {
+        const response = await fetch('contaBD.php', {
             method: 'POST',
             body: formData
         });

@@ -168,7 +168,7 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     echo "<div style='color: green; font-weight: bold;'>✅ Projeto cadastrado com sucesso!</div>";
     
-    echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPainelCoordenador/painelCoordenador.php';</script>";
+    echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPrincipal/painelCoordenador.php';</script>";
     
 } else {
     echo "<div style='color: red; font-weight: bold;'>❌ Erro ao cadastrar projeto:</div>";

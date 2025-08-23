@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'bolsista') {
+if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'coordenador') {
     header("Location: ../telaLogin/login.html");
     exit();
 }
@@ -12,7 +12,7 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -33,8 +33,7 @@ $resultado = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="hover-effect.css">
-    <link rel="stylesheet" href="painelBolsista.css">
+    <link rel="stylesheet" href="principal.css">
     <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1, user-scalable=no">
     <title>Projetos do Campus Ibirama</title>
 </head>
@@ -58,7 +57,7 @@ $resultado = $conn->query($sql);
                 <div id="projetos-nav">Projetos</div>
                 <div id="monitoria-nav">Monitoria</div>
                 <div id="sobre-nav">Sobre</div>
-                <?php include '../telaPrincipal/menuUsuario.php'; ?>
+                <?php include '../telaPrincipal/menuUsuario.php'; ?> 
             </div>
         </header>
 
@@ -99,10 +98,9 @@ $resultado = $conn->query($sql);
                             break;
                     }
                     
-                    // Caminho da imagem de capa
                     $imagemCapa = !empty($projeto['capa']) ? '../telaPrincipal/img/' . $projeto['capa'] : '../telaPrincipal/img/campus-image.jpg';
                     
-                    // Limitar o texto do nome para não quebrar o layout
+                    // limite do nome para não quebrar o layout
                     $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];
                     
                     echo '<div class="project-card ' . $projeto['tipo'] . ' categoria-' . $projeto['categoria'] . '" data-id="' . $projeto['idProjeto'] . '" data-tipo="' . $projeto['tipo'] . '" data-categoria="' . $projeto['categoria'] . '">';
@@ -113,14 +111,15 @@ $resultado = $conn->query($sql);
             } else {
                 // Caso não tenha projetos cadastrados, mostrar mensagem
                 echo '<div class="no-projects">';
-                echo '<p id="desc">Nenhum projeto cadastrado ainda.</p>';
+                echo '<p>Nenhum projeto cadastrado ainda.</p>';
+                echo '<p id="desc"><a href="../telaCadastroProjeto/cadProjeto.php">Clique aqui para cadastrar o primeiro projeto</a></p>';
                 echo '</div>';
             }
             ?>
         </div> 
     </div>
 
-    <footer>
+   <footer>
     <div class="container footer-container">
         <div class="Aluno">
             <h2>Recursos</h2>
@@ -148,7 +147,7 @@ $resultado = $conn->query($sql);
         </div>
     </div>
 </footer>
-    <script src="./painelBolsista.js"></script>
+    <script src="./principal.js"></script>
 </body>
 </html>
 

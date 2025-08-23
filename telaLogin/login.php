@@ -4,7 +4,7 @@
     // conexão
     $host = 'localhost';
     $usuario = 'root';
-    $senha = 'Gui@15600';
+    $senha = 'root';
     $banco = 'website';
 
     $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -38,9 +38,9 @@
             
             echo($usuario['nome']);
             if ($usuario['tipo'] == 'coordenador') {
-                header("Location: ../telaPainelCoordenador/painelCoordenador.php"); 
+                header("Location: ../telaPrincipal/painelCoordenador.php"); 
             } elseif ($usuario['tipo'] === 'bolsista') {
-                header("Location: ../telaPainelBolsista/painelBolsista.php");
+                header("Location: ../telaPrincipal/painelBolsista.php");
             } else {
                     header("Location: ../telaPrincipal/principal.php");
             }

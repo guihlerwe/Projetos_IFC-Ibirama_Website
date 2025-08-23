@@ -13,9 +13,9 @@ document.querySelector(".projetos-nav").addEventListener("click", function () {
   const tipo = sessionStorage.getItem("tipoUsuario");
 
   if (tipo === "coordenador") {
-    window.location.href = "../telaPainelCoordenador/painelCoordenador.php";
+    window.location.href = "../telaPrincipal/painelCoordenador.php";
   } else if (tipo === "bolsista") {
-    window.location.href = "../telaPainelBolsista/painelBolsista.php";
+    window.location.href = "../telaPrincipalainelBolsista/painelBolsista.php";
   } else {
     window.location.href = "../telaPrincipal/principal.php";
   }
