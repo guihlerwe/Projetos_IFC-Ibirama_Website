@@ -1,9 +1,23 @@
-/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/telaLogin/img/image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(8px); /* Aplica o blur real */
+    z-index: -1;
 }
 
 header {
@@ -74,7 +88,7 @@ header.com-sombra{
 /* Container principal */
 .container-perfil {
     max-width: 900px;
-    margin: 40px auto;
+    margin: 100px auto 60px auto;
     padding: 20px;
     background: #fff;
     border-radius: 12px;
@@ -98,28 +112,30 @@ header.com-sombra{
 
 .secao-foto {
     flex-shrink: 0;
-    min-width: 200px;
+    min-width: 180px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
 }
 
 .foto-perfil {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #ddd;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 /* Formulário */
 .formulario-perfil {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5em 1.5em;
+    align-content: start;
 }
 
 .formulario-perfil label {
@@ -130,11 +146,18 @@ header.com-sombra{
 }
 
 .formulario-perfil input {
-    padding: 10px;
+    padding: 12px;
     border-radius: 6px;
     border: 1.5px solid #ccc;
-    margin-top: 6px;
+    margin-top: 8px;
     font-size: 14px;
+    min-height: 44px;
+}
+
+/* Remove as classes antigas que não são mais necessárias */
+.campoDireita,
+.campoEsquerda {
+    /* Classes mantidas para compatibilidade, mas agora o grid controla o layout */
 }
 
 /* ===================== DESCRIÇÃO ===================== */
@@ -160,6 +183,7 @@ header.com-sombra{
     text-align: justify;
     background-color: #f9f9f9;
     font-size: 14px;
+    margin-top: 8px;
 }
 
 .contador-caracteres {
@@ -179,12 +203,13 @@ header.com-sombra{
 }
 
 .btn {
-    padding: 10px 18px;
+    padding: 8px 16px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
+    font-size: 13px;
 }
 
 .btn:hover {
@@ -211,5 +236,7 @@ header.com-sombra{
 
     .formulario-perfil {
         width: 100%;
+        grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+        gap: 1.2em;
     }
 }

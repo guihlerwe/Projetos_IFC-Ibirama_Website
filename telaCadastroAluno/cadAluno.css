@@ -11,7 +11,7 @@ body {
 
 /* Ajustando o container */
 .container-principal {
-    max-width: 1200px; /* Define a largura máxima */
+    max-width: 1000px; /* Define a largura máxima */
     margin: 0 auto; /* Centraliza o conteúdo */
     min-height: 100vh; /* Garante que o container ocupe toda a altura da tela */
     align-items: center; /* Centraliza o conteúdo horizontalmente */
@@ -22,6 +22,13 @@ body {
     align-items: center;
     /* margin-top: 70px; */
 
+}
+
+.imagem-container {
+    position: relative;
+    width: 100%;
+    height: 20vh;
+    overflow: hidden;
 }
 
 /* Uniformizando o cabeçalho */
@@ -69,6 +76,26 @@ header.com-sombra{
     margin-bottom: 10px;
 }
 
+#foto-ifc {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 1.5em 1.5em;
+    margin: 0px;
+    border: 0px;
+    display: block;
+}
+
+.titulo-sobre-imagem {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 7vh;
+    color: white;
+    text-shadow: 10px 20px 40px rgba(32, 32, 32, 1);
+    margin: 0;
+}
+
 /* Navegação */
 .navigation {
     display: flex;
@@ -92,18 +119,24 @@ header.com-sombra{
 
 form {
     width: 100%;
-    max-width: 600px; 
-    padding: 0.8em;
+    max-width: 550px; /* Largura máxima do formulário */
     background-color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
     border-radius: 1.5em;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Centraliza o formulário */
+    object-fit: cover;
+    align-items: center;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(10px);
 }
 
 #divformulario{
     align-items: center;
-    align-items: center;
     justify-content: center;
+    margin-top: 0;
 }
 
 #titulo {
@@ -114,7 +147,8 @@ form {
 }
 
 #subtitulo {
-    color: rgb(0, 0, 0);
+    font-family: sans-serif;
+    color: rgb(33, 66, 41);
     text-align: center;
 }
 
