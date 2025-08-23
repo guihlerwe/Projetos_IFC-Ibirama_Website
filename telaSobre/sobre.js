@@ -21,4 +21,14 @@ document.querySelector(".projetos-nav").addEventListener("click", function () {
   }
 });
 
+const header = document.querySelector("header");
+window.addEventListener("scroll", () => {
+  if (header) {
+    if (window.scrollY > 0) {
+        header.classList.add("com-sombra");
+    } else {
+        header.classList.remove("com-sombra");
+    }
+  }
+});
 

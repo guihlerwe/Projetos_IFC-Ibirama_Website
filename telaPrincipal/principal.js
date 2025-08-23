@@ -105,3 +105,42 @@ function setupPesquisa() {
         });
     });
 }
+
+// Custom dropdown categorias
+document.addEventListener("DOMContentLoaded", () => {
+    const selectBox = document.getElementById("categorias-filtrar");
+    const selected = selectBox.querySelector(".select-selected");
+    const optionsContainer = selectBox.querySelector(".select-items");
+    const options = optionsContainer.querySelectorAll("div");
+
+    // Abrir/fechar dropdown
+    selected.addEventListener("click", () => {
+        selectBox.classList.toggle("open");
+    });
+
+    // Selecionar opção
+    options.forEach(option => {
+        option.addEventListener("click", () => {
+            const value = option.getAttribute("data-value");
+            selected.textContent = option.textContent;
+            selectBox.classList.remove("open");
+
+            // Filtro dos cards
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                if (value === "" || card.getAttribute("data-categoria") === value) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    });
+
+    // Fechar dropdown ao clicar fora
+    document.addEventListener("click", (e) => {
+        if (!selectBox.contains(e.target)) {
+            selectBox.classList.remove("open");
+        }
+    });
+});

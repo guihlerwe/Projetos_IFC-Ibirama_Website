@@ -398,6 +398,10 @@ a:hover {
     color: rgb(255, 255, 255);
 }
 
+#no-projects{
+    margin-bottom: 30vh;
+}
+
 /* Celular*/
 @media screen and (max-width: 768px) {
 
@@ -561,4 +565,89 @@ a:hover {
     .projects-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+/* Container estilizado do select */
+#categorias-filtrar {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    background-color: #ffffff;
+    font-size: 14px;
+    appearance: none;          /* remove estilo nativo */
+    -webkit-appearance: none;  /* Safari */
+    -moz-appearance: none;     /* Firefox */
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='black' d='M0 0l5 6 5-6z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+    padding-right: 30px; /* espaço para a setinha */
+}
+
+/* Hover */
+#categorias-filtrar:hover {
+    background-color: #f5f5f5;
+}
+
+/* Quando em foco */
+#categorias-filtrar:focus {
+    outline: none;
+    border-color: #999;
+    background-color: #fafafa;
+}
+
+.custom-select {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 6px 12px;
+    background-color: #fff;
+    user-select: none;
+    min-width: 150px;
+}
+
+/* Texto selecionado */
+.select-selected {
+    font-size: 14px;
+}
+
+/* Container de opções escondido */
+.select-items {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 99;
+    display: none;
+    overflow: hidden;
+    animation: expandDown 0.3s ease forwards;
+}
+
+/* Opções */
+.select-items div {
+    padding: 8px 12px;
+    transition: background-color 0.2s;
+}
+
+.select-items div:hover {
+    background-color: #f0f0f0;
+}
+
+/* Animação */
+@keyframes expandDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Quando aberto */
+.custom-select.open .select-items {
+    display: block;
 }

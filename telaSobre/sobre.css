@@ -13,7 +13,7 @@ body {
     width: 100%; /* 30% da largura da tela */
     max-height: 40vh;
     aspect-ratio: 1 / 1; /* mantém o círculo */
-    border-radius: 50px 50px 0px 0px;
+    border-radius: 30px;
     margin-top: 5vh;
     object-fit: cover;
 }
@@ -47,10 +47,11 @@ header {
     z-index: 1000;
     transition: box-shadow 0.3s ease;
 }
+
 header.com-sombra{
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
 }
+
 #logo {
     display: flex;
     align-items: center;
@@ -95,6 +96,7 @@ header.com-sombra{
     cursor: pointer;
     border-radius: 20px;
 }
+
 
 .menu-btn {
     background: none;
@@ -265,7 +267,7 @@ header.com-sombra{
 }
 
 footer {
-    background-color: #e0e0e0; /* cinza bem claro */
+    background-color: #d7d7d7; /* cinza bem claro */
     padding: 5px 20px; /* quase sem padding vertical */
     color: white; /* texto branco */
     font-size: 14px;
@@ -361,5 +363,475 @@ footer .Sobre {
         margin-bottom: 20px;    /* dá um espacinho abaixo da imagem */
         aspect-ratio: 0;
         border-radius: 50px;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Variáveis CSS para os temas */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --header-bg: rgba(255, 255, 255, 0.8);
+    --footer-bg: #d7d7d7;
+    --footer-text: #ffffff;
+    --section-bg: #ffffff;
+    --nav-hover: #eeeeee;
+    --border-color: #ddd;
+    --link-bg: #f5f5f5;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --dropdown-bg: #ffffff;
+    --dropdown-hover: #e0e0e0;
+}
+
+/* Modo escuro automático baseado na preferência do sistema */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --text-color: #e0e0e0;
+        --header-bg: rgba(30, 30, 30, 0.9);
+        --footer-bg: #2a2a2a;
+        --footer-text: #e0e0e0;
+        --section-bg: #1a1a1a;
+        --nav-hover: #333333;
+        --border-color: #444444;
+        --link-bg: #2a2a2a;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+        --dropdown-bg: #2a2a2a;
+        --dropdown-hover: #3a3a3a;
+    }
+    
+    /* Ajustes específicos para imagens em modo escuro */
+    .hamburger-icon span {
+        background-color: var(--text-color) !important;
+    }
+    
+    .site-link-icon div {
+        background-color: var(--text-color) !important;
+    }
+}
+
+/* Classe para forçar modo escuro manualmente */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --header-bg: rgba(30, 30, 30, 0.9);
+    --footer-bg: #2a2a2a;
+    --footer-text: #e0e0e0;
+    --section-bg: #1a1a1a;
+    --nav-hover: #333333;
+    --border-color: #444444;
+    --link-bg: #2a2a2a;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --dropdown-bg: #2a2a2a;
+    --dropdown-hover: #3a3a3a;
+}
+
+[data-theme="dark"] .hamburger-icon span {
+    background-color: var(--text-color);
+}
+
+[data-theme="dark"] .site-link-icon div {
+    background-color: var(--text-color);
+}
+
+/* Aplicação das variáveis nos elementos */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#capa{
+    width: 100%;
+    max-height: 40vh;
+    aspect-ratio: 1 / 1;
+    border-radius: 30px;
+    margin-top: 5vh;
+    object-fit: cover;
+}
+
+#icone-ifc {
+    width: 30px;
+    height: 27px;
+    object-fit: auto;
+    margin-bottom: 10px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: auto;
+    margin-top: 5;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--header-bg);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+header.com-sombra{
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+#logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+#icone-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    color: var(--text-color);
+}
+
+.navegador {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.projetos-nav,
+.monitoria-nav,
+.sobre-nav,
+.login-nav {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 20px;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 22px;
+    height: 16px;
+}
+
+.hamburger-icon span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--text-color);
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-btn {
+    background-color: var(--link-bg);
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--dropdown-bg);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px var(--shadow-color);
+    z-index: 1;
+    right: 0;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--dropdown-hover);
+    color: var(--text-color);
+    font-weight: normal;
+    text-decoration: none; 
+}
+
+.sobre-nav {
+    background-color: var(--nav-hover);
+    color: var(--text-color);
+}
+
+.login-btn {
+    padding: 5px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    background-color: var(--link-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.content {
+    padding: 30px 40px;
+}
+
+.section-title {
+    margin-top: 60px;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.section-text {
+    line-height: 1.6;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.section-layout {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.section-image {
+    width: 30vw;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    border-radius: 15%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.section-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.site-link {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--link-bg);
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.site-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.site-link-icon {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1px;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+.site-link-icon div {
+    background-color: var(--text-color);
+    width: 100%;
+    height: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.team-member-link {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--link-bg);
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    margin-right: 10px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.team-member-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.linkedin-icon {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    color: #0077b5;
+}
+
+/* Botão para alternar tema manualmente */
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    color: var(--text-color);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+footer {
+    background-color: var(--footer-bg);
+    padding: 5px 20px;
+    color: var(--footer-text);
+    font-size: 14px;
+    margin-top: 20vh;
+    padding-bottom: 5vh;
+    transition: background-color 0.3s ease;
+}
+
+footer h2 {
+    margin-bottom: 3px;
+    margin-top: 3vh;
+    color: var(--footer-text);
+}
+
+footer p, footer span, footer li {
+    color: var(--footer-text);
+    margin: 0;
+    line-height: 1.3;
+}
+
+footer ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+footer li {
+    margin-bottom: 2px;
+}
+
+footer a {
+    color: var(--footer-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    margin-bottom: 10vh;
+}
+
+footer a:hover {
+    color: #ff6b6b;
+}
+
+footer .footer-container {
+    max-width: 1200px; 
+    margin: 0 auto;     
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+footer .Aluno {
+    flex: 1;
+    min-width: 200px;
+}
+
+footer .Sobre {
+    flex: 2;
+    min-width: 300px;
+}
+
+@media (max-width: 768px) {
+    .section-layout {
+        flex-direction: column;
+        text-align: center;     
+        text-align: left;
+    }
+    
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: var(--header-bg);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100%;
+        transition: box-shadow 0.3s ease, background-color 0.3s ease;
+        font-size: 0.5vh;
+    }
+
+    .section-image {
+        width: 300vw;
+        max-width: 100%;
+        margin-bottom: 20px;
+        aspect-ratio: 0;
+        border-radius: 50px;
+    }
+    
+    .theme-toggle {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
     }
 }

@@ -34,7 +34,6 @@ header {
 
 header.com-sombra{
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: uma sombra para destacar */
-
 }
 
 .logo {
@@ -214,6 +213,18 @@ header.com-sombra{
     gap: 20px;
     padding: 0 20px 20px 20px;
 }
+.project-label {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
 
 @media (max-width: 600px) {
     .projects-grid {
@@ -353,3 +364,4 @@ footer .Sobre {
         align-items: flex-start;
     }
 }
+

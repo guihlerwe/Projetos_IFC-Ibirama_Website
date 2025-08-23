@@ -57,7 +57,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                         </a>
                     </div>
                     <div class="section-image">
-                        <img src="../telaPrincipal/img/campus-image.jpg" alt="Imagem do campus">
+                        <img src="../telaPrincipal/img/fachada-ifc-ibirama-1024x576.jpg" alt="Imagem do campus">
                     </div>
                 </div>
             </div>
@@ -71,9 +71,9 @@ $tipo = $_SESSION['tipo'] ?? '';
                     <div>
                         <h2 class="section-title">Este site e o projeto de TCC</h2>
                         <p class="section-text">
-Este site foi criado de uma necessidade que Gabriella e Guilherme encontraram ao entrar no IFC – Campus Ibirama, o conhecimento de projetos ativos que os interessassem e os horários  das monitorias do conteúdos que precisavam. Já que a divulgação dos mesmos não era tão efetiva, gerando uma falta de alunos e um grande tempo gasto dos bolsistas, tendo que passar de sala em sala para a divulgação dos projetos de ensino e extensão.
+                        Este site foi criado de uma necessidade que Gabriella e Guilherme encontraram ao entrar no IFC – Campus Ibirama, o conhecimento de projetos ativos que os interessassem e os horários  das monitorias do conteúdos que precisavam. Já que a divulgação dos mesmos não era tão efetiva, gerando uma falta de alunos e um grande tempo gasto dos bolsistas, tendo que passar de sala em sala para a divulgação dos projetos de ensino e extensão.
 
-  Portanto, com o objetivo de divulgar e dar igualdade ao acesso das informações dos projetos ativos de ensino, pesquisa, extensão – e das monitorias, este site reúne todos os projetos deixando visível se há inscrições abertas para participação e vagas para bolsista ou voluntários ao alcance de clique, e reúne as monitorias e seus horários, email dos monitores . Além de disponibilizar as descrições, as datas, as categorias de áreas de interesse em que os projetos se encaixam, os meios de contato com os realizadores do projeto, os coordenadores, os bolsistas e o link para o site do projeto (se o projeto ter). Contudo este TCC integrou diversos conhecimentos aprendidos no curso de Tecnologia de Informação, provando a capacidade de solução de problemas de Gabriella e Guilherme.                        </p>
+                        Portanto, com o objetivo de divulgar e dar igualdade ao acesso das informações dos projetos ativos de ensino, pesquisa, extensão – e das monitorias, este site reúne todos os projetos deixando visível se há inscrições abertas para participação e vagas para bolsista ou voluntários ao alcance de clique, e reúne as monitorias e seus horários, email dos monitores . Além de disponibilizar as descrições, as datas, as categorias de áreas de interesse em que os projetos se encaixam, os meios de contato com os realizadores do projeto, os coordenadores, os bolsistas e o link para o site do projeto (se o projeto ter). Contudo este TCC integrou diversos conhecimentos aprendidos no curso de Tecnologia de Informação, provando a capacidade de solução de problemas de Gabriella e Guilherme.                        </p>
 
                         <div>
 

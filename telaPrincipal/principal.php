@@ -6,7 +6,7 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -63,16 +63,18 @@ $resultado = $conn->query($sql);
             <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
             <button class="btn-filtrar todos" data-filtro="">Todos</button>
             
-            <select id="categorias-filtrar">
-                <option value="">Categorias</option>
-                <option value="ciencias_naturais">Ciências Naturais</option>
-                <option value="ciencias_humanas">Ciências Humanas</option>
-                <option value="linguagens">Linguagens</option>
-                <option value="matematica">Matemática</option>
-                <option value="administracao">Administração</option>
-                <option value="informatica">Informática</option>
-                <option value="vestuario">Vestuário</option>
-            </select>    
+            <div class="custom-select" id="categorias-filtrar">
+  <div class="select-selected">Categorias</div>
+  <div class="select-items">
+    <div data-value="ciencias_naturais">Ciências Naturais</div>
+    <div data-value="ciencias_humanas">Ciências Humanas</div>
+    <div data-value="linguagens">Linguagens</div>
+    <div data-value="matematica">Matemática</div>
+    <div data-value="administracao">Administração</div>
+    <div data-value="informatica">Informática</div>
+    <div data-value="vestuario">Vestuário</div>
+  </div>
+</div> 
         </div>
 
         <div class="projects-grid">
@@ -107,7 +109,7 @@ $resultado = $conn->query($sql);
             } else {
                 // Caso não tenha projetos cadastrados, mostrar mensagem
                 echo '<div class="no-projects">';
-                echo '<p>Nenhum projeto cadastrado ainda.</p>';
+                echo '<p id="no-projects">Nenhum projeto cadastrado ainda.</p>';
                 if ($tipo === 'coordenador') {
                     echo '<p><a href="../telaCadastroProjeto/cadProjeto.php">Clique aqui para cadastrar o primeiro projeto</a></p>';
                 }
