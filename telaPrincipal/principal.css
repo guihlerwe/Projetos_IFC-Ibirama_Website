@@ -73,7 +73,8 @@ header.com-sombra {
 
 #projetos-nav,
 #monitoria-nav,
-#sobre-nav {
+#sobre-nav, 
+#login-nav{
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 20px;

@@ -41,5 +41,6 @@ if ($tipo === "coordenador") {
 
 echo '
     </div>
-</div>';
+</div>'
+
 ?>

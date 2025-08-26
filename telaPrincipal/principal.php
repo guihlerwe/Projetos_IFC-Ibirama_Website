@@ -6,7 +6,7 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -52,7 +52,7 @@ $resultado = $conn->query($sql);
                 <div id="projetos-nav">Projetos</div>
                 <div id="monitoria-nav">Monitoria</div>
                 <div id="sobre-nav">Sobre</div>
-                <?php include '../telaPrincipal/menuUsuario.php'; ?>
+                <div id="entrar-nav"> <?php include '../telaPrincipal/menuUsuario.php'; ?> </div>
             </div>
         </header>
 
@@ -63,18 +63,18 @@ $resultado = $conn->query($sql);
             <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
             <button class="btn-filtrar todos" data-filtro="">Todos</button>
             
-            <div class="custom-select" id="categorias-filtrar">
-  <div class="select-selected">Categorias</div>
-  <div class="select-items">
-    <div data-value="ciencias_naturais">Ciências Naturais</div>
-    <div data-value="ciencias_humanas">Ciências Humanas</div>
-    <div data-value="linguagens">Linguagens</div>
-    <div data-value="matematica">Matemática</div>
-    <div data-value="administracao">Administração</div>
-    <div data-value="informatica">Informática</div>
-    <div data-value="vestuario">Vestuário</div>
-  </div>
-</div> 
+        <div class="custom-select" id="categorias-filtrar">
+            <div class="select-selected">Categorias</div>
+                <div class="select-items">
+                    <div data-value="ciencias_naturais">Ciências Naturais</div>
+                    <div data-value="ciencias_humanas">Ciências Humanas</div>
+                    <div data-value="linguagens">Linguagens</div>
+                    <div data-value="matematica">Matemática</div>
+                    <div data-value="administracao">Administração</div>
+                    <div data-value="informatica">Informática</div>
+                    <div data-value="vestuario">Vestuário</div>
+                </div>
+            </div> 
         </div>
 
         <div class="projects-grid">
@@ -120,6 +120,7 @@ $resultado = $conn->query($sql);
     </div>
 
 <footer>
+    <div id="Dados ativos"> </div>
     <div class="container footer-container">
         <div class="Aluno">
             <h2>Recursos</h2>

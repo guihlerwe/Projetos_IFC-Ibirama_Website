@@ -159,6 +159,7 @@ header.com-sombra {
     margin-bottom: 20px;
     overflow: hidden;
     position: relative;
+    border-radius: 4vh;
 }
 
 #banner-img {

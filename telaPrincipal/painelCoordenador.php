@@ -57,7 +57,7 @@ $resultado = $conn->query($sql);
                 <div id="projetos-nav">Projetos</div>
                 <div id="monitoria-nav">Monitoria</div>
                 <div id="sobre-nav">Sobre</div>
-                <?php include '../telaPrincipal/menuUsuario.php'; ?> 
+                <?php include '../telaPrincipal/menuUsuario.php'; ?>
             </div>
         </header>
 
