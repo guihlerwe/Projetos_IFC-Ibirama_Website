@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM carregado!');
     
     // Navegação - links para outras telas
-    const loginBtn = document.querySelector("#entrar-nav");
+    const loginBtn = document.querySelector("#login-nav");
     if (loginBtn) {
         loginBtn.addEventListener("click", function () {
             window.location.href = "../telaLogin/login.html";

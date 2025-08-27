@@ -103,17 +103,10 @@ header.com-sombra{
     border-radius: 3px;
 }
 
+
 .menu-dropdown {
     position: relative;
     display: inline-block;
-}
-
-.menu-btn {
-    background-color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 20px;
 }
 
 .dropdown-content {
@@ -121,9 +114,10 @@ header.com-sombra{
     position: absolute;
     background-color: white;
     min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0px 8px 16px var(--shadow-color);
     z-index: 1;
     right: 0;
+    border-radius: 2vh;
 }
 
 .menu-dropdown:hover .dropdown-content {
@@ -131,17 +125,19 @@ header.com-sombra{
 }
 
 .dropdown-content a {
-    color: black;
+    color: var(--text-color);
     padding: 10px 14px;
     text-decoration: none;
     display: block;
 }
 
 .dropdown-content a:hover {
-    background-color: #e0e0e0;
-    color: black;
+    background-color: #eeee;
+    color: var(--text-color);
     font-weight: normal;
+    padding: 10px 14px;
     text-decoration: none; 
+    border-radius: 2vh;
 }
 
 .monitoria-nav{
@@ -300,7 +296,7 @@ header.com-sombra{
 footer {
     background-color: #e0e0e0; /* cinza bem claro */
     padding: 5px 20px; /* quase sem padding vertical */
-    color: white; /* texto branco */
+    color: rgb(0, 0, 0); /* texto branco */
     font-size: 14px;
     margin-top: 20vh;
     padding-bottom: 5vh;
@@ -309,11 +305,11 @@ footer {
 footer h2 {
     margin-bottom: 3px; /* mínimo possível */
     margin-top: 3vh; /* remove qualquer margem superior */
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 footer p, footer span, footer li {
-    color: white; /* garante que todos os textos fiquem brancos */
+    color: rgb(0, 0, 0); /* garante que todos os textos fiquem brancos */
     margin: 0; /* remove todas as margens */
     line-height: 1.3; /* controla altura da linha */
 }
@@ -328,7 +324,7 @@ footer li {
 }
 
 footer a {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
     transition: color 0.3s ease;
     margin-bottom: 10vh;

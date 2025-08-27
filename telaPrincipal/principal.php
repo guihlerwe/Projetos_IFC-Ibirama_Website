@@ -6,7 +6,7 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -57,25 +57,23 @@ $resultado = $conn->query($sql);
         </header>
 
         <div class="barra-pesquisar">
-            <input type="text" class="input-pesquisar" placeholder="Pesquisar" id="input-pesquisa">
-            <button class="btn-filtrar pesquisa" data-filtro="pesquisa">Pesquisa</button>
-            <button class="btn-filtrar ensino" data-filtro="ensino">Ensino</button>
-            <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
-            <button class="btn-filtrar todos" data-filtro="">Todos</button>
-            
-        <div class="custom-select" id="categorias-filtrar">
-            <div class="select-selected">Categorias</div>
-                <div class="select-items">
-                    <div data-value="ciencias_naturais">Ciências Naturais</div>
-                    <div data-value="ciencias_humanas">Ciências Humanas</div>
-                    <div data-value="linguagens">Linguagens</div>
-                    <div data-value="matematica">Matemática</div>
-                    <div data-value="administracao">Administração</div>
-                    <div data-value="informatica">Informática</div>
-                    <div data-value="vestuario">Vestuário</div>
-                </div>
-            </div> 
-        </div>
+    <input type="text" class="input-pesquisar" placeholder="Pesquisar" id="input-pesquisa">
+    <button class="btn-filtrar pesquisa" data-filtro="pesquisa">Pesquisa</button>
+    <button class="btn-filtrar ensino" data-filtro="ensino">Ensino</button>
+    <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
+    
+    <!-- SELECT NATIVO CORRIGIDO -->
+    <select id="categorias-filtrar">
+        <option value="">Todas as Categorias</option>
+        <option value="ciencias_naturais">Ciências Naturais</option>
+        <option value="ciencias_humanas">Ciências Humanas</option>
+        <option value="linguagens">Linguagens</option>
+        <option value="matematica">Matemática</option>
+        <option value="administracao">Administração</option>
+        <option value="informatica">Informática</option>
+        <option value="vestuario">Vestuário</option>
+    </select>    
+</div>
 
         <div class="projects-grid">
             <?php

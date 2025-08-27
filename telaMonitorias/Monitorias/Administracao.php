@@ -32,70 +32,48 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div id"login-nav"><?php include '../telaPrincipal/menuUsuario.php'; ?></div>
+                <div><?php include 'telaPrincipal/menuUsuario.php'; ?></div>
             </div>
         </header>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitoria - Administração</title>
+  <link rel="stylesheet" href="monitoria.css"> <!-- UM ÚNICO CSS -->
+</head>
+<body>
 
-        <div class="barra-pesquisar">
-            <input type="text" class="input-pesquisar" placeholder="Pesquisar">
-            <button class="btn-filtrar tecnico">Área Técnica</button>
-            <button class="btn-filtrar geral">Componentes Gerais</button>
-        </div>
-
-
-
-        <div class="projects-grid">
-
-            <div class="project-card">
-                <img src="icones/adm.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Administração</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="icones/info.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Informática</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="icones/vest.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Vestuário</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="icones/moda.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Moda</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="icones/exatas.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Ciências Humanas</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="icones/humanas.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Ciências da Natureza</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="icones/linguagens.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Linguagens e suas Tecnologias</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="icones/matemática.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Matemática e suas Tecnologias</div>
-            </div>
-     
-        </div>
+<div class="monitoria-container">
+  <!-- Capa -->
+  <div class="monitoria-capa">
+    <img src="/icones/adm.png" alt="Administração">
+    <div class="foto-monitor">
+      <img src="imagens/monitor-adm.jpg" alt="Monitor Administração">
     </div>
-    <script src="./telaMonitorias.js"></script>
+  </div>
+
+  <!-- Conteúdo -->
+  <div class="monitoria-conteudo">
+    <h1>Monitor João Silva</h1>
+    <h3>Administração</h3>
+
+    <section class="sobre">
+      <h2>Sobre</h2>
+      <p>João é aluno do curso técnico em Administração e atua como monitor para auxiliar estudantes com dúvidas em gestão e contabilidade.</p>
+    </section>
+
+    <section class="horarios">
+      <h2>Horários</h2>
+      <p>Segundas e Quartas - 14h às 16h</p>
+    </section>
+
+    <section class="contato">
+      <h2>Contato</h2>
+      <a href="mailto:joao@email.com">joao@email.com</a>
+    </section>
+  </div>
+</div>
 <footer>
     <div class="container footer-container">
         <div class="Aluno">
@@ -124,7 +102,8 @@ $tipo = $_SESSION['tipo'] ?? '';
         </div>
     </div>
 </footer>
+    <script src="./telaMonitorias.js"></script>
+
 
 </body>
-
 </html>

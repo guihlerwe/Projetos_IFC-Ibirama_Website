@@ -15,7 +15,6 @@ body {
     margin-top: 70px;
 }
 
-
 /*header*/
 header {
     display: flex;
@@ -79,11 +78,21 @@ header.com-sombra {
     cursor: pointer;
     border-radius: 20px;
 }
+
 .menu-btn {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .hamburger-icon {
@@ -107,22 +116,15 @@ header.com-sombra {
     display: inline-block;
 }
 
-.menu-btn {
-    background-color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 20px;
-}
-
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: white;
     min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0px 8px 16px var(--shadow-color);
     z-index: 1;
     right: 0;
+    border-radius: 2vh;
 }
 
 .menu-dropdown:hover .dropdown-content {
@@ -130,17 +132,19 @@ header.com-sombra {
 }
 
 .dropdown-content a {
-    color: black;
+    color: var(--text-color);
     padding: 10px 14px;
     text-decoration: none;
     display: block;
 }
 
 .dropdown-content a:hover {
-    background-color: #e0e0e0;
-    color: black;
+    background-color: #eeee;
+    color: var(--text-color);
     font-weight: normal;
+    padding: 10px 14px;
     text-decoration: none; 
+    border-radius: 2vh;
 }
 
 #projetos-nav {
@@ -161,11 +165,13 @@ header.com-sombra {
     border-radius: 10px;
 }
 
-/*page fuctions*/
+/* BARRA DE PESQUISA E FILTROS - MELHORADO */
 .barra-pesquisar {
     margin: 20px;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .input-pesquisar {
@@ -173,45 +179,90 @@ header.com-sombra {
     border: 1px solid #ccc;
     border-radius: 20px;
     width: 200px;
-    margin-right: 15px;
+    font-size: 14px;
 }
 
-.btn-filtrar, #categorias-filtrar {
-    padding: 6px 9px;
+.btn-filtrar {
+    padding: 8px 16px;
     border: 1px solid #ccc;
     border-radius: 20px;
     cursor: pointer;
-    margin-right: 10px;
     background-color: #ffffff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
+/* Estados hover específicos para cada tipo */
 .btn-filtrar.pesquisa:hover {
     background-color: rgba(33, 150, 243, 0.85);
-    color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
-    text-shadow: none;
+    color: white;
+    border-color: rgba(33, 150, 243, 0.85);
+    box-shadow: outset 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 .btn-filtrar.ensino:hover {
     background-color: #417144;
-    color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
-    text-shadow: none;
+    color: white;
+    border-color: #417144;
+    box-shadow: outset 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 .btn-filtrar.extensao:hover {
     background-color: #d32f2f;
-    color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
-    text-shadow: none;
+    color: white;
+    border-color: #d32f2f;
+    box-shadow: outset 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
+/* Estado ativo dos filtros */
+.btn-filtrar.filtro-ativo.pesquisa {
+    background-color: rgba(33, 150, 243, 0.85);
+    color: white;
+    border-color: rgba(33, 150, 243, 0.85);
+}
 
-.btn-filtrar.todos:hover {
-    background-color: #838383;
-    color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.2);
-    text-shadow: none;
+.btn-filtrar.filtro-ativo.ensino {
+    background-color: #417144;
+    color: white;
+    border-color: #417144;
+}
+
+.btn-filtrar.filtro-ativo.extensao {
+    background-color: #d32f2f;
+    color: white;
+    border-color: #d32f2f;
+}
+
+/* Select de categorias melhorado */
+#categorias-filtrar {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #ffffff;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='%23333' d='M0 0l5 6 5-6z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+    padding-right: 35px;
+    min-width: 150px;
+}
+
+#categorias-filtrar:hover {
+    background-color: #f5f5f5;
+    border-color: #999;
+}
+
+#categorias-filtrar:focus {
+    outline: none;
+    border-color: #666;
+    background-color: #fafafa;
 }
 
 .dropdown-arrow {
@@ -250,7 +301,7 @@ header.com-sombra {
     right: 5px;
     padding: 5px 10px;
     color: white;
-    font-size: 10px;
+    font-size: 15px;
     border-radius: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -263,7 +314,6 @@ header.com-sombra {
 
 .project-label.vermelho {
     background-color: rgba(211, 47, 47, 0.6);
-    ;
 }
 
 .project-label.azul {
@@ -277,7 +327,6 @@ header.com-sombra {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     aspect-ratio: 16/9;
     transition: all 0.3s ease;
-    /* Adiciona transição suave para todos os efeitos */
 }
 
 .project-card:hover {
@@ -294,41 +343,39 @@ header.com-sombra {
     transform: scale(1.05);
 }
 
-
 /* footer */
-
 footer {
-    background-color: #e0e0e0; /* cinza bem claro */
-    padding: 5px 20px; /* quase sem padding vertical */
-    color: white; /* texto branco */
+    background-color: #e0e0e0;
+    padding: 5px 20px;
+    color: rgb(0, 0, 0);
     font-size: 14px;
     margin-top: 20vh;
     padding-bottom: 5vh;
 }
 
 footer h2 {
-    margin-bottom: 3px; /* mínimo possível */
-    margin-top: 3vh; /* remove qualquer margem superior */
-    color: white;
+    margin-bottom: 3px;
+    margin-top: 3vh;
+    color: rgb(0, 0, 0);
 }
 
 footer p, footer span, footer li {
-    color: white; /* garante que todos os textos fiquem brancos */
-    margin: 0; /* remove todas as margens */
-    line-height: 1.3; /* controla altura da linha */
+    color: rgb(0, 0, 0);
+    margin: 0;
+    line-height: 1.3;
 }
 
 footer ul {
-    margin: 0; /* remove margem da lista */
-    padding-left: 20px; /* apenas um pouco de espaço para os bullets */
+    margin: 0;
+    padding-left: 20px;
 }
 
 footer li {
-    margin-bottom: 2px; /* espaço mínimo entre itens da lista */
+    margin-bottom: 2px;
 }
 
 footer a {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
     transition: color 0.3s ease;
     margin-bottom: 10vh;
@@ -339,22 +386,21 @@ footer a:hover {
 }
 
 footer .footer-container {
-    max-width: 1200px; 
+    max-width: 1350px; 
     margin: 0 auto;     
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    flex-wrap: wrap; /* garante que na tela pequena fique empilhado */
+    flex-wrap: wrap;
 }
 
-/* Organiza colunas do footer */
 footer .Aluno {
-    flex: 1; /* ocupa espaço à esquerda */
+    flex: 1;
     min-width: 200px;
 }
 
 footer .Sobre {
-    flex: 2; /* ocupa mais espaço à direita */
+    flex: 2;
     min-width: 300px;
 }
 
@@ -365,7 +411,6 @@ footer .Sobre {
     }
 }
 
-
 @media only screen and (max-width: 950px) {
     footer {
         padding-left: 2vh;
@@ -375,11 +420,9 @@ footer .Sobre {
 li {
     margin-bottom: 1.5px;
     list-style-type: circle;
-
 }
 
 ul {
-
     margin-top: 2px;
     list-style-type: circle;
 }
@@ -387,12 +430,10 @@ ul {
 a {
     color: #ffffff;
     list-style-type: circle;
-
 }
 
 a:hover {
     color: rgb(43, 43, 255);
-    /* Altera a cor ao passar o mouse */
 }
 
 #Aluno {
@@ -403,9 +444,53 @@ a:hover {
     margin-bottom: 30vh;
 }
 
-/* Celular*/
-@media screen and (max-width: 768px) {
+/* Estilos adicionais para o sistema dinâmico de projetos */
+.no-projects {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
 
+.no-projects p {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.no-projects a {
+    color: #adadad;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.no-projects a:hover {
+    text-decoration: underline;
+}
+
+.project-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.project-label.verde {
+    background-color: #417144;
+}
+
+.project-label.azul {
+    background-color: rgba(33, 150, 243, 0.85);
+}
+
+.project-label.vermelho {
+    background-color: rgba(211, 47, 47, 0.85);
+}
+
+/* Responsividade para mobile - MELHORADA */
+@media screen and (max-width: 768px) {
     header {
         display: flex;
         justify-content: space-between;
@@ -460,7 +545,6 @@ a:hover {
         background-color: #2e7d32;
         color: white;
         -webkit-tap-highlight-color: transparent;
-
     }
 
     .container {
@@ -469,7 +553,6 @@ a:hover {
 
     .projects-grid {
         display: block;
-        /*padding: ;*/
         padding-bottom: 15vh;
         -webkit-tap-highlight-color: transparent;
     }
@@ -479,7 +562,6 @@ a:hover {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
-
     .container {
         min-width: 76px;
         margin: 0 auto;
@@ -487,78 +569,29 @@ a:hover {
         margin-top: 70px;
     }
 
-}
-
-/* Estilos adicionais para o sistema dinâmico de projetos */
-
-/* Botão de filtro ativo */
-.btn-filtrar.filtro-ativo {
-    background-color: #adadad;
-    color: white;
-    border-color: #adadad;
-}
-
-/* Estilo para quando não há projetos */
-.no-projects {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 60px 20px;
-    color: #666;
-}
-
-.no-projects p {
-    margin-bottom: 15px;
-    font-size: 18px;
-}
-
-.no-projects a {
-    color: #adadad;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.no-projects a:hover {
-    text-decoration: underline;
-}
-
-/* Melhorias no card de projeto */
-.project-card {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.project-label.verde {
-    background-color: #417144;
-}
-
-.project-label.azul {
-    background-color: rgba(33, 150, 243, 0.85);
-}
-
-.project-label.vermelho {
-    background-color: rgba(211, 47, 47, 0.85);
-}
-
-@media screen and (max-width: 768px) {
     .projects-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
     
     .barra-pesquisar {
-        flex-wrap: wrap;
-        gap: 10px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
     }
     
     .input-pesquisar {
         width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
+    }
+    
+    .btn-filtrar, #categorias-filtrar {
+        width: 100%;
+        text-align: center;
+    }
+    
+    #categorias-filtrar {
+        padding-right: 35px;
+        text-align: left;
     }
 }
 
@@ -566,89 +599,4 @@ a:hover {
     .projects-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-}
-/* Container estilizado do select */
-#categorias-filtrar {
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-right: 10px;
-    background-color: #ffffff;
-    font-size: 14px;
-    appearance: none;          /* remove estilo nativo */
-    -webkit-appearance: none;  /* Safari */
-    -moz-appearance: none;     /* Firefox */
-    transition: all 0.3s ease;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='black' d='M0 0l5 6 5-6z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 10px;
-    padding-right: 30px; /* espaço para a setinha */
-}
-
-/* Hover */
-#categorias-filtrar:hover {
-    background-color: #f5f5f5;
-}
-
-/* Quando em foco */
-#categorias-filtrar:focus {
-    outline: none;
-    border-color: #999;
-    background-color: #fafafa;
-}
-
-.custom-select {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 6px 12px;
-    background-color: #fff;
-    user-select: none;
-    min-width: 150px;
-}
-
-/* Texto selecionado */
-.select-selected {
-    font-size: 14px;
-}
-
-/* Container de opções escondido */
-.select-items {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    z-index: 99;
-    display: none;
-    overflow: hidden;
-    animation: expandDown 0.3s ease forwards;
-}
-
-/* Opções */
-.select-items div {
-    padding: 8px 12px;
-    transition: background-color 0.2s;
-}
-
-.select-items div:hover {
-    background-color: #f0f0f0;
-}
-
-/* Animação */
-@keyframes expandDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Quando aberto */
-.custom-select.open .select-items {
-    display: block;
 }

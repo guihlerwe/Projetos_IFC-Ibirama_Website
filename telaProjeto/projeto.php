@@ -4,7 +4,7 @@ session_start();
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco
@@ -219,7 +219,34 @@ $tipo = $_SESSION['tipo'] ?? '';
         </div>
     </div>
 </div>
+<footer>
+    <div class="container footer-container">
+        <div class="Aluno">
+            <h2>Recursos</h2>
+            <ul id="menu-aluno">
+                <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
+                <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
+                <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
+                <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
+                <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
+                <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
+            </ul>
+        </div>
+        <div class="Sobre">
+            <h2>Sobre este site</h2>
+            <p> 
+                O Campus Ibirama, inaugurado em 2010, com dezenas de profissionais, proporciona uma educação de 
+                qualidade e oferece cursos de Tecnologia da Informação, Administração e Vestuário, 
+                que são importantes para inovações e negócios.  
 
-<script src="./visualizarProjeto.js"></script>
+                <b id="gab">Gabriella</b> e <b id="gui">Guilherme</b> criaram um site para facilitar o acesso a informações sobre projetos e monitorias,
+                que antes eram pouco divulgados. O site reúne dados sobre inscrições, horários de monitorias e contatos 
+                dos responsáveis pelos projetos, mostrando a aplicação de conhecimentos do curso de Tecnologia da Informação.
+            </p>
+            <span id="License"><i>Licença M.I.T.2025</i></span>
+        </div>
+    </div>
+</footer>
+<script src="projeto.js"></script>
 </body>
 </html>

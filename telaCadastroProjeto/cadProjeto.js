@@ -4,7 +4,41 @@ console.log('Iniciando cadProjeto.js...');
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM carregado!');
     
-    // link para as outras telas
+    // Função para obter o tipo de usuário
+    function obterTipoUsuario() {
+        return sessionStorage.getItem('tipoUsuario') || '';
+    }
+    
+    // Função para redirecionar baseado no tipo de usuário
+    function redirecionarPorTipo(paginaBase) {
+        const tipoUsuario = obterTipoUsuario();
+        
+        switch(paginaBase) {
+            case 'projetos':
+                switch(tipoUsuario) {
+                    case 'coordenador':
+                        window.location.href = "../telaPrincipal/painelCoordenador.php";
+                        break;
+                    case 'bolsista':
+                        window.location.href = "../telaPrincipal/painelBolsista.php";
+                        break;
+                    default:
+                        window.location.href = "../telaPrincipal/principal.php";
+                        break;
+                }
+                break;
+            case 'monitoria':
+                // Para monitoria, sempre vai para a mesma página independente do tipo
+                window.location.href = "../telaMonitorias/telaMonitorias.php";
+                break;
+            case 'sobre':
+                // Para sobre, sempre vai para a mesma página independente do tipo
+                window.location.href = "../telaSobre/sobre.php";
+                break;
+        }
+    }
+    
+    // link para as outras telas com redirecionamento baseado no tipo de usuário
     const loginBtn = document.querySelector(".login-nav");
     if (loginBtn) {
         loginBtn.addEventListener("click", function () {
@@ -15,21 +49,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const projetosNav = document.querySelector("#projetos-nav");
     if (projetosNav) {
         projetosNav.addEventListener("click", function() {
-            window.location.href = "../telaPrincipal/principal.php";
+            redirecionarPorTipo('projetos');
         });
     }
 
     const monitoriaNav = document.querySelector("#monitoria-nav");
     if (monitoriaNav) {
         monitoriaNav.addEventListener("click", function() {
-            window.location.href = "../telaMonitorias/telaMonitorias.php";
+            redirecionarPorTipo('monitoria');
         });
     }
 
     const sobreNav = document.querySelector("#sobre-nav");
     if (sobreNav) {
         sobreNav.addEventListener("click", function() {
-            window.location.href = "../telaSobre/sobre.php";
+            redirecionarPorTipo('sobre');
         });
     }
 

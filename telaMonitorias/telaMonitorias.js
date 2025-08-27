@@ -6,6 +6,7 @@ if (loginBtn) {
     window.location.href = "../telaLogin/login.html";
   });
 }
+
   
 document.querySelector(".projetos-nav").addEventListener("click", function () {
   const tipo = sessionStorage.getItem("tipoUsuario");
@@ -32,4 +33,38 @@ window.addEventListener("scroll", () => {
   }
 });
   
-  
+// Seleciona todos os cards
+document.querySelectorAll(".project-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const label = card.querySelector(".project-label").innerText.trim();
+
+    switch (label) {
+      case "Administração":
+        window.location.href = "./Monitorias/Administracao.php";
+        break;
+      case "Informática":
+        window.location.href = "monitoriaInfo.php";
+        break;
+      case "Vestuário":
+        window.location.href = "monitoriaVest.php";
+        break;
+      case "Moda":
+        window.location.href = "monitoriaModa.php";
+        break;
+      case "Ciências Humanas":
+        window.location.href = "monitoriaHumanas.php";
+        break;
+      case "Ciências da Natureza":
+        window.location.href = "monitoriaNatureza.php";
+        break;
+      case "Linguagens":
+        window.location.href = "monitoriaLinguagens.php";
+        break;
+      case "Matemática":
+        window.location.href = "monitoriaMatematica.php";
+        break;
+      default:
+        alert("Monitoria ainda não cadastrada!");
+    }
+  });
+});
