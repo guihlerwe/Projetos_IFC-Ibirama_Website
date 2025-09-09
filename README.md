@@ -10,16 +10,12 @@ O sistema busca facilitar a organização, acompanhamento e transparência dos p
 
 Projeto desenvolvido como Trabalho de Conclusão de Curso (TCC) do curso Técnico em Informática / Tecnologia da Informação.
 
-⸻
-
 ## Funcionalidades (previstas/implementadas)
 	•	📂 Cadastro e gerenciamento de projetos
 	•	👥 Acompanhamento de responsáveis e equipes
 	•	📊 Relatórios e indicadores de progresso
 	•	🔎 Pesquisa e filtros de projetos ativos
 	•	🌐 Interface web intuitiva
-
-⸻
 
 ## Tecnologias Utilizadas
 	•	Frontend: HTML, CSS 
