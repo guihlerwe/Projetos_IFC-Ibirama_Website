@@ -3,13 +3,14 @@ const header = document.querySelector("header");
 const loginBtn = document.querySelector(".login-nav");
 if (loginBtn) {
   loginBtn.addEventListener("click", function () {
-    window.location.href = "../telaLogin/login.html";
+    window.location.href = "../telaCadastroAluno/cadAluno.html";
   });
 }
 
+
   
 document.querySelector(".projetos-nav").addEventListener("click", function () {
-  const tipo = sessionStorage.getItem("tipoUsuario");
+  const tipo = sessionStorage.getItem("tipo");
 
   if (tipo === "coordenador") {
       window.location.href = "../telaPrincipal/painelCoordenador.php";

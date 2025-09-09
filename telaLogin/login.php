@@ -4,7 +4,7 @@
     // conexão
     $host = 'localhost';
     $usuario = 'root';
-    $senha = 'root';
+    $senha = 'Gui215600';
     $banco = 'website';
 
     $conn = new mysqli($host, $usuario, $senha, $banco);

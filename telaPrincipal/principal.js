@@ -9,6 +9,10 @@ document.querySelector("#sobre-nav").addEventListener("click", function() {
     window.location.href = "../telaSobre/sobre.php";
 });
 
+document.querySelector("#login-nav").addEventListener("click", function() {
+    window.location.href = "../telaCadastroAluno/cadAluno.html";
+});
+
 // Efeito de sombra no header ao fazer scroll
 window.addEventListener("scroll", () => {
     if (window.scrollY > 0) {

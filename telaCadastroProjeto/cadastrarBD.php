@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 // banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
+$senha = 'Gui215600';
 $banco = 'website';
 
 // conexão com o banco

@@ -32,7 +32,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div id"login-nav"><?php include '../telaPrincipal/menuUsuario.php'; ?></div>
+                <div class="login-nav"id"login-nav"><?php include '../telaPrincipal/menuUsuario.php'; ?></div>
             </div>
         </header>
 
