@@ -2,6 +2,31 @@
 session_start();
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
+
+// Conexão com o banco de dados
+$host = 'localhost';
+$usuario = 'root';
+$senha = 'root';
+$banco = 'website';
+
+$conn = new mysqli($host, $usuario, $senha, $banco);
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
+}
+
+$conn->set_charset("utf8");
+
+$id = $_GET['id'] ?? null;
+$monitor = null;
+
+if ($id) {
+    $stmt = $conn->prepare("SELECT * FROM monitores WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $monitor = $result->fetch_assoc();
+    $stmt->close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +35,7 @@ $tipo = $_SESSION['tipo'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="telaMonitorias.css">
+    <link rel="stylesheet" href="monitor.css">
     <title>Monitorias</title>
 </head>
 
@@ -23,7 +48,7 @@ $tipo = $_SESSION['tipo'] ?? '';
         <header>
             <div class="logo">
                 <div class="grid-icon">
-                    <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                    <img src="/telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
                     
                 </div>
                 Monitores do Campus Ibirama
@@ -35,42 +60,28 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <div><?php include 'telaPrincipal/menuUsuario.php'; ?></div>
             </div>
         </header>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Monitoria - Administração</title>
-  <link rel="stylesheet" href="monitoria.css"> <!-- UM ÚNICO CSS -->
-</head>
-<body>
-
+        
 <div class="monitoria-container">
-  <!-- Capa -->
   <div class="monitoria-capa">
-    <img src="/icones/adm.png" alt="Administração">
+    <img src="<?php echo $monitor['capa_img']; ?>" alt="<?php echo $monitor['area']; ?>">
     <div class="foto-monitor">
-      <img src="imagens/monitor-adm.jpg" alt="Monitor Administração">
+      <img src="<?php echo $monitor['foto']; ?>" alt="Monitor <?php echo $monitor['nome']; ?>">
     </div>
   </div>
-
-  <!-- Conteúdo -->
   <div class="monitoria-conteudo">
-    <h1>Monitor João Silva</h1>
-    <h3>Administração</h3>
-
+    <h1>Monitor <?php echo $monitor['nome']; ?></h1>
+    <h3><?php echo $monitor['area']; ?></h3>
     <section class="sobre">
       <h2>Sobre</h2>
-      <p>João é aluno do curso técnico em Administração e atua como monitor para auxiliar estudantes com dúvidas em gestão e contabilidade.</p>
+      <p><?php echo $monitor['sobre']; ?></p>
     </section>
-
     <section class="horarios">
       <h2>Horários</h2>
-      <p>Segundas e Quartas - 14h às 16h</p>
+      <p><?php echo $monitor['horarios']; ?></p>
     </section>
-
     <section class="contato">
       <h2>Contato</h2>
-      <a href="mailto:joao@email.com">joao@email.com</a>
+      <a href="mailto:<?php echo $monitor['email']; ?>"><?php echo $monitor['email']; ?></a>
     </section>
   </div>
 </div>
@@ -102,8 +113,11 @@ $tipo = $_SESSION['tipo'] ?? '';
         </div>
     </div>
 </footer>
-    <script src="./telaMonitorias.js"></script>
+    <script src="/telaMonitorias.js"></script>
 
 
 </body>
 </html>
+<?php
+$conn->close();
+?>

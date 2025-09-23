@@ -6,8 +6,6 @@ if (loginBtn) {
     window.location.href = "../telaCadastroAluno/cadAluno.html";
   });
 }
-
-
   
 document.querySelector(".projetos-nav").addEventListener("click", function () {
   const tipo = sessionStorage.getItem("tipo");
@@ -20,7 +18,6 @@ document.querySelector(".projetos-nav").addEventListener("click", function () {
       window.location.href = "../telaPrincipal/principal.php";
   }
 });
-
   
 document.querySelector(".sobre-nav").addEventListener("click", function() {
     window.location.href = "../telaSobre/sobre.php";
@@ -41,28 +38,28 @@ document.querySelectorAll(".project-card").forEach(card => {
 
     switch (label) {
       case "Administração":
-        window.location.href = "./Monitorias/Administracao.php";
+        window.location.href = "monitor.php";
         break;
       case "Informática":
-        window.location.href = "monitoriaInfo.php";
+        window.location.href = "monitor.php";
         break;
       case "Vestuário":
-        window.location.href = "monitoriaVest.php";
+        window.location.href = "monitor.php";
         break;
       case "Moda":
-        window.location.href = "monitoriaModa.php";
+        window.location.href = "monitor.php";
         break;
       case "Ciências Humanas":
-        window.location.href = "monitoriaHumanas.php";
+        window.location.href = "monitor.php";
         break;
       case "Ciências da Natureza":
-        window.location.href = "monitoriaNatureza.php";
+        window.location.href = "monitor.php";
         break;
       case "Linguagens":
-        window.location.href = "monitoriaLinguagens.php";
+        window.location.href = "monitor.php";
         break;
       case "Matemática":
-        window.location.href = "monitoriaMatematica.php";
+        window.location.href = "monitor.php";
         break;
       default:
         alert("Monitoria ainda não cadastrada!");
