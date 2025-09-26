@@ -36,7 +36,8 @@ if ($id) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="monitor.css">
+    <link rel="stylesheet" href="../assets/css/tema-global.css">
+    <link rel="stylesheet" href="../assets/css/monitor.css">
     <title>Monitorias</title>
 </head>
 
@@ -49,7 +50,7 @@ if ($id) {
         <header>
             <div class="logo">
                 <div class="grid-icon">
-                    <img src="/telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                    <img src="/assets/photos/ifc-logo-preto.png" id="icone-ifc">
                     
                 </div>
                 Monitores do Campus Ibirama
@@ -58,7 +59,7 @@ if ($id) {
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div><?php include 'telaPrincipal/menuUsuario.php'; ?></div>
+                <div><?php include 'menuUsuario.php'; ?></div>
             </div>
         </header>
         

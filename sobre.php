@@ -10,7 +10,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="sobre.css">
+    <link rel="stylesheet" href="../assets/css/tema-global.css">
+    <link rel="stylesheet" href="../assets/css/sobre.css">
     <title>Sobre o Campus Ibirama e este site</title>
 </head>
 
@@ -21,9 +22,9 @@ $tipo = $_SESSION['tipo'] ?? '';
     </script>
     <div class="container">
         <header>
-            <div id="logo">
-                <div id="icone-nav">
-                    <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+            <div class="logo">
+                <div class="icone-nav">
+                    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
                 </div>
                 Projetos do Campus Ibirama
             </div>
@@ -33,14 +34,14 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div class="login-nav"> <?php include '../telaPrincipal/menuUsuario.php'; ?> </div>
+                <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
         
         <div class="content">
             <div class="section">
                 <div>
-                        <img  id="capa" src="../telaPrincipal/img/campus-image.jpg" alt="Imagem do campus">
+                        <img  id="capa" src="../assets/photos/campus-image.jpg" alt="Imagem do campus">
                     </div>
                 <h2 class="section-title">Campus IFC Ibirama</h2>
                 <div class="section-layout">
@@ -57,7 +58,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                         </a>
                     </div>
                     <div class="section-image">
-                        <img src="../telaPrincipal/img/fachada-ifc-ibirama-1024x576.jpg" alt="Imagem do campus">
+                        <img src="../assets/photos/fachada-ifc-ibirama-1024x576.jpg" alt="Imagem do campus">
                     </div>
                 </div>
             </div>
@@ -65,7 +66,7 @@ $tipo = $_SESSION['tipo'] ?? '';
             <div class="section">
                 <div class="section-layout">
                     <div class="section-image">
-                        <img src="../telaPrincipal/img/campus-image.jpg" alt="Estudantes" id="Criadores">
+                        <img src="../assets/photos/campus-image.jpg" alt="Estudantes" id="Criadores">
                     </div>
 
                     <div>

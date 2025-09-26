@@ -27,8 +27,8 @@ $resultado = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="">
-    <link rel="stylesheet" href="principal.css">
+    <link rel="stylesheet" href="../assets/css/tema-global.css">
+    <link rel="stylesheet" href="../assets/css/principal.css">
     <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1, user-scalable=no">
     <title>Projetos do Campus Ibirama</title>
 </head>
@@ -41,18 +41,18 @@ $resultado = $conn->query($sql);
     <div class="container">
 
         <header>
-            <div id="logo">
-                <div id="icone-nav">
+            <div class="logo">
+                <div class="icone-nav">
                     <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
                 </div>
                 Projetos do Campus Ibirama
             </div>
 
-            <div id="navegador">
-                <div id="projetos-nav">Projetos</div>
-                <div id="monitoria-nav">Monitoria</div>
-                <div id="sobre-nav">Sobre</div>
-                <div id="entrar-nav"> <?php include '../telaPrincipal/menuUsuario.php'; ?> </div>
+            <div class="navegador">
+                <div class="projetos-nav">Projetos</div>
+                <div class="monitoria-nav">Monitoria</div>
+                <div class="sobre-nav">Sobre</div>
+                <div class="entrar-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
 
@@ -62,7 +62,7 @@ $resultado = $conn->query($sql);
             <button class="btn-filtrar ensino" data-filtro="ensino">Ensino</button>
             <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
             
-            <select id="categorias-filtrar">
+            <select class="categorias-filtrar">
                 <option value="">Todas as Categorias</option>
                 <option value="ciencias_naturais">Ciências Naturais</option>
                 <option value="ciencias_humanas">Ciências Humanas</option>

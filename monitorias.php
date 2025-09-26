@@ -10,7 +10,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="telaMonitorias.css">
+    <link rel="stylesheet" href="assets/css/tema-global.css">
+    <link rel="stylesheet" href="assets/css/monitorias.css">
     <title>Monitorias</title>
 </head>
 
@@ -22,7 +23,7 @@ $tipo = $_SESSION['tipo'] ?? '';
     <div class="container">
         <header>
             <div class="logo">
-                <div class="grid-icon">
+                <div class="icone-nav">
                     <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
                     
                 </div>
@@ -32,7 +33,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div class="login-nav"id"login-nav"><?php include '../telaPrincipal/menuUsuario.php'; ?></div>
+                <div class="login-nav"id"login-nav"><?php include 'menuUsuario.php'; ?></div>
             </div>
         </header>
 

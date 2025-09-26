@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Conta</title>
-    <link rel="stylesheet" href="contaUsuario.css">
+    <!-- precisa arrumar o global para funcionar nesse aqui
+    <link rel="stylesheet" href="assets/css/tema-global.css">
+-->
+    <link rel="stylesheet" href="assets/css/usuario.css">
 </head>
 <body>
     <header>
             <div class="logo">
                 <div class="grid-icon">
-                    <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
                 </div>
                 Projetos do Campus Ibirama
             </div>
@@ -31,7 +34,7 @@
         <section class="secao-superior">
             <!-- Foto -->
             <div class="secao-foto">
-                <img src="../telaPrincipal/sem_foto_perfil.png" alt="Foto de Perfil" class="foto-perfil">
+                <img src="../assets/photos/sem_foto_perfil.png" alt="Foto de Perfil" class="foto-perfil">
                 <button class="btn">Alterar Foto</button>
             </div>
 
@@ -75,5 +78,36 @@
             <button class="btn excluir">Excluir Conta</button>
         </div>
     </main>
+
+    <footer>
+        <div class="container footer-container">
+            <div class="Aluno">
+                <h2>Recursos</h2>
+                <ul id="menu-aluno">
+                    <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
+                    <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
+                    <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
+                    <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
+                    <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
+                    <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
+                </ul>
+            </div>
+            <div class="Sobre">
+                <h2>Sobre este site</h2>
+                <p> 
+                    O Campus Ibirama, inaugurado em 2010, com dezenas de profissionais, proporciona uma educação de 
+                    qualidade e oferece cursos de Tecnologia da Informação, Administração e Vestuário, 
+                    que são importantes para inovações e negócios.  
+
+                    <b id="gab">Gabriella</b> e <b id="gui">Guilherme</b> criaram um site para facilitar o acesso a informações sobre projetos e monitorias,
+                    que antes eram pouco divulgados. O site reúne dados sobre inscrições, horários de monitorias e contatos 
+                    dos responsáveis pelos projetos, mostrando a aplicação de conhecimentos do curso de Tecnologia da Informação.
+                </p>
+                <span id="License"><i>Licença M.I.T.2025</i></span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/usuario.js"></script>
 </body>
 </html>

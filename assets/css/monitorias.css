@@ -1,0 +1,148 @@
+.monitoria-nav{
+    background-color: #eeeeee;
+    color: rgb(0, 0, 0);
+}
+
+.barra-pesquisar {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.input-pesquisar {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: 200px;
+    margin-right: 15px;
+}
+
+.btn-filtrar {
+    padding: 6px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    background-color: #ffffff;
+}
+
+.btn-filtrar.tecnico:hover {
+    background-color:#2e7d32;
+    color: rgb(217, 233, 221);
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    text-shadow: none;
+}
+
+.btn-filtrar.geral:hover {
+    background-color:#d32f2f;
+    color: rgb(217, 233, 221);
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    text-shadow: none;
+}
+
+.dropdown-arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 0 20px 20px 20px;
+}
+
+.project-label {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+@media (max-width: 600px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.project-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.project-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.project-label {
+    position: absolute;
+    top: 85%;
+    position-area: block-start center;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+.project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+}
+
+.project-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 16/9;
+    /* Mantém proporção consistente para todos os cartões */
+}
+
+
+.project-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 16/9;
+    transition: all 0.3s ease; /* Adiciona transição suave para todos os efeitos */
+}
+
+/* Efeito quando o mouse passa por cima do cartão */
+.project-card:hover {
+    transform: translateY(-10px); /* Move o cartão 10px para cima */
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada e distante */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+}
+
+/* Opcional: efeito sutil de zoom na imagem ao passar o mouse */
+.project-card .project-image {
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image {
+    transform: scale(1.05); /* Aumenta ligeiramente a imagem */
+}
+
+@media (max-width: 600px) {
+    footer .footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+

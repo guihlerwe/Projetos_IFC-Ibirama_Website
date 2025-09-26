@@ -1,11 +1,4 @@
-/* 
-   ARQUIVO: assets/css/global.css
-   
-   Este arquivo deve ser incluído em TODAS as páginas do projeto.
-   Coloque este CSS em uma pasta compartilhada como assets/css/
-*/
-
-/* ===== RESET E CONFIGURAÇÕES BASE ===== */
+/* RESET E CONFIGURAÇÕES BASE  */
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +6,7 @@
     font-family: Arial, sans-serif;
 }
 
-/* ===== VARIÁVEIS GLOBAIS DO TEMA ===== */
+/* VARIÁVEIS GLOBAIS DO TEMA */
 :root {
     /* Cores principais */
     --primary-bg: #ffffff;
@@ -86,9 +79,52 @@
     --cor-extensao: #d32f2f;
 }
 
-/* ===== MODO ESCURO AUTOMÁTICO (Sistema) ===== */
-@media (prefers-color-scheme: dark) {
-    :root {
+    /* ===== MODO ESCURO AUTOMÁTICO (Sistema) ===== */
+    /*@media (prefers-color-scheme: dark) {
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #2a2a2a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            
+            --header-bg: rgba(30, 30, 30, 0.9);
+            --header-text: #e0e0e0;
+            --nav-hover: #333333;
+            --nav-active: #404040;
+            
+            --card-bg: #1e1e1e;
+            --card-border: #333333;
+            --card-shadow: rgba(0, 0, 0, 0.3);
+            
+            --input-bg: #2a2a2a;
+            --input-border: #404040;
+            --input-focus: #0d6efd;
+            --input-text: #ffffff;
+            --input-placeholder: #b3b3b3;
+            
+            --footer-bg: #2a2a2a;
+            --footer-text: #ffffff;
+            --footer-link: #ffffff;
+            --footer-link-hover: #ff6b6b;
+            
+            --table-bg: #1e1e1e;
+            --table-stripe: #2a2a2a;
+            --table-border: #333333;
+            --table-hover: #333333;
+            
+            --border-color: #333333;
+            --divider-color: #404040;
+            
+            --hover-overlay: rgba(255, 255, 255, 0.05);
+            --active-overlay: rgba(255, 255, 255, 0.1);
+            --disabled-bg: #333333;
+            --disabled-text: #666666;
+        }
+    }*/
+
+    /* ===== MODO ESCURO FORÇADO (Classe) ===== */
+    /*[data-theme="dark"] {
         --primary-bg: #1a1a1a;
         --secondary-bg: #2a2a2a;
         --text-primary: #e0e0e0;
@@ -128,54 +164,11 @@
         --disabled-bg: #333333;
         --disabled-text: #666666;
     }
-}
 
-/* ===== MODO ESCURO FORÇADO (Classe) ===== */
-[data-theme="dark"] {
-    --primary-bg: #1a1a1a;
-    --secondary-bg: #2a2a2a;
-    --text-primary: #e0e0e0;
-    --text-secondary: #b3b3b3;
-    --text-muted: #666666;
-    
-    --header-bg: rgba(30, 30, 30, 0.9);
-    --header-text: #e0e0e0;
-    --nav-hover: #333333;
-    --nav-active: #404040;
-    
-    --card-bg: #1e1e1e;
-    --card-border: #333333;
-    --card-shadow: rgba(0, 0, 0, 0.3);
-    
-    --input-bg: #2a2a2a;
-    --input-border: #404040;
-    --input-focus: #0d6efd;
-    --input-text: #ffffff;
-    --input-placeholder: #b3b3b3;
-    
-    --footer-bg: #2a2a2a;
-    --footer-text: #ffffff;
-    --footer-link: #ffffff;
-    --footer-link-hover: #ff6b6b;
-    
-    --table-bg: #1e1e1e;
-    --table-stripe: #2a2a2a;
-    --table-border: #333333;
-    --table-hover: #333333;
-    
-    --border-color: #333333;
-    --divider-color: #404040;
-    
-    --hover-overlay: rgba(255, 255, 255, 0.05);
-    --active-overlay: rgba(255, 255, 255, 0.1);
-    --disabled-bg: #333333;
-    --disabled-text: #666666;
-}
-
-[data-theme="dark"] .hamburger-icon span,
-[data-theme="dark"] .site-link-icon div {
-    background-color: var(--text-primary);
-}
+    [data-theme="dark"] .hamburger-icon span,
+    [data-theme="dark"] .site-link-icon div {
+        background-color: var(--text-primary);
+    }*/
 
 /* ===== ESTILOS BASE GLOBAIS ===== */
 body {

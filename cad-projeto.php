@@ -8,7 +8,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="cadProjeto.css">
+    <link rel="stylesheet" href="../assets/css/tema-global.css">
+    <link rel="stylesheet" href="../assets/css/cad-projeto.css">
     <title>Criar/Editar Projeto</title>
 </head>
 <body>
@@ -19,17 +20,17 @@ $tipo = $_SESSION['tipo'] ?? '';
 
 <div class="container">
     <header>
-        <div id="logo">
-            <div id="icone-nav">
+        <div class="logo">
+            <div class="icone-nav">
                 <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
             </div>
             Projetos do Campus Ibirama
         </div>
-        <div id="navegador">
-            <div id="projetos-nav">Projetos</div>
-            <div id="monitoria-nav">Monitoria</div>
-            <div id="sobre-nav">Sobre</div>
-            <?php include '../telaPrincipal/menuUsuario.php'; ?>
+        <div class="navegador">
+            <div class="projetos-nav">Projetos</div>
+            <div class="monitoria-nav">Monitoria</div>
+            <div class="sobre-nav">Sobre</div>
+            <?php include '..menuUsuario.php'; ?>
         </div>
     </header>
 
@@ -126,6 +127,6 @@ $tipo = $_SESSION['tipo'] ?? '';
     </form>
 </div>
 
-<script src="./cadProjeto.js"></script>
+<script src="./assets/js/cad-aluno.js"></script>
 </body>
 </html>

@@ -40,12 +40,12 @@
             echo($usuario['nome']);
             if ($usuario['tipo'] == 'coordenador') {
                 //header("Location: ../telaPrincipal/painelCoordenador.php"); 
-                header("Location: ../telaPrincipal/principal.php");
+                header("Location: principal.php");
             } elseif ($usuario['tipo'] === 'bolsista') {
                 //header("Location: ../telaPrincipal/painelBolsista.php");
-                header("Location: ../telaPrincipal/principal.php");
+                header("Location: principal.php");
             } else {
-                header("Location: ../telaPrincipal/principal.php");
+                header("Location: principal.php");
             }
 
         //} else {
