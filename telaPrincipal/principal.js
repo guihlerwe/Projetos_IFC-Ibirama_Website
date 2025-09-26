@@ -1,18 +1,5 @@
 const header = document.querySelector("header");
 
-// Navegação entre páginas
-document.querySelector("#monitoria-nav").addEventListener("click", function() {
-    window.location.href = "../telaMonitorias/telaMonitorias.php";
-});
-
-document.querySelector("#sobre-nav").addEventListener("click", function() {
-    window.location.href = "../telaSobre/sobre.php";
-});
-
-document.querySelector("#login-nav").addEventListener("click", function() {
-    window.location.href = "../telaCadastroAluno/cadAluno.html";
-});
-
 // Efeito de sombra no header ao fazer scroll
 window.addEventListener("scroll", () => {
     if (window.scrollY > 0) {
@@ -24,118 +11,52 @@ window.addEventListener("scroll", () => {
 
 // Funcionalidade quando o DOM carregar
 document.addEventListener("DOMContentLoaded", function () {
-    
-    // Gerenciar menu do usuário logado
+    // ===== Navegação entre páginas =====
+    const monitoriaNav = document.querySelector("#monitoria-nav");
+    if (monitoriaNav) {
+        monitoriaNav.addEventListener("click", () => {
+            window.location.href = "../telaMonitorias/telaMonitorias.php";
+        });
+    }
+
+    const sobreNav = document.querySelector("#sobre-nav");
+    if (sobreNav) {
+        sobreNav.addEventListener("click", () => {
+            window.location.href = "../telaSobre/sobre.php";
+        });
+    }
+
+    const loginNav = document.querySelector("#login-nav");
+    if (loginNav) {
+        loginNav.addEventListener("click", () => {
+            window.location.href = "../telaCadastroAluno/cadAluno.html";
+        });
+    }
+
+    // ===== Gerenciar menu do usuário logado =====
     const nome = sessionStorage.getItem("usuarioLogado");
     const tipo = sessionStorage.getItem("tipoUsuario");
 
-    if (nome) {
-        const loginNav = document.getElementById("login-nav");
-        if (loginNav) {
-            loginNav.style.display = "none";
-        }
+    if (nome && loginNav) {
+        loginNav.style.display = "none";
     }
 
-    // Adicionar evento de clique nos cards de projeto
+    // ===== Adicionar evento de clique nos cards de projeto =====
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach(card => {
         card.addEventListener('click', function() {
-            const projetoId = this.getAttribute('data-id');
+            const idProjeto = this.getAttribute('data-id');
             // Redirecionar para página de detalhes do projeto
-            window.location.href = `../telaProjeto/projeto.php?id=${projetoId}`;
+            window.location.href = `../telaProjeto/projeto.php?id=${idProjeto}`;
         });
     });
 
-    // Funcionalidade de filtros
+    // ===== Funcionalidade de filtros e pesquisa =====
     setupFiltros();
     setupPesquisa();
-});
 
-function setupFiltros() {
-    // Filtros por tipo de projeto - MELHORADO
-    const botoesFiltro = document.querySelectorAll('.btn-filtrar[data-filtro]');
-    const projectCards = document.querySelectorAll('.project-card');
-    let filtroAtivo = ''; // variável para controlar o filtro ativo
-
-    botoesFiltro.forEach(botao => {
-        botao.addEventListener('click', function() {
-            const filtro = this.getAttribute('data-filtro');
-            
-            // Se clicar no mesmo filtro ativo, desativa (volta para "todos")
-            if (filtroAtivo === filtro && filtro !== '') {
-                // Desativar filtro atual
-                filtroAtivo = '';
-                botoesFiltro.forEach(btn => btn.classList.remove('filtro-ativo'));
-                
-                // Mostrar todos os cards
-                projectCards.forEach(card => {
-                    card.style.display = 'block';
-                });
-            } else {
-                // Ativar novo filtro
-                filtroAtivo = filtro;
-                
-                // Remover classe ativa de todos os botões
-                botoesFiltro.forEach(btn => btn.classList.remove('filtro-ativo'));
-                // Adicionar classe ativa ao botão clicado
-                this.classList.add('filtro-ativo');
-                
-                // Aplicar filtro
-                projectCards.forEach(card => {
-                    if (filtro === '' || card.classList.contains(filtro)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            }
-        });
-    });
-
-    // Filtro por categoria - MELHORADO
-    const selectCategoria = document.getElementById('categorias-filtrar');
-    if (selectCategoria) {
-        selectCategoria.addEventListener('change', function() {
-            const categoriaFiltro = this.value;
-            
-            projectCards.forEach(card => {
-                if (categoriaFiltro === '' || card.getAttribute('data-categoria') === categoriaFiltro) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    }
-}
-
-function setupPesquisa() {
-    const inputPesquisa = document.getElementById('input-pesquisa');
-    const projectCards = document.querySelectorAll('.project-card');
-    
-    if (inputPesquisa) {
-        inputPesquisa.addEventListener('input', function() {
-            const termoPesquisa = this.value.toLowerCase();
-            
-            projectCards.forEach(card => {
-                const nomeLabel = card.querySelector('.project-label');
-                const nomeProjeto = nomeLabel.textContent.toLowerCase();
-                
-                if (nomeProjeto.includes(termoPesquisa)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    }
-}
-
-// Custom dropdown categorias - MELHORADO
-document.addEventListener("DOMContentLoaded", () => {
+    // ===== Custom dropdown categorias =====
     const selectBox = document.getElementById("categorias-filtrar");
-    
-    // Verificar se é um select customizado ou nativo
     if (selectBox && selectBox.classList.contains('custom-select')) {
         const selected = selectBox.querySelector(".select-selected");
         const optionsContainer = selectBox.querySelector(".select-items");
@@ -153,12 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const text = option.textContent;
                 
                 // Não mostrar "Categorias" como selecionado
-                if (value === '') {
-                    selected.textContent = "Categorias";
-                } else {
-                    selected.textContent = text;
-                }
-                
+                selected.textContent = value === '' ? "Categorias" : text;
                 selectBox.classList.remove("open");
 
                 // Filtro dos cards
@@ -181,3 +97,83 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+function normalizeString(str) {
+    return str
+        .toLowerCase()
+        .normalize("NFD") // tira acentos
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "-"); // troca espaço por hífen
+}
+
+function setupFiltros() {
+    const botoesFiltro = document.querySelectorAll('.btn-filtrar[data-filtro]');
+    const projectCards = document.querySelectorAll('.project-card');
+    let filtroAtivo = '';
+
+    // ===== Filtro por tipo (ensino, pesquisa, extensão) =====
+    botoesFiltro.forEach(botao => {
+        botao.addEventListener('click', function() {
+            const filtro = this.getAttribute('data-filtro');
+            
+            if (filtroAtivo === filtro && filtro !== '') {
+                filtroAtivo = '';
+                botoesFiltro.forEach(btn => btn.classList.remove('filtro-ativo'));
+                projectCards.forEach(card => card.style.display = 'block');
+            } else {
+                filtroAtivo = filtro;
+                botoesFiltro.forEach(btn => btn.classList.remove('filtro-ativo'));
+                this.classList.add('filtro-ativo');
+                
+                projectCards.forEach(card => {
+                    const tipo = card.getAttribute("data-tipo"); 
+                    if (filtro === '' || tipo === filtro) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        });
+    });
+
+    // ===== Filtro por categoria =====
+    const selectCategoria = document.getElementById('categorias-filtrar');
+    if (selectCategoria) {
+        selectCategoria.addEventListener('change', function() {
+            const categoriaFiltro = normalizeString(this.value);
+            
+            projectCards.forEach(card => {
+                const categoriaCard = normalizeString(card.getAttribute('data-categoria'));
+                if (categoriaFiltro === '' || categoriaCard === categoriaFiltro) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+}
+
+
+function setupPesquisa() {
+    const inputPesquisa = document.getElementById('input-pesquisa');
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    if (inputPesquisa) {
+        inputPesquisa.addEventListener('input', function() {
+            const termoPesquisa = this.value.toLowerCase();
+            
+            projectCards.forEach(card => {
+                const nomeLabel = card.querySelector('.project-label');
+                const nomeProjeto = nomeLabel.textContent.toLowerCase();
+                
+                if (nomeProjeto.includes(termoPesquisa)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+}

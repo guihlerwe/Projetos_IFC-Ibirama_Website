@@ -17,10 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'projetos':
                 switch(tipoUsuario) {
                     case 'coordenador':
-                        window.location.href = "../telaPrincipal/painelCoordenador.php";
+                        //window.location.href = "../telaPrincipal/painelCoordenador.php";
+                        window.location.href = "../telaPrincipal/principal.php";
                         break;
                     case 'bolsista':
-                        window.location.href = "../telaPrincipal/painelBolsista.php";
+                        //window.location.href = "../telaPrincipal/painelBolsista.php";
+                        window.location.href = "../telaPrincipal/principal.php";
                         break;
                     default:
                         window.location.href = "../telaPrincipal/principal.php";

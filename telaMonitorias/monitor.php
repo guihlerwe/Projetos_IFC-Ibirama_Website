@@ -7,6 +7,7 @@ $tipo = $_SESSION['tipo'] ?? '';
 $host = 'localhost';
 $usuario = 'root';
 $senha = 'root';
+//$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);

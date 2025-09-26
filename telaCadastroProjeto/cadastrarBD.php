@@ -7,7 +7,8 @@ ini_set('display_errors', 1);
 // banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui215600';
+//$senha = 'Gui215600';
+$senha = 'root';
 $banco = 'website';
 
 // conexão com o banco
@@ -19,7 +20,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8");
 
 // pasta que guarda as imagens
-$pastaImagens = '../telaPrincipal/img/';
+$pastaImagens = '../assets/photos/projetos/';
 
 // função que salva as imagens
 function salvarImagem($campoArquivo, $pastaDestino) {
@@ -168,7 +169,7 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     echo "<div style='color: green; font-weight: bold;'>✅ Projeto cadastrado com sucesso!</div>";
     
-    echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPrincipal/painelCoordenador.php';</script>";
+    echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPrincipal/principal.php';</script>";
     
 } else {
     echo "<div style='color: red; font-weight: bold;'>❌ Erro ao cadastrar projeto:</div>";

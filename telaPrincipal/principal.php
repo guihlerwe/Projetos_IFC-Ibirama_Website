@@ -27,7 +27,7 @@ $resultado = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="hover-effect.css">
+    <link rel="stylesheet" href="">
     <link rel="stylesheet" href="principal.css">
     <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1, user-scalable=no">
     <title>Projetos do Campus Ibirama</title>
@@ -43,7 +43,7 @@ $resultado = $conn->query($sql);
         <header>
             <div id="logo">
                 <div id="icone-nav">
-                    <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
                 </div>
                 Projetos do Campus Ibirama
             </div>
@@ -57,23 +57,22 @@ $resultado = $conn->query($sql);
         </header>
 
         <div class="barra-pesquisar">
-    <input type="text" class="input-pesquisar" placeholder="Pesquisar" id="input-pesquisa">
-    <button class="btn-filtrar pesquisa" data-filtro="pesquisa">Pesquisa</button>
-    <button class="btn-filtrar ensino" data-filtro="ensino">Ensino</button>
-    <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
-    
-    <!-- SELECT NATIVO CORRIGIDO -->
-    <select id="categorias-filtrar">
-        <option value="">Todas as Categorias</option>
-        <option value="ciencias_naturais">Ciências Naturais</option>
-        <option value="ciencias_humanas">Ciências Humanas</option>
-        <option value="linguagens">Linguagens</option>
-        <option value="matematica">Matemática</option>
-        <option value="administracao">Administração</option>
-        <option value="informatica">Informática</option>
-        <option value="vestuario">Vestuário</option>
-    </select>    
-</div>
+            <input type="text" class="input-pesquisar" placeholder="Pesquisar" id="input-pesquisa">
+            <button class="btn-filtrar pesquisa" data-filtro="pesquisa">Pesquisa</button>
+            <button class="btn-filtrar ensino" data-filtro="ensino">Ensino</button>
+            <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
+            
+            <select id="categorias-filtrar">
+                <option value="">Todas as Categorias</option>
+                <option value="ciencias_naturais">Ciências Naturais</option>
+                <option value="ciencias_humanas">Ciências Humanas</option>
+                <option value="linguagens">Linguagens</option>
+                <option value="matematica">Matemática</option>
+                <option value="administracao">Administração</option>
+                <option value="informatica">Informática</option>
+                <option value="vestuario">Vestuário</option>
+            </select>    
+        </div>
 
         <div class="projects-grid">
             <?php
@@ -94,12 +93,12 @@ $resultado = $conn->query($sql);
                     }
                     
                     // Caminho da imagem de capa
-                    $imagemCapa = !empty($projeto['capa']) ? 'img/' . $projeto['capa'] : 'img/campus-image.jpg';
+                    $imagemCapa = !empty($projeto['capa']) ? '../assets/photos/projetos/' . $projeto['capa'] : '../assets/photos/campus-image.jpg';
                     
                     // Limitar o texto do nome para não quebrar o layout
                     $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];
                     
-                    echo '<div class="project-card ' . $projeto['tipo'] . ' categoria-' . $projeto['categoria'] . '" data-id="' . $projeto['idProjeto'] . '" data-tipo="' . $projeto['tipo'] . '" data-categoria="' . $projeto['categoria'] . '">';
+                    echo '<div class="project-card ' . ' tipo-' . $projeto['tipo'] . ' categoria-' . $projeto['categoria'] . '" data-id="' . $projeto['idProjeto'] . '" data-tipo="' . $projeto['tipo'] . '" data-categoria="' . $projeto['categoria'] . '">';
                     echo '<img src="' . $imagemCapa . '" alt="' . htmlspecialchars($projeto['nome']) . '" class="project-image">';
                     echo '<div class="project-label ' . $corClass . '">' . htmlspecialchars($nomeExibido) . '</div>';
                     echo '</div>';

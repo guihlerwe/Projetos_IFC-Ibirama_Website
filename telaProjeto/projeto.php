@@ -4,7 +4,7 @@ session_start();
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
 $banco = 'website';
 
 // Conexão com o banco
@@ -62,7 +62,7 @@ $tipo = $_SESSION['tipo'] ?? '';
     <header>
         <div id="logo">
             <div id="icone-nav">
-                <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
             </div>
             Projetos do Campus Ibirama
         </div>
@@ -77,7 +77,7 @@ $tipo = $_SESSION['tipo'] ?? '';
     <div id="conteudo-projeto">
         <div id="banner">
             <?php if (!empty($projeto['banner'])): ?>
-                <img src="../telaPrincipal/img/<?php echo htmlspecialchars($projeto['banner']); ?>" alt="Banner do projeto" id="banner-img">
+                <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['banner']); ?>" alt="Banner do projeto" id="banner-img">
             <?php else: ?>
                 <div id="banner-placeholder">
                     <span>Banner do Projeto</span>
@@ -88,7 +88,7 @@ $tipo = $_SESSION['tipo'] ?? '';
         <div id="info-projeto">
             <div id="div-capa">
                 <?php if (!empty($projeto['capa'])): ?>
-                    <img src="../telaPrincipal/img/<?php echo htmlspecialchars($projeto['capa']); ?>" alt="Capa do projeto" id="capa-img">
+                    <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['capa']); ?>" alt="Capa do projeto" id="capa-img">
                 <?php else: ?>
                     <span id="capa-icon">📷</span>
                 <?php endif; ?>
@@ -141,7 +141,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                                     <div class="membro">
                                         <div class="foto-membro">
                                             <?php if (!empty($projeto['fotoCoordenador'])): ?>
-                                                <img src="../telaPrincipal/img/<?php echo htmlspecialchars($projeto['fotoCoordenador']); ?>" alt="Foto do coordenador">
+                                                <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['fotoCoordenador']); ?>" alt="Foto do coordenador">
                                             <?php else: ?>
                                                 <span>👤</span>
                                             <?php endif; ?>
@@ -160,7 +160,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                                     <div class="membro">
                                         <div class="foto-membro">
                                             <?php if (!empty($projeto['fotoBolsista'])): ?>
-                                                <img src="../telaPrincipal/img/<?php echo htmlspecialchars($projeto['fotoBolsista']); ?>" alt="Foto do bolsista">
+                                                <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['fotoBolsista']); ?>" alt="Foto do bolsista">
                                             <?php else: ?>
                                                 <span>👤</span>
                                             <?php endif; ?>

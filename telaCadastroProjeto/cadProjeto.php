@@ -21,7 +21,7 @@ $tipo = $_SESSION['tipo'] ?? '';
     <header>
         <div id="logo">
             <div id="icone-nav">
-                <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
             </div>
             Projetos do Campus Ibirama
         </div>

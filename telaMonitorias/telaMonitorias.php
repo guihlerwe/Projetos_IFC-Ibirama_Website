@@ -23,7 +23,7 @@ $tipo = $_SESSION['tipo'] ?? '';
         <header>
             <div class="logo">
                 <div class="grid-icon">
-                    <img src="../telaPrincipal/img/ifc-logo-preto.png" id="icone-ifc">
+                    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
                     
                 </div>
                 Monitores do Campus Ibirama
@@ -47,49 +47,49 @@ $tipo = $_SESSION['tipo'] ?? '';
         <div class="projects-grid">
 
             <div class="project-card">
-                <img src="icones/adm.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/adm.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Administração</div>
             </div>
 
 
             <div class="project-card">
-                <img src="icones/info.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/info.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Informática</div>
             </div>
 
 
             <div class="project-card">
-                <img src="icones/vest.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/vest.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Vestuário</div>
             </div>
 
 
             <div class="project-card">
-                <img src="icones/moda.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/moda.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label">Moda</div>
             </div>
 
 
             <div class="project-card">
-                <img src="icones/exatas.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/humanas.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label vermelho">Ciências Humanas</div>
             </div>
 
 
             <div class="project-card">
-                <img src="icones/humanas.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/natureza.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label vermelho">Ciências da Natureza</div>
             </div>
 
 
             <div class="project-card">
-                <img src="icones/linguagens.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/linguagens.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label vermelho">Linguagens e suas Tecnologias</div>
             </div>
 
 
             <div class="project-card">
-                <img src="icones/matemática.png" alt="Campus Ibirama" class="project-image">
+                <img src="../assets/photos/monitoria/icones/matemática.png" alt="Campus Ibirama" class="project-image">
                 <div class="project-label vermelho">Matemática e suas Tecnologias</div>
             </div>
      
