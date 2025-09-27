@@ -24,18 +24,18 @@ echo '
 
 if ($tipo === "coordenador") {
     echo '
-        <a href="../telaCadastroProjeto/cadProjeto.php">Criar projeto</a>
+        <a href="cad-projeto.php">Criar projeto</a>
         <a href="#">Seus projetos</a>
-        <a href="../telaDadosConta/contaUsuario.html">Dados da conta</a>
+        <a href="usuario.php">Dados da conta</a>
     ';
 } elseif ($tipo === "bolsista") {
     echo '
         <a href="#">Seus projetos</a>
-        <a href="../telaDadosConta/contaUsuario.html">Dados da conta</a>
+        <a href="usuario.php">Dados da conta</a>
     ';
 } else { // aluno
     echo '
-        <a href="../telaDadosConta/contaUsuario.html">Dados da conta</a>
+        <a href="usuario.php">Dados da conta</a>
     ';
 }
 

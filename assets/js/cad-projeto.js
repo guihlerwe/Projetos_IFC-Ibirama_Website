@@ -1,74 +1,5 @@
 console.log('Iniciando cadProjeto.js...');
 
-// esperando carregar página completa
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM carregado!');
-    
-    // Função para obter o tipo de usuário
-    function obterTipoUsuario() {
-        return sessionStorage.getItem('tipoUsuario') || '';
-    }
-    
-    // Função para redirecionar baseado no tipo de usuário
-    function redirecionarPorTipo(paginaBase) {
-        const tipoUsuario = obterTipoUsuario();
-        
-        switch(paginaBase) {
-            case 'projetos':
-                switch(tipoUsuario) {
-                    case 'coordenador':
-                        //window.location.href = "../telaPrincipal/painelCoordenador.php";
-                        window.location.href = "../telaPrincipal/principal.php";
-                        break;
-                    case 'bolsista':
-                        //window.location.href = "../telaPrincipal/painelBolsista.php";
-                        window.location.href = "../telaPrincipal/principal.php";
-                        break;
-                    default:
-                        window.location.href = "../telaPrincipal/principal.php";
-                        break;
-                }
-                break;
-            case 'monitoria':
-                // Para monitoria, sempre vai para a mesma página independente do tipo
-                window.location.href = "../telaMonitorias/telaMonitorias.php";
-                break;
-            case 'sobre':
-                // Para sobre, sempre vai para a mesma página independente do tipo
-                window.location.href = "../telaSobre/sobre.php";
-                break;
-        }
-    }
-    
-    // link para as outras telas com redirecionamento baseado no tipo de usuário
-    const loginBtn = document.querySelector(".login-nav");
-    if (loginBtn) {
-        loginBtn.addEventListener("click", function () {
-            window.location.href = "../telaLogin/login.html";
-        });
-    }
-
-    const projetosNav = document.querySelector("#projetos-nav");
-    if (projetosNav) {
-        projetosNav.addEventListener("click", function() {
-            redirecionarPorTipo('projetos');
-        });
-    }
-
-    const monitoriaNav = document.querySelector("#monitoria-nav");
-    if (monitoriaNav) {
-        monitoriaNav.addEventListener("click", function() {
-            redirecionarPorTipo('monitoria');
-        });
-    }
-
-    const sobreNav = document.querySelector("#sobre-nav");
-    if (sobreNav) {
-        sobreNav.addEventListener("click", function() {
-            redirecionarPorTipo('sobre');
-        });
-    }
-
     // permite vizualizar a foto escolhida pro banner antes de cadastrar
     const bannerInput = document.getElementById('banner-projeto');
     if (bannerInput) {
@@ -385,6 +316,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     console.log('Todos os event listeners configurados!');
-});
 
 console.log('cadProjeto.js carregado com sucesso!');

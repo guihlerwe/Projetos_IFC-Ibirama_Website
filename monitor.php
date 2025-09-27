@@ -59,7 +59,7 @@ if ($id) {
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div><?php include 'menuUsuario.php'; ?></div>
+                <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
         
@@ -115,11 +115,10 @@ if ($id) {
         </div>
     </div>
 </footer>
-    <script src="/telaMonitorias.js"></script>
-
-
+    <script src="../assets/js/global.js"></script>
 </body>
 </html>
+
 <?php
-$conn->close();
+    $conn->close();
 ?>

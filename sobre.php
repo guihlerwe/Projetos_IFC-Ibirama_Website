@@ -126,7 +126,6 @@ $tipo = $_SESSION['tipo'] ?? '';
         </div>
     </div>
 </footer>
-    <script src="./sobre.js"></script>
-
+    <script src="../assets/js/global.js"></script>
 </body>
 </html>

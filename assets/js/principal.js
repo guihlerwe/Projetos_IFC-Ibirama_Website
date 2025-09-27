@@ -1,41 +1,8 @@
-const header = document.querySelector("header");
-
-// Efeito de sombra no header ao fazer scroll
-window.addEventListener("scroll", () => {
-    if (window.scrollY > 0) {
-        header.classList.add("com-sombra");
-    } else {
-        header.classList.remove("com-sombra");
-    }
-});
-
 // Funcionalidade quando o DOM carregar
 document.addEventListener("DOMContentLoaded", function () {
-    // ===== Navegação entre páginas =====
-    const monitoriaNav = document.querySelector("#monitoria-nav");
-    if (monitoriaNav) {
-        monitoriaNav.addEventListener("click", () => {
-            window.location.href = "../telaMonitorias/telaMonitorias.php";
-        });
-    }
-
-    const sobreNav = document.querySelector("#sobre-nav");
-    if (sobreNav) {
-        sobreNav.addEventListener("click", () => {
-            window.location.href = "../telaSobre/sobre.php";
-        });
-    }
-
-    const loginNav = document.querySelector("#login-nav");
-    if (loginNav) {
-        loginNav.addEventListener("click", () => {
-            window.location.href = "../telaCadastroAluno/cadAluno.html";
-        });
-    }
-
+    
     // ===== Gerenciar menu do usuário logado =====
     const nome = sessionStorage.getItem("usuarioLogado");
-    const tipo = sessionStorage.getItem("tipoUsuario");
 
     if (nome && loginNav) {
         loginNav.style.display = "none";

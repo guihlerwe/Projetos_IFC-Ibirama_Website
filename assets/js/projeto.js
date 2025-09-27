@@ -1,49 +1,5 @@
-console.log('Iniciando visualizarProjeto.js...');
-
 // Esperando carregar página completa
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM carregado!');
-    
-    // Navegação - links para outras telas
-    const loginBtn = document.querySelector("#login-nav");
-    if (loginBtn) {
-        loginBtn.addEventListener("click", function () {
-            window.location.href = "../telaLogin/login.html";
-        });
-    }
-
-    const projetosNav = document.querySelector("#projetos-nav");
-    if (projetosNav) {
-        projetosNav.addEventListener("click", function() {
-            window.location.href = "../telaPrincipal/principal.php";
-        });
-    }
-
-    const monitoriaNav = document.querySelector("#monitoria-nav");
-    if (monitoriaNav) {
-        monitoriaNav.addEventListener("click", function() {
-            window.location.href = "../telaMonitorias/telaMonitorias.php";
-        });
-    }
-
-    const sobreNav = document.querySelector("#sobre-nav");
-    if (sobreNav) {
-        sobreNav.addEventListener("click", function() {
-            window.location.href = "../telaSobre/sobre.php";
-        });
-    }
-
-    // Adiciona sombra ao header quando scrolla
-    const header = document.querySelector('header');
-    if (header) {
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 10) {
-                header.classList.add('com-sombra');
-            } else {
-                header.classList.remove('com-sombra');
-            }
-        });
-    }
 
     // Smooth scroll para links internos (se houver)
     const linksInternos = document.querySelectorAll('a[href^="#"]');
@@ -234,5 +190,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Chama lazy loading se houver imagens configuradas para isso
     implementarLazyLoading();
-
-console.log('visualizarProjeto.js carregado com sucesso!');

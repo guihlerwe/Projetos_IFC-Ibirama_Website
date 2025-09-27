@@ -52,7 +52,7 @@ $resultado = $conn->query($sql);
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
                 <div class="sobre-nav">Sobre</div>
-                <div class="entrar-nav"> <?php include 'menuUsuario.php'; ?> </div>
+                <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
 
@@ -145,7 +145,8 @@ $resultado = $conn->query($sql);
         </div>
     </div>
 </footer>
-    <script src="./principal.js"></script>
+    <script src="../assets/js/global.js"></script>
+    <script src="../assets/js/principal.js"></script>
 </body>
 </html>
 

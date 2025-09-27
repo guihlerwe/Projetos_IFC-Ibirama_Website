@@ -449,36 +449,6 @@ function inicializarEventListeners() {
         }
     });
     
-    // Navegação do header
-    document.querySelector(".projetos-nav").addEventListener("click", function() {
-        if (modoEdicao && !confirm('Você tem alterações não salvas. Deseja realmente sair?')) {
-            return;
-        }
-        window.location.href = "../telaPrincipal/principal.php";
-    });
-    
-    document.querySelector(".monitoria-nav").addEventListener("click", function() {
-        if (modoEdicao && !confirm('Você tem alterações não salvas. Deseja realmente sair?')) {
-            return;
-        }
-        window.location.href = "../telaMonitorias/telaMonitorias.php";
-    });
-    
-    document.querySelector(".sair-nav").addEventListener("click", function() {
-        if (confirm('Deseja realmente sair?')) {
-            window.location.href = "../telaLogin/login.html";
-        }
-    });
-    
-    // Scroll do header
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 0) {
-            header.classList.add("com-sombra");
-        } else {
-            header.classList.remove("com-sombra");
-        }
-    });
-    
     // Prevenir saída acidental durante edição
     window.addEventListener('beforeunload', (e) => {
         if (modoEdicao) {
