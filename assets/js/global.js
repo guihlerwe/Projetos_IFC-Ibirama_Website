@@ -28,5 +28,16 @@ document.addEventListener('DOMContentLoaded', function() {
     window.location.href = "login.html";
   });
 });
+  // Troca logo do header conforme modo claro/escuro
+  function trocaLogoHeader() {
+    const logoHeader = document.getElementById('icone-ifc');
+    if (!logoHeader) return;
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    logoHeader.src = isDark
+      ? '../assets/photos/ifc-logo-branco.png'
+      : '../assets/photos/ifc-logo-preto.png';
+  }
+  trocaLogoHeader();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', trocaLogoHeader);
 
   

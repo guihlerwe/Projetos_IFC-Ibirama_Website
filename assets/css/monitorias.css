@@ -33,6 +33,13 @@
     text-shadow: none;
 }
 
+.btn-filtrar.superior:hover {
+    background-color: #8F4CA0;
+    color: rgb(217, 233, 221);
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    text-shadow: none;
+}
+
 .btn-filtrar.geral:hover {
     background-color:#d32f2f;
     color: rgb(217, 233, 221);

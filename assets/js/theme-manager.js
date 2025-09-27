@@ -6,17 +6,14 @@
 */
 
 class GlobalThemeManager {
-  constructor() {
-    this.storageKey = 'projeto-ifc-theme';
-    this.init();
-  }
+  
 
   init() {
     // Inicializa o tema assim que a classe é instanciada
     this.applyInitialTheme();
     
-    // Cria o botão de alternância
-    this.createThemeToggle();
+    // REMOVA ou COMENTE esta linha:
+    // this.createThemeToggle();
     
     // Escuta mudanças no sistema
     this.watchSystemTheme();
@@ -26,15 +23,8 @@ class GlobalThemeManager {
   }
 
   applyInitialTheme() {
-    const savedTheme = localStorage.getItem(this.storageKey);
-    
-    if (savedTheme) {
-      this.setTheme(savedTheme);
-    } else {
-      // Se não tem preferência salva, usa a do sistema
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this.setTheme(systemPrefersDark ? 'dark' : 'light');
-    }
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.setTheme(systemPrefersDark ? 'dark' : 'light');
   }
 
   setTheme(theme) {
@@ -49,9 +39,6 @@ class GlobalThemeManager {
   }
 
   getCurrentTheme() {
-    const saved = localStorage.getItem(this.storageKey);
-    if (saved) return saved;
-    
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
@@ -72,80 +59,13 @@ class GlobalThemeManager {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
     mediaQuery.addEventListener('change', (e) => {
-      // Só muda automaticamente se não há preferência manual salva
-      if (!localStorage.getItem(this.storageKey)) {
-        this.setTheme(e.matches ? 'dark' : 'light');
-      }
+      this.setTheme(e.matches ? 'dark' : 'light');
     });
   }
 
-  createThemeToggle() {
-    // Verifica se já existe um botão na página
-    if (document.querySelector('.theme-toggle')) {
-      this.updateThemeToggleButton();
-      return;
-    }
+  
 
-    const button = document.createElement('button');
-    button.className = 'theme-toggle';
-    button.setAttribute('aria-label', 'Alternar tema');
-    button.setAttribute('title', 'Alternar entre modo claro e escuro');
-    
-    // Adiciona evento
-    button.addEventListener('click', () => this.toggleTheme());
 
-    // Tenta encontrar onde inserir o botão
-    this.insertThemeButton(button);
-    
-    this.updateThemeToggleButton();
-  }
-
-  insertThemeButton(button) {
-    // Lista de possíveis locais para inserir o botão (em ordem de prioridade)
-    const possibleContainers = [
-      '.navegador',           // Para a página sobre
-      '.header-nav',          // Para outras páginas
-      '.navbar',              // Bootstrap navbar
-      '.nav',                 // Navegação genérica
-      'header',               // Qualquer header
-      '.top-bar',             // Barra superior
-      '.main-nav'             // Navegação principal
-    ];
-
-    for (const selector of possibleContainers) {
-      const container = document.querySelector(selector);
-      if (container) {
-        container.appendChild(button);
-        return;
-      }
-    }
-
-    // Se não encontrou nenhum container, adiciona no body como fallback
-    const fallbackContainer = document.createElement('div');
-    fallbackContainer.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999;
-    `;
-    fallbackContainer.appendChild(button);
-    document.body.appendChild(fallbackContainer);
-  }
-
-  updateThemeToggleButton() {
-    const button = document.querySelector('.theme-toggle');
-    if (!button) return;
-
-    const currentTheme = this.getCurrentTheme();
-    
-    if (currentTheme === 'dark') {
-      button.innerHTML = '☀️';
-      button.setAttribute('title', 'Mudar para modo claro');
-    } else {
-      button.innerHTML = '🌙';
-      button.setAttribute('title', 'Mudar para modo escuro');
-    }
-  }
 
   updateThemeColorMeta() {
     let metaTag = document.querySelector('#theme-color-meta');
@@ -201,3 +121,23 @@ if (document.readyState === 'loading') {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = GlobalThemeManager;
 }
+
+function trocaLogoIFCComTema(theme) {
+  const logoHeader = document.getElementById('icone-ifc');
+  if (logoHeader) {
+    logoHeader.src = theme === 'dark'
+      ? '../assets/photos/ifc-logo-branco.png'
+      : '../assets/photos/ifc-logo-preto.png';
+  }
+}
+
+// Troca logo ao iniciar
+document.addEventListener('DOMContentLoaded', function() {
+  const theme = window.themeManager?.getCurrentTheme?.() || 'light';
+  trocaLogoIFCComTema(theme);
+});
+
+// Troca logo quando o tema muda
+window.addEventListener('themeChanged', function(e) {
+  trocaLogoIFCComTema(e.detail.theme);
+});

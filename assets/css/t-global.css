@@ -194,7 +194,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 15    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">px 20px;
     background-color: var(--header-bg);
     color: var(--header-text);
     backdrop-filter: blur(10px);
@@ -246,6 +246,19 @@ header.com-sombra {
     height: 27px;
     object-fit: auto;
     margin-bottom: 10px;
+    content: url("../assets/photos/ifc-logo-preto.png");
+}
+
+/* Logo branca no modo escuro automático */
+@media (prefers-color-scheme: dark) {
+    #icone-ifc {
+        content: url("../assets/photos/ifc-logo-branco.png");
+    }
+}
+
+/* Logo branca no modo escuro forçado por classe */
+[data-theme="dark"] #icone-ifc {
+    content: url("../assets/photos/ifc-logo-branco.png");
 }
 
 /* Navegação */
@@ -287,7 +300,7 @@ header.com-sombra {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 0px 0px;
     border-radius: 20px;
     transition: background-color var(--transition-normal);
     display: flex;
@@ -589,8 +602,4 @@ footer .Sobre {
     }
 }
 
-@media screen and (max-width: 480px) {
-    .container {
-        padding: 0 10px;
-    }
-}
+@media screen and

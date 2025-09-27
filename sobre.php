@@ -52,7 +52,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                             Hoje o campus é formado por mais de dezenas de profissionais, que garantem uma educação de excelência, com métodos de aprendizados contemporâneos e engajadores aos alunos tanto nas matérias dos Cursos quanto nas do Ensino Médio.
                         </p>
                         <a href="https://ibirama.ifc.edu.br/" class="site-link">
-                            <img class="site-link-icon" src = "../telaPrincipal/img/ifc-logo-colorida.png" viewBox="0 0 24 24" fill="currentColor"> 
+                            <img class="site-link-icon" src = "../assets/photos/ifc-logo-branco.png" viewBox="0 0 24 24" fill="currentColor"> 
                         </img>
                             Site oficial do IFC Ibirama
                         </a>

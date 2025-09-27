@@ -26,7 +26,9 @@ if ($tipo === "coordenador") {
     echo '
         <a href="cad-projeto.php">Criar projeto</a>
         <a href="#">Seus projetos</a>
+        <a href="usuario.php">Editar Monitorias</a>
         <a href="usuario.php">Dados da conta</a>
+        
     ';
 } elseif ($tipo === "bolsista") {
     echo '

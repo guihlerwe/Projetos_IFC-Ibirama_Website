@@ -6,8 +6,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -18,8 +18,17 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8");
 
 $id = $_GET['id'] ?? null;
-$monitor = null;
+$monitoria = null;
+if ($id) {
+    $stmt = $conn->prepare("SELECT m.*, p.nome as monitor_nome, p.email as monitor_email FROM monitoria m LEFT JOIN pessoa p ON m.idPessoa = p.idPessoa WHERE m.idMonitoria = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $monitoria = $result->fetch_assoc();
+    $stmt->close();
+}
 
+$monitor = null;
 if ($id) {
     $stmt = $conn->prepare("SELECT * FROM monitores WHERE id = ?");
     $stmt->bind_param("i", $id);

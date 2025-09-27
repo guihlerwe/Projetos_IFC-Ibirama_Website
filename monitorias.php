@@ -39,8 +39,9 @@ $tipo = $_SESSION['tipo'] ?? '';
 
         <div class="barra-pesquisar">
             <input type="text" class="input-pesquisar" placeholder="Pesquisar">
-            <button class="btn-filtrar tecnico">Área Técnica</button>
-            <button class="btn-filtrar geral">Componentes Gerais</button>
+            <button class="btn-filtrar tecnico">Área Técnica Integrada</button>
+            <button class="btn-filtrar geral">Ensino Médio</button>
+            <button class="btn-filtrar superior">Superior</button>
         </div>
 
 
@@ -64,6 +65,10 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <div class="project-label">Vestuário</div>
             </div>
 
+            <div class="project-card">
+                <img src="../assets/photos/monitoria/icones/comercial.png" alt="Campus Ibirama" class="project-image">
+                <div class="project-label">Gestão Comercial</div>
+            </div>
 
             <div class="project-card">
                 <img src="../assets/photos/monitoria/icones/moda.png" alt="Campus Ibirama" class="project-image">
