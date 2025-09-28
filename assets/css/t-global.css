@@ -18,8 +18,8 @@
     /* Header/Navigation */
     --header-bg: rgba(255, 255, 255, 0.8);
     --header-text: #212529;
-    --nav-hover: #eeeeee;
-    --nav-active: #dee2e6;
+    --nav-hover: #ba2929;
+    --nav-active: #eeeeee;
     
     /* Cards e containers */
     --card-bg: #ffffff;
@@ -194,7 +194,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">px 20px;
+    padding: 15px 20px;
     background-color: var(--header-bg);
     color: var(--header-text);
     backdrop-filter: blur(10px);

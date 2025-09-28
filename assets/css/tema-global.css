@@ -5,6 +5,78 @@
     font-family: Helvetica, sans-serif;
 }
 
+:root {
+    /* Cores principais */
+    --primary-bg: #ffffff;
+    --secondary-bg: #f8f9fa;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+    
+    /* Header/Navigation */
+    --header-bg: rgba(255, 255, 255, 0.8);
+    --header-text: #212529;
+    --nav-hover: #ba2929;
+    --nav-active: #eeeeee;
+    
+    /* Cards e containers */
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    
+    /* Forms */
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --input-focus: #86b7fe;
+    --input-text: #212529;
+    --input-placeholder: #6c757d;
+    
+    /* Buttons */
+    --btn-primary-bg: #006620;
+    --btn-primary-hover: #004d18;
+    --btn-secondary-bg: #6c757d;
+    --btn-secondary-hover: #5c636a;
+    --btn-text: #ffffff;
+    
+    /* Footer */
+    --footer-bg: #e0e0e0;
+    --footer-text: #000000;
+    --footer-link: #000000;
+    --footer-link-hover: #ff6b6b;
+    
+    /* Tables */
+    --table-bg: #ffffff;
+    --table-stripe: #f8f9fa;
+    --table-border: #dee2e6;
+    --table-hover: #f5f5f5;
+    
+    /* Alerts/Messages */
+    --alert-success: #d1edff;
+    --alert-warning: #fff3cd;
+    --alert-danger: #f8d7da;
+    --alert-info: #d1ecf1;
+    
+    /* Borders e divisões */
+    --border-color: #dee2e6;
+    --divider-color: #e9ecef;
+    
+    /* Estados */
+    --hover-overlay: rgba(0, 0, 0, 0.05);
+    --active-overlay: rgba(0, 0, 0, 0.1);
+    --disabled-bg: #e9ecef;
+    --disabled-text: #6c757d;
+    
+    /* Transições */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Cores específicas de projetos */
+    --cor-ensino: #417144;
+    --cor-pesquisa: rgba(33, 150, 243, 0.85);
+    --cor-extensao: #d32f2f;
+}
+
 body {
     font-family: "Helvetica";
     background-color: #ffffff;
@@ -72,7 +144,7 @@ header.com-sombra {
 .login-nav{
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 40px;
 }
 
 .menu-btn {
@@ -80,7 +152,7 @@ header.com-sombra {
     border: none;
     cursor: pointer;
     padding: 5px 10px;
-    border-radius: 20px;
+    border-radius: 100px;
     transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
@@ -104,7 +176,7 @@ header.com-sombra {
     height: 3px;
     width: 100%;
     background-color: black;
-    border-radius: 3px;
+    border-radius: 100px;
 }
 
 .menu-dropdown {
@@ -120,7 +192,7 @@ header.com-sombra {
     box-shadow: 0px 8px 16px var(--shadow-color);
     z-index: 1;
     right: 0;
-    border-radius: 2vh;
+    border-radius: 1;
 }
 
 .menu-dropdown:hover .dropdown-content {

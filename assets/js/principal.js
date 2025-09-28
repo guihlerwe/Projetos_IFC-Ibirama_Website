@@ -3,10 +3,9 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // ===== Gerenciar menu do usuário logado =====
     const nome = sessionStorage.getItem("usuarioLogado");
+    const loginNav = document.querySelector('.login-nav');
 
-    if (nome && loginNav) {
-        loginNav.style.display = "none";
-    }
+    // Não ocultar o menu do usuário para logados
 
     // ===== Adicionar evento de clique nos cards de projeto =====
     const projectCards = document.querySelectorAll('.project-card');
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         card.addEventListener('click', function() {
             const idProjeto = this.getAttribute('data-id');
             // Redirecionar para página de detalhes do projeto
-            window.location.href = `../telaProjeto/projeto.php?id=${idProjeto}`;
+            window.location.href = `projeto.php?id=${idProjeto}`;
         });
     });
 
