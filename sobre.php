@@ -33,7 +33,6 @@ $tipo = $_SESSION['tipo'] ?? '';
             <div class="navegador">
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
-                <div class="sobre-nav">Sobre</div>
                 <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
@@ -91,7 +90,6 @@ $tipo = $_SESSION['tipo'] ?? '';
                                 </svg>
                                 Guilherme Raimundo
                             </a>
-
                         </div>
                     </div>
                 </div>
@@ -111,20 +109,72 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
             </ul>
         </div>
-        <div class="Sobre">
-            <h2>Sobre este site</h2>
-            <p> 
-                O Campus Ibirama, inaugurado em 2010, com dezenas de profissionais, proporciona uma educação de 
-                qualidade e oferece cursos de Tecnologia da Informação, Administração e Vestuário, 
-                que são importantes para inovações e negócios.  
-
-                <b id="gab">Gabriella</b> e <b id="gui">Guilherme</b> criaram um site para facilitar o acesso a informações sobre projetos e monitorias,
-                que antes eram pouco divulgados. O site reúne dados sobre inscrições, horários de monitorias e contatos 
-                dos responsáveis pelos projetos, mostrando a aplicação de conhecimentos do curso de Tecnologia da Informação.
-            </p>
-            <span id="License"><i>Licença M.I.T.2025</i></span>
+        <div class="Comunidade">
+            <h2>Comunidade</h2>
+            <ul id="menu-aluno">
+                <li><a href="http://acessoainformacao.ifc.edu.br/">Acesso à Informação</a></li>
+                <li><a href="https://ifc.edu.br/comite-de-crise/">Calendários Acadêmicos</a></li>
+                <li><a href="https://cepsh.ifc.edu.br/">Comitê de Ética em Pesquisas com Seres Humanos</a></li>
+                <li><a href="https://consuper.ifc.edu.br/">Conselho Superior</a></li>
+                <li><a href="https://sig.ifc.edu.br/public/jsp/portal.jsf">Portal Público</a></li>
+                <li><a href="https://ifc.edu.br/consultas-publicas-2/">Consultas Públicas</a></li>
+                <li><a href="https://sig.ifc.edu.br/public/jsp/portal.jsf">Consultas Públicas de Processos</a></li>
+                <li><a href="https://editais.ifc.edu.br/">Editais IFC</a></li>
+                <li><a href="http://www.camboriu.ifc.edu.br/pos-graduacao/treinador-e-instrutor-de-caes-guia/">Projetos Cães-guia</a></li>
+                <li><a href="https://trabalheconosco.ifc.edu.br/">Trabalhe no IFC</a></li>
+            </ul>
+        </div>
+        <div class="Servidor">
+            <h2>Servidor</h2>
+            <ul id="menu-aluno">
+                <li><a href="https://ifc.edu.br/desenvolvimento-do-servidor/">Desenvolvimento do Servidor</a></li>
+                <li><a href="https://manualdoservidor.ifc.edu.br/">Manual do Servidor</a></li>
+                <li><a href="https://www.siapenet.gov.br/Portal/Servico/Apresentacao.asp">Portal SIAPENET</a></li>
+                <li><a href="http://suporte.ifc.edu.br/">Suporte TI</a></li>
+                <li><a href="https://sig.ifc.edu.br/sigrh/public/home.jsf">Sistema Integrado de Gestão (SIG)</a></li>
+                <li><a href="https://mail.google.com/mail/u/0/#inbox">Webmail</a></li>
+            </ul>
+        </div>
+        <div class="Sites Relacionados">
+            <h2>Sites Relacionados</h2>
+            <ul id="menu-aluno">
+                <li><a href="https://www.gov.br/pt-br">Brasil - GOV</a></li>
+                <li><a href="https://www.gov.br/capes/pt-br">CAPES - Chamadas Públicas</a></li>
+                <li><a href="https://www-periodicos-capes-gov-br.ez317.periodicos.capes.gov.br/index.php?">Capes - Portal de Periódicos</a></li>
+                <li><a href="https://www.gov.br/cnpq/pt-br">CNPq - Chamadas Públicas</a></li>
+                <li><a href="http://informativo.ifc.edu.br/">Informativo IFC</a></li>
+                <li><a href="https://www.gov.br/mec/pt-br">MEC - Ministério da Educação</a></li>
+                <li><a href="https://www.transparencia.gov.br/">Transparência Pública</a></li>
+            </ul>
         </div>
     </div>
+        
+        <div class="Sobre">
+            <h2 href="sobre.php">Sobre este site</h2>
+            <p>
+                Desenvolvido por Gabriella Schmilla Sandner e Guilherme Raimundo como Portal para comunidade e Trabalho de Conclusão de Curso (TCC)
+                 do curso de Tecnologia da Informação do <b>Instituto Federal Catarinense - Campus Ibirama.</b>
+            </p>
+
+            <span id="License"><i>Licença M.I.T.2025</i></span>
+        </div>
+        <div class="Ativos">
+            <h2>Dados Atuais</h2>
+            <div id="dados-ativos">
+                <p id="num-projetos">Projetos 
+                    <div id="numero-projetos"><h1>15 </div>
+                </p>
+
+                <p id="num-bolsistas">Bolsistas
+                <div id="numero-bolsistas"><h1>8 </div>
+                </p>
+
+                <p id="num-coordenadores">Coordenadores
+                <div id="numero-coordenadores"><h1>5 </div>`
+                </p>
+            </div>
+        </div>
+        <div><a href="http://www.acessoainformacao.gov.br/" img="assets/photos/icones/logo-acesso-informacao.svg">Acesso à Informação</a></div>
 </footer>
     <script src="../assets/js/global.js"></script>
 </body>

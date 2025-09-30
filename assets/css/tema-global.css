@@ -139,8 +139,7 @@ header.com-sombra {
 }
 
 .projetos-nav,
-.monitoria-nav,
-.sobre-nav, 
+.monitoria-nav, 
 .login-nav{
     padding: 5px 10px;
     cursor: pointer;
