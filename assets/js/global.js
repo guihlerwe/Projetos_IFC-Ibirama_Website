@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   document.querySelector(".login-nav").addEventListener("click", function() {
-    window.location.href = "login.html";
+    window.location.href = "login.php";
   });
 });
   // Troca logo do header conforme modo claro/escuro

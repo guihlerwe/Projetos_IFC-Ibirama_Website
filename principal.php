@@ -63,17 +63,23 @@ $resultado = $conn->query($sql);
             <button class="btn-filtrar ensino" data-filtro="ensino">Ensino</button>
             <button class="btn-filtrar extensao" data-filtro="extensao">Extensão</button>
             
-            <select class="categorias-filtrar">
-                <option value="">Todas as Categorias</option>
-                <option value="ciencias_naturais">Ciências Naturais</option>
-                <option value="ciencias_humanas">Ciências Humanas</option>
-                <option value="linguagens">Linguagens</option>
-                <option value="matematica">Matemática</option>
-                <option value="administracao">Administração</option>
-                <option value="informatica">Informática</option>
-                <option value="vestuario">Vestuário</option>
-            </select>    
-        </div>
+            <div class="custom-select" id="categorias-filtrar">
+                <div class="select-selected">Categorias</div>
+                    <div class="select-items">
+                        <div data-value="ciencias_naturais">Ciências Naturais</div>
+                        <div data-value="ciencias_humanas">Ciências Humanas</div>
+                        <div data-value="linguagens">Linguagens</div>
+                        <div data-value="matematica">Matemática</div>
+                        <div data-value="administracao">Administração</div>
+                        <div data-value="informatica">Informática</div>
+                        <div data-value="vestuario">Vestuário</div>
+                    </div>
+                </div>   
+                
+                <button id="limpar-filtros">Limpar filtros</button>
+            </div>
+
+            
 
         <div class="projects-grid">
             <?php

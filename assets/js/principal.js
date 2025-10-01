@@ -5,8 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const nome = sessionStorage.getItem("usuarioLogado");
     const loginNav = document.querySelector('.login-nav');
 
-    // Não ocultar o menu do usuário para logados
-
     // ===== Adicionar evento de clique nos cards de projeto =====
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach(card => {
@@ -20,48 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // ===== Funcionalidade de filtros e pesquisa =====
     setupFiltros();
     setupPesquisa();
-
-    // ===== Custom dropdown categorias =====
-    const selectBox = document.getElementById("categorias-filtrar");
-    if (selectBox && selectBox.classList.contains('custom-select')) {
-        const selected = selectBox.querySelector(".select-selected");
-        const optionsContainer = selectBox.querySelector(".select-items");
-        const options = optionsContainer.querySelectorAll("div");
-
-        // Abrir/fechar dropdown
-        selected.addEventListener("click", () => {
-            selectBox.classList.toggle("open");
-        });
-
-        // Selecionar opção
-        options.forEach(option => {
-            option.addEventListener("click", () => {
-                const value = option.getAttribute("data-value");
-                const text = option.textContent;
-                
-                // Não mostrar "Categorias" como selecionado
-                selected.textContent = value === '' ? "Categorias" : text;
-                selectBox.classList.remove("open");
-
-                // Filtro dos cards
-                const projectCards = document.querySelectorAll('.project-card');
-                projectCards.forEach(card => {
-                    if (value === "" || card.getAttribute("data-categoria") === value) {
-                        card.style.display = "block";
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-            });
-        });
-
-        // Fechar dropdown ao clicar fora
-        document.addEventListener("click", (e) => {
-            if (!selectBox.contains(e.target)) {
-                selectBox.classList.remove("open");
-            }
-        });
-    }
+    setupCategorias();
+    setupBotaoLimpar();
 });
 
 function normalizeString(str) {
@@ -72,56 +30,33 @@ function normalizeString(str) {
         .replace(/\s+/g, "-"); // troca espaço por hífen
 }
 
+// ===== Variáveis globais para filtros =====
+let filtroAtivoTipo = '';
+let filtroAtivoCategoria = '';
+
+// ===== Filtro por tipo (ensino, pesquisa, extensão) =====
 function setupFiltros() {
     const botoesFiltro = document.querySelectorAll('.btn-filtrar[data-filtro]');
-    const projectCards = document.querySelectorAll('.project-card');
-    let filtroAtivo = '';
 
-    // ===== Filtro por tipo (ensino, pesquisa, extensão) =====
     botoesFiltro.forEach(botao => {
         botao.addEventListener('click', function() {
             const filtro = this.getAttribute('data-filtro');
             
-            if (filtroAtivo === filtro && filtro !== '') {
-                filtroAtivo = '';
+            if (filtroAtivoTipo === filtro && filtro !== '') {
+                filtroAtivoTipo = '';
                 botoesFiltro.forEach(btn => btn.classList.remove('filtro-ativo'));
-                projectCards.forEach(card => card.style.display = 'block');
             } else {
-                filtroAtivo = filtro;
+                filtroAtivoTipo = filtro;
                 botoesFiltro.forEach(btn => btn.classList.remove('filtro-ativo'));
                 this.classList.add('filtro-ativo');
-                
-                projectCards.forEach(card => {
-                    const tipo = card.getAttribute("data-tipo"); 
-                    if (filtro === '' || tipo === filtro) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
             }
+
+            aplicarFiltros();
         });
     });
-
-    // ===== Filtro por categoria =====
-    const selectCategoria = document.getElementById('categorias-filtrar');
-    if (selectCategoria) {
-        selectCategoria.addEventListener('change', function() {
-            const categoriaFiltro = normalizeString(this.value);
-            
-            projectCards.forEach(card => {
-                const categoriaCard = normalizeString(card.getAttribute('data-categoria'));
-                if (categoriaFiltro === '' || categoriaCard === categoriaFiltro) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    }
 }
 
-
+// ===== Pesquisa por nome =====
 function setupPesquisa() {
     const inputPesquisa = document.getElementById('input-pesquisa');
     const projectCards = document.querySelectorAll('.project-card');
@@ -141,5 +76,92 @@ function setupPesquisa() {
                 }
             });
         });
+    }
+}
+
+// ===== Dropdown de categorias =====
+function setupCategorias() {
+    const selectBox = document.getElementById("categorias-filtrar");
+    const selected = selectBox.querySelector(".select-selected");
+    const optionsContainer = selectBox.querySelector(".select-items");
+    const options = optionsContainer.querySelectorAll("div");
+
+    // Abrir/fechar dropdown
+    selected.addEventListener("click", () => {
+        selectBox.classList.toggle("open");
+    });
+
+    // Selecionar opção
+    options.forEach(option => {
+        option.addEventListener("click", () => {
+            let value = option.getAttribute("data-value");
+
+            // Normalizar categorias (trocar underline por hífen e remover acento)
+            value = value.replace(/_/g, "-"); 
+            value = normalizeString(value);
+
+            filtroAtivoCategoria = value;
+
+            selected.textContent = option.textContent;
+            selectBox.classList.remove("open");
+
+            aplicarFiltros();
+        });
+    });
+
+    // Fechar dropdown ao clicar fora
+    document.addEventListener("click", (e) => {
+        if (!selectBox.contains(e.target)) {
+            selectBox.classList.remove("open");
+        }
+    });
+}
+
+// ===== Botão para limpar filtros =====
+function setupBotaoLimpar() {
+    const btnLimpar = document.getElementById("limpar-filtros");
+    if (btnLimpar) {
+        // começa oculto
+        btnLimpar.style.display = "none";
+
+        btnLimpar.addEventListener("click", () => {
+            filtroAtivoTipo = '';
+            filtroAtivoCategoria = '';
+
+            // Resetar UI
+            document.querySelectorAll('.btn-filtrar').forEach(btn => btn.classList.remove('filtro-ativo'));
+            const selected = document.querySelector("#categorias-filtrar .select-selected");
+            if (selected) selected.textContent = "Categorias";
+
+            aplicarFiltros();
+        });
+    }
+}
+
+// ===== Aplicar filtros combinados =====
+function aplicarFiltros() {
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+        const tipo = card.getAttribute("data-tipo");
+        const categoria = card.getAttribute("data-categoria");
+
+        const passaFiltroTipo = (filtroAtivoTipo === '' || tipo === filtroAtivoTipo);
+        const passaFiltroCategoria = (filtroAtivoCategoria === '' || categoria === filtroAtivoCategoria);
+
+        if (passaFiltroTipo && passaFiltroCategoria) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // Mostrar ou esconder botão "limpar filtros"
+    const btnLimpar = document.getElementById("limpar-filtros");
+    if (btnLimpar) {
+        if (filtroAtivoTipo !== '' || filtroAtivoCategoria !== '') {
+            btnLimpar.style.display = "inline-block";
+        } else {
+            btnLimpar.style.display = "none";
+        }
     }
 }
