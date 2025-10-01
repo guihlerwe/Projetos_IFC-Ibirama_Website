@@ -6,8 +6,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
-//$senha = 'root';
+//$senha = 'Gui@15600';
+$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -109,7 +109,7 @@ $resultado = $conn->query($sql);
                 echo '<div class="no-projects">';
                 echo '<p id="no-projects">Nenhum projeto cadastrado ainda.</p>';
                 if ($tipo === 'coordenador') {
-                    echo '<p><a href="../telaCadastroProjeto/cadProjeto.php">Clique aqui para cadastrar o primeiro projeto</a></p>';
+                    echo '<p><a href="menuCad-projeto.php">Clique aqui para cadastrar o primeiro projeto</a></p>';
                 }
                 echo '</div>';
             }
