@@ -98,6 +98,8 @@ $tipo = $_SESSION['tipo'] ?? '';
     </div>
     <footer>
     <div class="container footer-container">
+
+        <!-- Recursos -->
         <div class="Aluno">
             <h2>Recursos</h2>
             <ul id="menu-aluno">
@@ -148,33 +150,29 @@ $tipo = $_SESSION['tipo'] ?? '';
             </ul>
         </div>
     </div>
-        
+        <!-- Sobre -->
         <div class="Sobre">
-            <h2 href="sobre.php">Sobre este site</h2>
-            <p>
-                Desenvolvido por Gabriella Schmilla Sandner e Guilherme Raimundo como Portal para comunidade e Trabalho de Conclusão de Curso (TCC)
-                 do curso de Tecnologia da Informação do <b>Instituto Federal Catarinense - Campus Ibirama.</b>
-            </p>
-
+            <h2 cl>Sobre este site</h2>
             <span id="License"><i>Licença M.I.T.2025</i></span>
         </div>
+        <!-- Dados Atuais -->
         <div class="Ativos">
             <h2>Dados Atuais</h2>
             <div id="dados-ativos">
-                <p id="num-projetos">Projetos 
-                    <div id="numero-projetos"><h1>15 </div>
+                <p id="num-projetos">Projetos
+                    <div id="numero-projetos"><h1><?php echo isset($resultado) ? $resultado->num_rows : 0; ?> </h1></div>
                 </p>
-
+                <!-- Os valores de bolsistas e coordenadores podem ser ajustados para serem dinâmicos se necessário -->
                 <p id="num-bolsistas">Bolsistas
-                <div id="numero-bolsistas"><h1>8 </div>
+                    <div id="numero-bolsistas"><h1>8 </h1></div>
                 </p>
-
                 <p id="num-coordenadores">Coordenadores
-                <div id="numero-coordenadores"><h1>5 </div>`
+                    <div id="numero-coordenadores"><h1>5 </h1></div>
                 </p>
             </div>
         </div>
-        <div><a href="http://www.acessoainformacao.gov.br/" img="assets/photos/icones/logo-acesso-informacao.svg">Acesso à Informação</a></div>
+        <!-- Gov -->
+        <div><img src="assets/photos/icones/logo-acesso-informacao.svg"><a href="sobre.php"></a></img></div>
 </footer>
     <script src="../assets/js/global.js"></script>
 </body>

@@ -10,8 +10,8 @@ if (!isset($_SESSION['usuario_id'])) {
 // Conectando com o banco
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
-//$senha = 'root';
+//$senha = 'Gui@15600';
+$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);

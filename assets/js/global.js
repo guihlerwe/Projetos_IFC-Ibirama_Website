@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.location.href = "monitorias.php";
   });
     
-  document.querySelector(".sobre-nav").addEventListener("click", function() {
+  document.querySelector(".Sobre").addEventListener("click", function() {
     window.location.href = "sobre.php";
   });
 

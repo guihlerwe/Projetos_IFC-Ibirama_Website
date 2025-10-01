@@ -29,7 +29,6 @@ $tipo = $_SESSION['tipo'] ?? '';
         <div class="navegador">
             <div class="projetos-nav">Projetos</div>
             <div class="monitoria-nav">Monitoria</div>
-            <div class="sobre-nav">Sobre</div>
             <?php include 'menuUsuario.php'; ?>
         </div>
     </header>

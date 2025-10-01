@@ -6,8 +6,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -52,7 +52,6 @@ $resultado = $conn->query($sql);
             <div class="navegador">
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
-                <div class="sobre-nav">Sobre</div>
                 <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
