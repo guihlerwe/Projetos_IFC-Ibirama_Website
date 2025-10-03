@@ -215,18 +215,18 @@ header.com-sombra {
 }
 
 footer {
-    background-color: #e0e0e0;
-    padding: 5px 20px;
     color: rgb(0, 0, 0);
     font-size: 14px;
     margin-top: 38vh;
     padding-bottom: 5vh;
+    background-color: #f5f5f5;
 }
 
 footer h2 {
-    margin-bottom: 3px;
+    margin-bottom: 15px;
     margin-top: 3vh;
     color: rgb(0, 0, 0);
+    font-size: 1.2em;
 }
 
 footer p, footer span, footer li {
@@ -241,35 +241,57 @@ footer ul {
 }
 
 footer li {
-    margin-bottom: 2px;
+    margin-bottom: 8px;
 }
 
 footer a {
     color: rgb(0, 0, 0);
     text-decoration: none;
     transition: color 0.3s ease;
-    margin-bottom: 10vh;
 }
 
 footer a:hover {
-    color: red;
+    color: #ba2929;
+}
+
+footer .linha {
+    padding: 40px 0;
+    border-bottom: 1px solid #ddd;
 }
 
 footer .footer-container {
     max-width: 1350px; 
     margin: 0 auto;     
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-footer .Aluno {
-    flex: 1;
-    min-width: 200px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 0 20px;
 }
 
 footer .Sobre {
-    flex: 2;
-    min-width: 300px;
+    text-align: center;
+    padding: 30px 0;
+    size: 30px;
+
+}
+
+footer .Ativos {
+    text-align: center;
+    padding: 30px 0;
+}
+
+footer .Ativos #dados-ativos {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 20px;
+}
+
+footer .Ativos #dados-ativos p {
+    text-align: center;
+}
+
+footer .Ativos #dados-ativos h1 {
+    font-size: 2.5em;
+    margin-top: 10px;
 }

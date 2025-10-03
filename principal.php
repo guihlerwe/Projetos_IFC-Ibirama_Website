@@ -6,8 +6,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -123,32 +123,82 @@ $resultado = $conn->query($sql);
     </div>
 
 <footer>
-    <div id="Dados ativos"> </div>
-    <div class="container footer-container">
-        <div class="Aluno">
-            <h2>Recursos</h2>
-            <ul id="menu-aluno">
-                <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
-                <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
-                <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
-                <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
-                <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
-                <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
-            </ul>
+    <div class="linha">
+        <div class="footer-container">
+            <div class="Recursos">
+                <h2>Recursos</h2>
+                <ul>
+                    <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
+                    <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
+                    <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
+                    <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
+                    <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
+                    <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
+                </ul>
+            </div>
+            <div class="Comunidade">
+                <h2>Comunidade</h2>
+                <ul>
+                    <li><a href="http://acessoainformacao.ifc.edu.br/">Acesso à Informação</a></li>
+                    <li><a href="https://ifc.edu.br/comite-de-crise/">Calendários Acadêmicos</a></li>
+                    <li><a href="https://cepsh.ifc.edu.br/">CEPSH</a></li>
+                    <li><a href="https://consuper.ifc.edu.br/">Conselho Superior</a></li>
+                    <li><a href="https://sig.ifc.edu.br/public/jsp/portal.jsf">Portal Público</a></li>
+                    <li><a href="https://editais.ifc.edu.br/">Editais IFC</a></li>
+                    <li><a href="http://www.camboriu.ifc.edu.br/pos-graduacao/treinador-e-instrutor-de-caes-guia/">Projetos Cães-guia</a></li>
+                    <li><a href="https://trabalheconosco.ifc.edu.br/">Trabalhe no IFC</a></li>
+                </ul>
+            </div>
+            <div class="Servidor">
+                <h2>Servidor</h2>
+                <ul>
+                    <li><a href="https://ifc.edu.br/desenvolvimento-do-servidor/">Desenvolvimento do Servidor</a></li>
+                    <li><a href="https://manualdoservidor.ifc.edu.br/">Manual do Servidor</a></li>
+                    <li><a href="https://www.siapenet.gov.br/Portal/Servico/Apresentacao.asp">Portal SIAPENET</a></li>
+                    <li><a href="http://suporte.ifc.edu.br/">Suporte TI</a></li>
+                    <li><a href="https://sig.ifc.edu.br/sigrh/public/home.jsf">Sistema Integrado de Gestão (SIG)</a></li>
+                    <li><a href="https://mail.google.com/mail/u/0/#inbox">Webmail</a></li>
+                </ul>
+            </div>
+            <div class="Sites-Relacionados">
+                <h2>Sites Relacionados</h2>
+                <ul>
+                    <li><a href="https://www.gov.br/pt-br">Brasil - GOV</a></li>
+                    <li><a href="https://www.gov.br/capes/pt-br">CAPES - Chamadas Públicas</a></li>
+                    <li><a href="https://www-periodicos-capes-gov-br.ez317.periodicos.capes.gov.br/index.php?">Capes - Portal de Periódicos</a></li>
+                    <li><a href="https://www.gov.br/cnpq/pt-br">CNPq - Chamadas Públicas</a></li>
+                    <li><a href="http://informativo.ifc.edu.br/">Informativo IFC</a></li>
+                    <li><a href="https://www.gov.br/mec/pt-br">MEC - Ministério da Educação</a></li>
+                    <li><a href="https://www.transparencia.gov.br/">Transparência Pública</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="Sobre">
-            <h2>Sobre este site</h2>
-            <p> 
-                O Campus Ibirama, inaugurado em 2010, com dezenas de profissionais, proporciona uma educação de 
-                qualidade e oferece cursos de Tecnologia da Informação, Administração e Vestuário, 
-                que são importantes para inovações e negócios.  
-
-                <b id="gab">Gabriella</b> e <b id="gui">Guilherme</b> criaram um site para facilitar o acesso a informações sobre projetos e monitorias,
-                que antes eram pouco divulgados. O site reúne dados sobre inscrições, horários de monitorias e contatos 
-                dos responsáveis pelos projetos, mostrando a aplicação de conhecimentos do curso de Tecnologia da Informação.
+    </div>
+    <div class="Sobre">
+        <h2>Sobre este site</h2>
+        <span id="License"><i>Licença M.I.T.2025</i></span>
+    </div>
+    <div class="Ativos">
+        <h2>Dados Atuais</h2>
+        <div id="dados-ativos">
+            <p id="num-projetos">
+                <span>Projetos</span>
+                <h1><?php echo isset($resultado) ? $resultado->num_rows : 0; ?></h1>
             </p>
-            <span id="License"><i>Licença M.I.T.2025</i></span>
+            <p id="num-bolsistas">
+                <span>Bolsistas</span>
+                <h1>18</h1>
+            </p>
+            <p id="num-coordenadores">
+                <span>Coordenadores</span>
+                <h1>4</h1>
+            </p>
         </div>
+    </div>
+    <div class="acesso-info">
+        <a href="sobre.php">
+            <img src="../assets/photos/icones/logo-acesso-informacao.svg" alt="Logo Acesso à Informação">
+        </a>
     </div>
 </footer>
     <script src="../assets/js/global.js"></script>
