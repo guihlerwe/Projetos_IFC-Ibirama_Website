@@ -4,8 +4,8 @@ session_start();
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
+//$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco
@@ -16,7 +16,6 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
-// Pega o ID do projeto via GET - aceita tanto 'id' quanto 'idProjeto'
 $idProjeto = 0;
 if (isset($_GET['idProjeto'])) {
     $idProjeto = (int)$_GET['idProjeto'];

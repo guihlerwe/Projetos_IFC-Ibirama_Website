@@ -88,7 +88,7 @@ form {
     color: rgb(33, 66, 41);
     text-align: center;
     padding-bottom: 0.8em;
-    margin-top: 0.8em;
+    margin-top: 1.5em;
 }
 
 fieldset {
@@ -111,10 +111,6 @@ input, select, button {
   width: calc(50% - 0.5em); 
   box-sizing: border-box;
 }
-
-.radio input[type="radio"]:checked + label::before {
-    background-color: green;
-  }
 
 .campo{
     display: block;
@@ -139,13 +135,13 @@ fieldset.grupo {
 
 .campo input[type="text"],
 .campo input[type="email"],
-.campo input[type="password"],
-.campo select {
+.campo input[type="password"]{
     font-size: 1em;
     width: 100%; 
     border: 1px solid rgb(33, 66, 41);
     box-shadow: 2px 2px 2px rgb(33, 66, 41);
     display: block;
+    margin-bottom: 0.1em;
 }
 
 .campo select option {
@@ -157,6 +153,85 @@ fieldset.grupo {
     background: #E0E0F8;
 }
 
+#curso-aluno, #area-coordenador {
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='black' d='M0 0l5 6 5-6z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+    padding-right: 30px; /* espaço para a setinha */
+}
+
+/* */
+.custom-select {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 8px 16px;
+    background-color: #fff;
+    user-select: none;
+    min-width: 150px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.select-selected{
+    width: 100%;
+    font-size: 16px;
+    display: block;
+}
+
+/* Container de opções escondido */
+.select-items {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 99;
+    display: none;
+    overflow: hidden;
+    animation: expandDown 0.3s ease forwards;
+}
+
+/* Opções */
+.select-items div {
+    padding: 8px 12px;
+    transition: background-color 0.2s;
+}
+
+.select-items div:hover {
+    background-color: #f0f0f0;
+}
+.custom-select.open .select-items {
+    display: block;
+}
+
+.radio-group {
+    display: flex;           
+    justify-content: center; /* centraliza horizontalmente */
+    align-items: center;     /* alinha no meio vertical */
+    gap: 2px;               /* espaço entre as opções */
+}
+
+.radio-group label {
+    display: flex;           
+    align-items: center;     
+    gap: 5px;                /* espaço entre o círculo e o texto */
+    cursor: pointer;
+}
+
+.radio-container {
+  display: flex;
+  justify-content: center; /* centraliza horizontalmente */
+  gap: 20px; /* espaço entre os botões */
+}
+
 .botao {
     font-size: 1.2em;
     background-color:rgb(38, 110, 51);
@@ -166,7 +241,7 @@ fieldset.grupo {
     padding: 0.4em 1em;
     cursor: pointer;
     display: block;
-    margin: 2em auto 1em auto;
+    margin: 1em auto 0.5em auto;
 }
 
 .botao:hover {

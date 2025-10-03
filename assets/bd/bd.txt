@@ -28,15 +28,17 @@ CREATE TABLE `projeto` (
 
 DROP TABLE IF EXISTS `pessoa`;
 
-CREATE TABLE `pessoa` (
-  `idPessoa` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(45) NOT NULL,
-  `sobrenome` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(45) NOT NULL,
-  `senha` VARCHAR(255) NOT NULL, 
-  `curso` ENUM('administracao', 'informatica', 'vestuario', 'moda', 'ciencias-naturais', 'ciencias-humanas', 'linguagens', 'matematica'),
-  `tipo` ENUM('aluno', 'bolsista', 'coordenador', 'colaborador') DEFAULT 'aluno',
-  PRIMARY KEY (`idPessoa`)
+CREATE TABLE pessoa (
+  idPessoa INT NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(45) NOT NULL,
+  sobrenome VARCHAR(45) NOT NULL,
+  email VARCHAR(45) NOT NULL UNIQUE,
+  senha VARCHAR(255) NOT NULL,
+  tipo ENUM('aluno', 'coordenador', 'bolsista', 'colaborador') DEFAULT 'aluno',
+  curso ENUM('administracao', 'informatica', 'vestuario', 'moda', 'gestao-comercial') NULL,
+  matricula VARCHAR(20) NULL,
+  area ENUM('ciencias-naturais', 'ciencias-humanas', 'linguagens', 'matematica', 'tecnico-administrativo') NULL,
+  PRIMARY KEY (idPessoa)
 );
 
 DROP TABLE IF EXISTS `pessoa_projeto`;
@@ -73,3 +75,31 @@ VALUES (
 SELECT * from pessoa;
 
 SELECT * from projeto;
+
+-- Permitir curso ser opcional
+ALTER TABLE `pessoa` 
+MODIFY `curso` ENUM(
+  'administracao', 
+  'informatica', 
+  'vestuario', 
+  'moda', 
+  'gestao-comercial', 
+  'ciencias-naturais', 
+  'ciencias-humanas', 
+  'linguagens', 
+  'matematica'
+) NULL;
+
+-- Adicionar matrícula (somente aluno)
+ALTER TABLE `pessoa`
+ADD COLUMN `matricula` VARCHAR(20) NULL AFTER `curso`;
+
+-- Adicionar área (somente coordenador)
+ALTER TABLE `pessoa`
+ADD COLUMN `area` ENUM(
+  'ciencias-naturais',
+  'ciencias-humanas',
+  'linguagens',
+  'matematica',
+  'tecnico-administrativo'
+) NULL AFTER `matricula`;

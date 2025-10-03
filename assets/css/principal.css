@@ -126,7 +126,6 @@
     font-size: 14px;
 }
 
-/* Container de opções escondido */
 .select-items {
     position: absolute;
     top: calc(100% + 5px);

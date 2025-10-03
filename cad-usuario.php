@@ -2,8 +2,8 @@
     // conectando com o banco
     $host = 'localhost';
     $usuario = 'root';
-    $senha = 'Gui@15600';
-    //$senha = 'root';
+    //$senha = 'Gui@15600';
+    $senha = 'root';
     $banco = 'website';
 
     $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -20,8 +20,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/cad-usuario.css">
     <link rel="stylesheet" href="assets/css/tema-global.css">
+    <link rel="stylesheet" href="assets/css/cad-usuario.css">
     <title>Cadastrar-se como aluno</title>
 </head>
 <body>
@@ -69,8 +69,55 @@
                             <input type="password" name="senha" class="campo" id="senha" placeholder="Senha" required>
                         </div>
                     </fieldset>
+
+                    <p class="subtitulo">Como você deseja cadastrar-se?</p>
+                    <div class="radio-group">
+                        <div class="custom-select">
+                            <div class="radio-container">
+                                <label>
+                                    <input type="radio" name="usuario" value="aluno"> Aluno
+                                </label>
+                                <label>
+                                    <input type="radio" name="usuario" value="coordenador"> Coordenador
+                                </label>
+                            </div>
+
+                        </div>
+                        <input type="hidden" name="tipo" id="inputTipo">
+                    </div>
+
+                    <div id="camposAluno" style="display:none;">
+                        <div class="custom-select" id="curso-aluno">
+                        <div class="select-selected">Curso</div>
+                        <div class="select-items">
+                            <div data-value="administracao">Administração</div>
+                            <div data-value="informatica">Informática</div>
+                            <div data-value="vestuario">Vestuário</div>
+                            <div data-value="moda">Moda</div>
+                            <div data-value="gestao-comercial">Gestão Comercial</div>
+                        </div>
+                        </div>
+                        <input type="hidden" name="curso" id="inputCurso">
+
+                        <input type="text" name="matricula" class="campo" placeholder="Digite sua matrícula">
+                    </div>
+
+                    <div id="camposCoordenador" style="display:none;">
+                    <div class="custom-select" id="area-coordenador">
+                        <div class="select-selected">Área de estudo</div>
+                        <div class="select-items">
+                            <div data-value="ciencias-naturais">Ciências Naturais</div>
+                            <div data-value="ciencias-humanas">Ciências Humanas</div>
+                            <div data-value="linguagens">Linguagens</div>
+                            <div data-value="matematica">Matemática</div>
+                            <div data-value="tecnico-administrativo">Técnico Administrativo</div>
+                        </div>
+                        </div>
+                        <input type="hidden" name="area" class="campo" id="inputArea">
+                    </div>
+
         
-                    <button type="submit" class="botao">Cadastrar</button>
+                    <button type="submit" class="botao">Cadastrar-se</button>
                 </form>
             </div>
         </div>
@@ -95,6 +142,7 @@
     </div>
 
     <script src="./assets/js/global.js"></script>
+    <script src="./assets/js/cad-usuario.js"></script>
 </body>
 
 </html>
