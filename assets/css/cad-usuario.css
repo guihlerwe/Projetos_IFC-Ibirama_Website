@@ -162,6 +162,11 @@ fieldset.grupo {
     padding-right: 30px; /* espaço para a setinha */
 }
 
+#tipo-usuario {
+    border:none;
+    background-color: transparent;
+}
+
 /* */
 .custom-select {
     position: relative;

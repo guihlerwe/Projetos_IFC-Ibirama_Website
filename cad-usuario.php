@@ -2,8 +2,8 @@
     // conectando com o banco
     $host = 'localhost';
     $usuario = 'root';
-    $senha = 'Gui@15600';
-    //$senha = 'root';
+    //$senha = 'Gui@15600';
+    $senha = 'root';
     $banco = 'website';
 
     $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -72,7 +72,7 @@
 
                     <p class="subtitulo">Como você deseja cadastrar-se?</p>
                     <div class="radio-group">
-                        <div class="custom-select">
+                        <div class="custom-select" id="tipo-usuario">
                             <div class="radio-container">
                                 <label>
                                     <input type="radio" name="usuario" value="aluno"> Aluno
@@ -110,6 +110,9 @@
                             <div data-value="ciencias-humanas">Ciências Humanas</div>
                             <div data-value="linguagens">Linguagens</div>
                             <div data-value="matematica">Matemática</div>
+                            <div data-value="administracao">Administração</div>
+                            <div data-value="informatica">Informática</div>
+                            <div data-value="vestuario">Vestuário</div>
                             <div data-value="tecnico-administrativo">Técnico Administrativo</div>
                         </div>
                         </div>
@@ -149,31 +152,49 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // pegando os dados do formulário
-    $nome = $_POST['nome'] ?? '';
-    $sobrenome = $_POST['sobrenome'] ?? '';
-    $email = $_POST['email'] ?? '';
+    // Pega os dados comuns
+    $nome = trim($_POST['nome'] ?? '');
+    $sobrenome = trim($_POST['sobrenome'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $senha = $_POST['senha'] ?? '';
+    $tipo = $_POST['tipo'] ?? ''; 
 
-    // se quiser validar
-    if (empty($nome) || empty($sobrenome) || empty($email) || empty($senha)) {
-        echo "Preencha todos os campos!";
-    } else {
-        // exemplo de cadastro no banco
-        $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo) VALUES (?, ?, ?, ?, 'aluno')";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssss", $nome, $sobrenome, $email, $senha);
-        
-        if ($stmt->execute()) {
-            echo "Cadastro realizado com sucesso!";
-            // redirecionar se quiser: header("Location: login.php");
-        } else {
-            echo "Erro: " . $stmt->error;
-        }
+    // Campos específicos 
+    $curso = $_POST['curso'] ?? null;
+    $matricula = $_POST['matricula'] ?? null;
+    $area = $_POST['area'] ?? null;
 
-        $stmt->close();
+
+    if (empty($nome) || empty($sobrenome) || empty($email) || empty($senha) || empty($tipo)) {
+        echo "Por favor, preencha todos os campos obrigatórios.";
+        exit;
     }
 
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+    if ($tipo === 'aluno') {
+        $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, curso, matricula) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $curso, $matricula);
+    } elseif ($tipo === 'coordenador') {
+        $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, area) 
+                VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $area);
+    } else {
+        echo "Tipo de usuário inválido.";
+        exit;
+    }
+
+    
+    if ($stmt->execute()) {
+        echo "<script>alert('Cadastro realizado com sucesso!'); window.location.href='login.php';</script>";
+    } else {
+        echo "Erro ao cadastrar: " . $stmt->error;
+    }
+
+    $stmt->close();
     $conn->close();
 }
 ?>

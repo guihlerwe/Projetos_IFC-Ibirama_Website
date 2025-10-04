@@ -28,21 +28,22 @@ if ($tipo === "coordenador") {
         <a href="#">Seus projetos</a>
         <a href="#">Editar Monitorias</a>
         <a href="menuConta.html">Dados da conta</a>
-        
+        <a href="logout.php" class="sair">Sair</a>
     ';
 } elseif ($tipo === "bolsista") {
     echo '
         <a href="#">Seus projetos</a>
         <a href="menuConta.html">Dados da conta</a>
+        <a href="logout.php" class="sair">Sair</a>
     ';
 } else { // aluno
     echo '
         <a href="menuConta.html">Dados da conta</a>
+        <a href="logout.php" class="sair">Sair</a>
     ';
 }
 
 echo '
     </div>
-</div>'
-
+</div>';
 ?>
