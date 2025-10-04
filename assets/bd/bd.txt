@@ -76,30 +76,12 @@ SELECT * from pessoa;
 
 SELECT * from projeto;
 
--- Permitir curso ser opcional
-ALTER TABLE `pessoa` 
-MODIFY `curso` ENUM(
-  'administracao', 
-  'informatica', 
-  'vestuario', 
-  'moda', 
-  'gestao-comercial', 
-  'ciencias-naturais', 
-  'ciencias-humanas', 
-  'linguagens', 
-  'matematica'
-) NULL;
+-- ADIÇÕES 
 
--- Adicionar matrícula (somente aluno)
-ALTER TABLE `pessoa`
-ADD COLUMN `matricula` VARCHAR(20) NULL AFTER `curso`;
+ALTER TABLE pessoa 
+ADD COLUMN area ENUM('ciencias-naturais','ciencias-humanas','linguagens','matematica', 'administracao', 'informatica', 'vestuario','tecnico-administrativo') DEFAULT NULL,
+ADD COLUMN curso VARCHAR(50) DEFAULT NULL,
+ADD COLUMN matricula VARCHAR(50) DEFAULT NULL,
+ADD COLUMN confirmado TINYINT(1) DEFAULT 0,
+ADD COLUMN token VARCHAR(32) DEFAULT NULL
 
--- Adicionar área (somente coordenador)
-ALTER TABLE `pessoa`
-ADD COLUMN `area` ENUM(
-  'ciencias-naturais',
-  'ciencias-humanas',
-  'linguagens',
-  'matematica',
-  'tecnico-administrativo'
-) NULL AFTER `matricula`;

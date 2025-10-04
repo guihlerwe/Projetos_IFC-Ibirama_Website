@@ -151,50 +151,105 @@
 </html>
 
 <?php
+// Conexão com o banco
+$host = 'localhost';
+$usuario = 'root';
+$senha = 'root';
+$banco = 'website';
+
+$conn = new mysqli($host, $usuario, $senha, $banco);
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
+}
+$conn->set_charset("utf8");
+
+// PHPMailer sem composer
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+require 'PHPMailer/src/Exception.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Pega os dados comuns
-    $nome = trim($_POST['nome'] ?? '');
-    $sobrenome = trim($_POST['sobrenome'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    // Dados do formulário
+    $nome = $_POST['nome'] ?? '';
+    $sobrenome = $_POST['sobrenome'] ?? '';
+    $email = $_POST['email'] ?? '';
     $senha = $_POST['senha'] ?? '';
-    $tipo = $_POST['tipo'] ?? ''; 
+    $tipo = $_POST['tipo'] ?? '';
+    
+    // Campos adicionais
+    $curso = $matricula = $area = null;
+    if ($tipo === 'aluno') {
+        $curso = $_POST['curso'] ?? null;
+        $matricula = $_POST['matricula'] ?? null;
+    } elseif ($tipo === 'coordenador') {
+        $area = $_POST['area'] ?? null;
+    }
 
-    // Campos específicos 
-    $curso = $_POST['curso'] ?? null;
-    $matricula = $_POST['matricula'] ?? null;
-    $area = $_POST['area'] ?? null;
-
-
+    // Validação básica
     if (empty($nome) || empty($sobrenome) || empty($email) || empty($senha) || empty($tipo)) {
-        echo "Por favor, preencha todos os campos obrigatórios.";
+        echo "Preencha todos os campos obrigatórios!";
         exit;
     }
 
+    // Hash da senha
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    if ($tipo === 'aluno') {
-        $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, curso, matricula) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $curso, $matricula);
-    } elseif ($tipo === 'coordenador') {
-        $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, area) 
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $area);
-    } else {
-        echo "Tipo de usuário inválido.";
-        exit;
-    }
+    // Gera token seguro para confirmação
+    $token = bin2hex(random_bytes(16));
 
-    
+    // Inserir no banco
+    $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, curso, matricula, area, confirmado, token) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $curso, $matricula, $area, $token);
+
     if ($stmt->execute()) {
-        echo "<script>alert('Cadastro realizado com sucesso!'); window.location.href='login.php';</script>";
+        // Enviar e-mail de confirmação
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'tls';
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 587;
+
+        $mail->Username = 'projetos.ifc.ibirama@gmail.com'; // coloque seu e-mail
+        $mail->Password = 'jsfi pcrf zumq xfcv';   // senha de app
+
+        $mail->setFrom('projetos.ifc.ibirama.com', 'IFC Projetos');
+        $mail->addAddress($email, $nome);
+        $mail->isHTML(true);
+        $mail->Subject = 'Confirme seu cadastro';
+
+        // Monta o link de confirmação
+        $linkConfirmacao = "http://localhost/confirmar.php?token=$token";
+
+        $mail->Body = "
+            <h2>Olá, $nome!</h2>
+            <p>Obrigado por se cadastrar no site de Projetos do IFC.</p>
+            <p>Clique no link abaixo para confirmar seu e-mail e ativar sua conta:</p>
+            <p><a href='$linkConfirmacao'>$linkConfirmacao</a></p>
+            <p>Se você não se cadastrou, ignore este e-mail.</p>
+        ";
+
+        if (!$mail->send()) {
+            $erroEmail = "Erro ao enviar e-mail: " . $mail->ErrorInfo;
+            // registrar em log ou exibir depois
+        } else {
+            // Redireciona para página informando que precisa confirmar e-mail
+            header("Location: aguardando-confirmacao.php");
+            exit;
+        }
+
     } else {
         echo "Erro ao cadastrar: " . $stmt->error;
     }
 
     $stmt->close();
-    $conn->close();
 }
+
+$conn->close();
 ?>
+
