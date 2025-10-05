@@ -10,6 +10,7 @@
 }
 
 .input-pesquisar {
+    outline: none;
     padding: 8px 15px;
     border: 1px solid #ccc;
     border-radius: 20px;
@@ -29,21 +30,18 @@
 .btn-filtrar.tecnico:hover {
     background-color:#2e7d32;
     color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
     text-shadow: none;
 }
 
 .btn-filtrar.superior:hover {
     background-color: #8F4CA0;
     color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
     text-shadow: none;
 }
 
 .btn-filtrar.geral:hover {
     background-color:#d32f2f;
     color: rgb(217, 233, 221);
-    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
     text-shadow: none;
 }
 
@@ -83,7 +81,7 @@
 
 .project-card {
     position: relative;
-    border-radius: 8px;
+    border-radius: 2vh;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -113,7 +111,7 @@
 
 .project-card {
     position: relative;
-    border-radius: 10px;
+    border-radius: 2vh;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     aspect-ratio: 16/9;
@@ -123,7 +121,7 @@
 
 .project-card {
     position: relative;
-    border-radius: 10px;
+    border-radius: 2vh;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     aspect-ratio: 16/9;

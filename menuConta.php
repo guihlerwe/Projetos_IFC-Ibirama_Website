@@ -2,104 +2,98 @@
 session_start();
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
-?>
 
+// Conexão com o banco de dados
+$host = 'localhost';
+$usuario = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
+$banco = 'website';
+
+$conn = new mysqli($host, $usuario, $senha, $banco);
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
+}
+
+$conn->set_charset("utf8");
+?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Conta</title>
     <link rel="stylesheet" href="assets/css/tema-global.css">
-    <link rel="stylesheet" href="assets/css/monitorias.css">
-    <title>Monitorias</title>
+    <link rel="stylesheet" href="assets/css/conta.css">
 </head>
-
 <body>
-    <script>
-        sessionStorage.setItem('usuarioLogado', '<?php echo $nome; ?>');
-        sessionStorage.setItem('tipoUsuario', '<?php echo $tipo; ?>');
-    </script>
-    <div class="container">
-        <header>
+    <header>
             <div class="logo">
-                <div class="icone-nav">
+                <div class="grid-icon">
                     <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
-                    
                 </div>
-                Monitores do Campus Ibirama
+                Projetos do Campus Ibirama
             </div>
             <div class="navegador">
                 <div class="projetos-nav">Projetos</div>
                 <div class="monitoria-nav">Monitoria</div>
-                <div class="login-nav"id"login-nav"><?php include 'menuUsuario.php'; ?></div>
+                <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
+    <main class="container-perfil">
+        
+        <h1>Minha Conta</h1>
+        <br>
 
-        <div class="barra-pesquisar">
-            <input type="text" class="input-pesquisar" placeholder="Pesquisar">
-            <button class="btn-filtrar tecnico">Área Técnica Integrada</button>
-            <button class="btn-filtrar geral">Ensino Médio</button>
-            <button class="btn-filtrar superior">Superior</button>
+        <!-- Parte superior: foto + formulário -->
+        <section class="secao-superior">
+            <!-- Foto -->
+            <div class="secao-foto">
+                <img src="../assets/photos/sem_foto_perfil.png" alt="Foto de Perfil" class="foto-perfil">
+                <button class="btn">Alterar Foto</button>
+            </div>
+
+
+            <!-- Formulário -->
+            <form class="formulario-perfil">
+                <label class="campoEsquerda">
+                    Nome:
+                    <input type="text" name="nome" placeholder="Digite seu nome">
+                </label>
+
+                <label class="campoDireita">
+                    Sobrenome:
+                    <input type="text" name="sobrenome" placeholder="Digite seu sobrenome">
+                </label>
+
+                <label class="campoEsquerda">
+                    E-mail:
+                    <input type="email" name="email" placeholder="Digite seu e-mail">
+                </label>
+
+                <label class="campoDireita">
+                    Senha:
+                    <input type="password" name="senha" placeholder="Digite sua senha">
+                </label>
+            </form>
+        </section>
+
+        <!-- Descrição -->
+        <section class="secao-descricao">
+            <label>
+                Descrição:
+                <textarea class="campo-descricao" maxlength="1000" placeholder="Escreva algo sobre você..."></textarea>
+            </label>
+            <div class="contador-caracteres">0/1000</div>
+        </section>
+
+        <!-- Botões -->
+        <div class="area-botoes">
+            <button class="btn editar">Editar</button>
+            <button class="btn excluir">Excluir Conta</button>
         </div>
-
-
-
-        <div class="projects-grid">
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/adm.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Administração</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/info.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Informática</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/vest.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Vestuário</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/comercial.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Gestão Comercial</div>
-            </div>
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/moda.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label">Moda</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/humanas.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Ciências Humanas</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/natureza.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Ciências da Natureza</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/linguagens.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Linguagens e suas Tecnologias</div>
-            </div>
-
-
-            <div class="project-card">
-                <img src="../assets/photos/monitoria/icones/matemática.png" alt="Campus Ibirama" class="project-image">
-                <div class="project-label vermelho">Matemática e suas Tecnologias</div>
-            </div>
-     
-        </div>
-    </div>
+    </main>
 
     
     <footer>
@@ -165,6 +159,7 @@ $tipo = $_SESSION['tipo'] ?? '';
     </div>
 </footer>
     <script src="../assets/js/global.js"></script>
-    <script src="../assets/js/monitorias.js"></script>
+    <script src="../assets/js/conta.js"></script>
 </body>
 </html>
+

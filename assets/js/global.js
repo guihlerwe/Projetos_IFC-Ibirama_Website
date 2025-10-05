@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+
   document.querySelector(".projetos-nav").addEventListener("click", function() {
     window.location.href = "principal.php";
   });
@@ -24,9 +25,30 @@ document.addEventListener('DOMContentLoaded', function() {
     window.location.href = "sobre.php";
   });
 
-  document.querySelector(".login-nav").addEventListener("click", function() {
-    window.location.href = "login.php";
-  });
+  const loginNav = document.querySelector(".login-nav");
+  if (loginNav) {
+    const menuBtn = loginNav.querySelector('.menu-btn');
+    const dropdownContent = loginNav.querySelector('.dropdown-content');
+    
+    if (menuBtn && dropdownContent) {
+      menuBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        dropdownContent.classList.toggle('active');
+      });
+
+      // Fechar dropdown quando clicar fora
+      document.addEventListener('click', function(e) {
+        if (!loginNav.contains(e.target)) {
+          dropdownContent.classList.remove('active');
+        }
+      });
+    } else if (!menuBtn) {
+      // Se não tiver menu-btn, significa que é o link de login
+      loginNav.addEventListener("click", function() {
+        window.location.href = "login.php";
+      });
+    }
+  }
 });
   // Troca logo do header conforme modo claro/escuro
   function trocaLogoHeader() {

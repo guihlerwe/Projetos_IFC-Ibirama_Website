@@ -27,18 +27,18 @@ if ($tipo === "coordenador") {
         <a href="menuCad-projeto.php">Criar projeto</a>
         <a href="#">Seus projetos</a>
         <a href="#">Editar Monitorias</a>
-        <a href="menuConta.html">Dados da conta</a>
+        <a href="menuConta.php">Dados da conta</a>
         <a href="logout.php" class="sair">Sair</a>
     ';
 } elseif ($tipo === "bolsista") {
     echo '
         <a href="#">Seus projetos</a>
-        <a href="menuConta.html">Dados da conta</a>
+        <a href="menuConta.php">Dados da conta</a>
         <a href="logout.php" class="sair">Sair</a>
     ';
 } else { // aluno
     echo '
-        <a href="menuConta.html">Dados da conta</a>
+        <a href="menuConta.php">Dados da conta</a>
         <a href="logout.php" class="sair">Sair</a>
     ';
 }

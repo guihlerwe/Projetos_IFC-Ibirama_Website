@@ -8,6 +8,10 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+input{
+    outline: none;
+}
+
 .container-perfil h1 {
     text-align: center;
     margin-bottom: 30px;
@@ -88,6 +92,7 @@
 
 .campo-descricao {
     width: 100%;
+    outline: none;
     min-height: 140px;
     padding: 12px;
     border-radius: 8px;

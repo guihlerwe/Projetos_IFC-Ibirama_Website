@@ -78,10 +78,17 @@ SELECT * from projeto;
 
 -- ADIÇÕES 
 
-ALTER TABLE pessoa 
-ADD COLUMN area ENUM('ciencias-naturais','ciencias-humanas','linguagens','matematica', 'administracao', 'informatica', 'vestuario','tecnico-administrativo') DEFAULT NULL,
-ADD COLUMN curso VARCHAR(50) DEFAULT NULL,
-ADD COLUMN matricula VARCHAR(50) DEFAULT NULL,
-ADD COLUMN confirmado TINYINT(1) DEFAULT 0,
-ADD COLUMN token VARCHAR(32) DEFAULT NULL
+ALTER TABLE pessoa
+  ADD COLUMN area ENUM('ciencias-naturais','ciencias-humanas','linguagens','matematica', 'administracao', 'informatica', 'vestuario','tecnico-administrativo') DEFAULT NULL,
+  ADD COLUMN curso VARCHAR(50) DEFAULT NULL,
+  ADD COLUMN matricula VARCHAR(50) DEFAULT NULL,
+  ADD COLUMN confirmado TINYINT(1) DEFAULT 0,
+  ADD COLUMN token VARCHAR(32) DEFAULT NULL,
+  ADD COLUMN is_monitor BOOLEAN DEFAULT FALSE,
+  ADD COLUMN monitor_area VARCHAR(100) DEFAULT NULL,
+  ADD COLUMN monitor_sobre TEXT DEFAULT NULL,
+  ADD COLUMN monitor_horarios TEXT DEFAULT NULL,
+  ADD COLUMN monitor_foto VARCHAR(255) DEFAULT NULL,
+  ADD COLUMN monitor_capa VARCHAR(255) DEFAULT NULL;
 
+eu

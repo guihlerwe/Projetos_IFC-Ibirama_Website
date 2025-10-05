@@ -6,8 +6,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -175,9 +175,12 @@ $resultado = $conn->query($sql);
         </div>
     </div>
     <div class="Sobre">
-        <h2>Sobre este site</h2>
-        <span id="License"><i>Licença M.I.T.2025</i></span>
-    </div>
+  <h2 id="Sobre">
+    Sobre este site
+    <span class="arrow">↗</span>
+  </h2>
+  <span id="License"><i>Licença M.I.T.2025</i></span>
+</div>
     <div class="Ativos">
         <h2>Dados Atuais</h2>
         <div id="dados-ativos">
@@ -196,8 +199,8 @@ $resultado = $conn->query($sql);
         </div>
     </div>
     <div class="acesso-info">
-        <a href="sobre.php">
-            <img src="../assets/photos/icones/logo-acesso-informacao.svg" alt="Logo Acesso à Informação">
+        <a href="https://www.gov.br/acessoainformacao/pt-br">
+            <img src="../assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
         </a>
     </div>
 </footer>

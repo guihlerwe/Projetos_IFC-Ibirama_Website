@@ -3,7 +3,7 @@
     color: var(--header-text);
 }
 
-/* BARRA DE PESQUISA E FILTROS - MELHORADO */
+/*ferramentas de pesquisa e filtros*/
 .barra-pesquisar {
     margin: 20px;
     display: flex;
@@ -13,6 +13,7 @@
 }
 
 .input-pesquisar {
+    outline: none;
     padding: 8px 15px;
     border: 1px solid var(--card-border);
     border-radius: 20px;
@@ -138,7 +139,7 @@
     z-index: 99;
     display: none;
     overflow: hidden;
-    animation: expandDown 0.3s ease forwards;
+    animation: expandDown 0.2s ease forwards;
 }
 
 /* Opções */
@@ -260,17 +261,14 @@
 
 li {
     margin-bottom: 1.5px;
-    list-style-type: circle;
 }
 
 ul {
     margin-top: 2px;
-    list-style-type: circle;
 }
 
 a {
     color: #ffffff;
-    list-style-type: circle;
 }
 
 a:hover {
@@ -345,7 +343,7 @@ a:hover {
         width: 100%;
         z-index: 100%;
         transition: box-shadow 0.3s ease;
-        font-size: 0.5vh;
+        font-size: 0.2vh;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -380,13 +378,7 @@ a:hover {
     }
 
     footer {
-        display: flex;
-        padding-top: 5vh;
-        padding-left: 2vh;
-        background-color: var(--footer-bg);
-        color: var(--footer-text);
-        -webkit-tap-highlight-color: transparent;
-    }
+        }
 
     .container {
         display: inline-block;
