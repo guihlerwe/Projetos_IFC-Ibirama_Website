@@ -125,22 +125,7 @@
             </div>
         </div>
 
-        <footer>
-            <div class="Aluno">
-                <h2>Recursos</h2>
-                <ul id="menu-aluno" >
-                    <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
-                    <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
-                    <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
-                    <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
-                    <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
-                    <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
-                </ul>
-
-                <span id="License">Licença M.I.T.</span>
-                    <span>2025</span>					
-            </div>
-        </footer>
+    
         
     </div>
 
@@ -225,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->Subject = 'Confirme seu cadastro';
 
         // Monta o link de confirmação
-        $linkConfirmacao = "http://localhost/confirmar.php?token=$token";
+        $linkConfirmacao = "http://localhost:8080/confirmar.php?token=$token";
 
         $mail->Body = "
             <h2>Olá, $nome!</h2>
@@ -235,13 +220,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Se você não se cadastrou, ignore este e-mail.</p>
         ";
 
-        if (!$mail->send()) {
-            $erroEmail = "Erro ao enviar e-mail: " . $mail->ErrorInfo;
-            // registrar em log ou exibir depois
-        } else {
-            // Redireciona para página informando que precisa confirmar e-mail
-            header("Location: aguardando-confirmacao.php");
+        if ($mail->send()) {
+            echo "<script>alert('Email enviado com Sucesso!);</script>";
+                     
             exit;
+            
+        } else {            
+            $erroEmail = "Erro ao enviar e-mail: " . $mail->ErrorInfo;
         }
 
     } else {
