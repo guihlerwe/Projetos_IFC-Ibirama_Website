@@ -186,51 +186,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Gera token seguro para confirmação
     $token = bin2hex(random_bytes(16));
 
-    // Inserir no banco
-    $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, curso, matricula, area, confirmado, token) 
+    // verificação de domínio
+    $verifica = explode('@',$email);
+
+    $dominio = $verifica[1];
+
+    if($dominio == 'ifc.com.br' || $dominio == 'estudante.ifc.edu.br') { 
+        // Inserir no banco
+        $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, curso, matricula, area, confirmado, token) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $curso, $matricula, $area, $token);
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $curso, $matricula, $area, $token);
 
-    if ($stmt->execute()) {
-        // Enviar e-mail de confirmação
-        $mail = new PHPMailer();
-        $mail->IsSMTP();
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = 'tls';
-        $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 587;
+        if ($stmt->execute()) {
+            // Enviar e-mail de confirmação
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 587;
 
-        $mail->Username = 'projetos.ifc.ibirama@gmail.com'; // coloque seu e-mail
-        $mail->Password = 'jsfi pcrf zumq xfcv';   // senha de app
+            $mail->Username = 'projetos.ifc.ibirama@gmail.com'; // e-mail que envia
+            $mail->Password = 'jsfi pcrf zumq xfcv';   // senha de app
 
-        $mail->setFrom('projetos.ifc.ibirama.com', 'IFC Projetos');
-        $mail->addAddress($email, $nome);
-        $mail->isHTML(true);
-        $mail->Subject = 'Confirme seu cadastro';
+            $mail->setFrom('projetos.ifc.ibirama.com', 'IFC Projetos');
+            $mail->addAddress($email, $nome); //receptor
+            $mail->isHTML(true);
+            $mail->Subject = 'Confirme seu cadastro';
 
-        // Monta o link de confirmação
-        $linkConfirmacao = "http://localhost:8080/confirmar.php?token=$token";
+            // Monta o link de confirmação
+            $linkConfirmacao = "http://localhost:8080/confirmar.php?token=$token";
 
-        $mail->Body = "
-            <h2>Olá, $nome!</h2>
-            <p>Obrigado por se cadastrar no site de Projetos do IFC.</p>
-            <p>Clique no link abaixo para confirmar seu e-mail e ativar sua conta:</p>
-            <p><a href='$linkConfirmacao'>$linkConfirmacao</a></p>
-            <p>Se você não se cadastrou, ignore este e-mail.</p>
-        ";
+            $mail->Body = "
+                <h2>Olá, $nome!</h2>
+                <p>Obrigado por se cadastrar no site de Projetos do IFC.</p>
+                <p>Clique no link abaixo para confirmar seu e-mail e ativar sua conta:</p>
+                <p><a href='$linkConfirmacao'>$linkConfirmacao</a></p>
+                <p>Se você não se cadastrou, ignore este e-mail.</p>
+            ";
 
-        if ($mail->send()) {
-            echo "<script>alert('Email enviado com Sucesso!);</script>";
-                     
-            exit;
-            
-        } else {            
-            $erroEmail = "Erro ao enviar e-mail: " . $mail->ErrorInfo;
+            if ($mail->send()) {
+                echo "<script>alert('Email enviado com Sucesso!);</script>";
+                        
+                exit;
+                
+            } else {            
+                $erroEmail = "Erro ao enviar e-mail: " . $mail->ErrorInfo;
+            }
+
+        } else {
+            echo "Erro ao cadastrar: " . $stmt->error;
         }
 
     } else {
-        echo "Erro ao cadastrar: " . $stmt->error;
+        echo "Somente e-mail com domínio @ifc.edu.br ou @estudante.ifc.edu.br";
+        
     }
 
     $stmt->close();

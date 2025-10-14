@@ -25,8 +25,8 @@ echo '
 if ($tipo === "coordenador") {
     echo '
         <a href="menuCad-projeto.php">Criar projeto</a>
-        <a href="#">Seus projetos</a>
-        <a href="#">Editar Monitorias</a>
+        <a href="menuProjetos.php">Seus projetos</a>
+        <a href="menuMonitorias.php">Editar Monitorias</a>
         <a href="menuConta.php">Dados da conta</a>
         <a href="logout.php" class="sair">Sair</a>
     ';
