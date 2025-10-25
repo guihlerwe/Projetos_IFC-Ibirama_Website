@@ -21,9 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
     window.location.href = "monitorias.php";
   });
     
-  document.querySelector(".Sobre").addEventListener("click", function() {
-    window.location.href = "sobre.php";
-  });
+  const sobreLink = document.querySelector(".Sobre");
+    if (sobreLink) {
+      sobreLink.addEventListener("click", function() {
+        window.location.href = "sobre.php";
+      });
+  }
 
   const loginNav = document.querySelector(".login-nav");
   if (loginNav) {

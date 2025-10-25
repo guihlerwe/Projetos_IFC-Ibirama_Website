@@ -51,3 +51,15 @@ document.addEventListener("DOMContentLoaded", function() {
     setupCustomSelect("curso-aluno", "inputCurso");
     setupCustomSelect("area-coordenador", "inputArea");
 });
+
+function mostrarToast(mensagem, tipo = "sucesso") {
+  const container = document.getElementById("toast-container");
+  const toast = document.createElement("div");
+  toast.className = `toast ${tipo}`;
+  toast.textContent = mensagem;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
+}
