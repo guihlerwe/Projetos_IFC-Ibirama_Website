@@ -2,6 +2,40 @@
 session_start();
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
+
+// Conexão com o banco de dados (reaproveitado de outros arquivos do projeto)
+$host = 'localhost';
+$usuario = 'root';
+//$senha = 'root';
+$senha = 'Gui@15600';
+$banco = 'website';
+
+$conn = new mysqli($host, $usuario, $senha, $banco);
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
+}
+
+$conn->set_charset("utf8");
+
+// Buscar coordenadores para popular o select
+$coordenadores = [];
+$sql = "SELECT idPessoa, nome, sobrenome, email FROM pessoa WHERE tipo = 'coordenador' ORDER BY nome, sobrenome";
+if ($result = $conn->query($sql)) {
+    while ($row = $result->fetch_assoc()) {
+        $coordenadores[] = $row;
+    }
+    $result->free();
+}
+
+$bolsistas = [];
+$sqlb = "SELECT idPessoa, nome, sobrenome, email FROM pessoa WHERE tipo = 'bolsista' ORDER BY nome, sobrenome";
+if ($result = $conn->query($sqlb)) {
+    while ($row = $result->fetch_assoc()) {
+        $bolsistas[] = $row;
+    }
+    $result->free();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -92,9 +126,18 @@ $tipo = $_SESSION['tipo'] ?? '';
                                 <span>📷</span>
                             </label>
                         </div>
-                        <input type="text" id="nome-coordenador" name="nome-coordenador" placeholder="Nome do coordenador(a)">
+                            <div class="form-group">
+                                            <select name="coordenador_id">
+                                                <option value="">Selecione um coordenador...</option>
+                                                <?php foreach ($coordenadores as $coord): ?>
+                                                    <option value="<?php echo $coord['idPessoa']; ?>">
+                                                        <?php echo htmlspecialchars($coord['nome'] . ' ' . $coord['sobrenome'] . ' (' . $coord['email'] . ')'); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                </div>                    
+                            </div>
                     </div>
-                </div>
             </div>
 
             <div class="equipe">
@@ -107,7 +150,16 @@ $tipo = $_SESSION['tipo'] ?? '';
                                 <span>📷</span>
                             </label>
                         </div>
-                        <input type="text" id="nome-bolsista" name="nome-bolsista" placeholder="Adicionar nome">
+                        <div class="form-group">
+                                            <select name="bolsista_id">
+                                                <option value="">Selecione um Bolsista...</option>
+                                                <?php foreach ($bolsista as $bolsis): ?>
+                                                    <option value="<?php echo $bolsis['idPessoa']; ?>">
+                                                        <?php echo htmlspecialchars($bolsis['nome'] . ' ' . $bolsis['sobrenome'] . ' (' . $coord['email'] . ')'); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                </div>
                     </div>
                 </div>
             </div>
@@ -127,5 +179,12 @@ $tipo = $_SESSION['tipo'] ?? '';
 </div>
 <script src="./assets/js/global.js"></script>
 <script src="./assets/js/cad-aluno.js"></script>
+<?php
+// Fechar conexão com o banco
+if (isset($conn) && $conn instanceof mysqli) {
+    $conn->close();
+}
+?>
+
 </body>
 </html>

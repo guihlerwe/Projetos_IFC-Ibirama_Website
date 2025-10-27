@@ -29,8 +29,8 @@ $conn->set_charset("utf8");
    // $resultado = $conn->query($sql);
 //}*/
 
-    $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto WHERE nomeCoordenador = " . $_SESSION['nome'] . " ORDER BY nome ASC";
-    $resultado = $conn->query($sql);
+   // $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto WHERE nomeCoordenador = " . $_SESSION['nome'] . " ORDER BY nome ASC";
+    //$resultado = $conn->query($sql);
 
 ?>
 

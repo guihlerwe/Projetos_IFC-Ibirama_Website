@@ -124,7 +124,6 @@
 
 .btn-link:hover {
     background-color: #004d18;
-    transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 102, 32, 0.3);
 }
 
@@ -208,8 +207,8 @@
 }
 
 .foto-membro {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     background-color: #eee;
     border-radius: 50%;
     display: flex;

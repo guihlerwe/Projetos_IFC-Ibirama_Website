@@ -1,6 +1,41 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --header-bg: rgba(255, 255, 255, 0.8);
+    --footer-bg: #d7d7d7;
+    --footer-text: #000000;
+    --section-bg: #ffffff;
+    --nav-hover: #eeeeee;
+    --border-color: #ddd;
+    --link-bg: #f5f5f5;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --dropdown-bg: #ffffff;
+    --dropdown-hover: #e0e0e0;
+}
+
+/* Modo escuro automático baseado na preferência do sistema */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --text-color: #e0e0e0;
+        --header-bg: rgba(30, 30, 30, 0.9);
+        --footer-bg: #2a2a2a;
+        --footer-text: #e0e0e0;
+        --section-bg: #1a1a1a;
+        --nav-hover: #333333;
+        --border-color: #444444;
+        --link-bg: #2a2a2a;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+        --dropdown-bg: #2a2a2a;
+        --dropdown-hover: #3a3a3a;
+    }
+}
+
+
+
 .projetos-nav {
-    background-color: var(--nav-active);
-    color: var(--header-text);
+    background-color: var(--nav-hover);
+    color: var(--text-color);
 }
 
 /*ferramentas de pesquisa e filtros*/
@@ -15,7 +50,7 @@
 .input-pesquisar {
     outline: none;
     padding: 8px 15px;
-    border: 1px solid var(--card-border);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     width: 200px;
     font-size: 14px;
@@ -85,7 +120,8 @@
     border-radius: 20px;
     cursor: pointer;
     margin-right: 10px;
-    background-color: #ffffff;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-size: 14px;
     appearance: none;          /* remove estilo nativo */
     -webkit-appearance: none;  /* Safari */
@@ -173,7 +209,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid #333;
+    border-top: 5px solid var(--text-color);
 }
 
 .projects-grid {
@@ -268,7 +304,7 @@ ul {
 }
 
 a {
-    color: #ffffff;
+    color: var(--text-color);
 }
 
 a:hover {
@@ -400,6 +436,7 @@ a:hover {
         margin: 0 auto;
         min-height: 100vh;
         margin-top: 70px;
+        background-color: var(--bg-color);
     }
 
     .projects-grid {

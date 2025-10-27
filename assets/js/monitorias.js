@@ -16,6 +16,9 @@ document.querySelectorAll(".project-card").forEach(card => {
       case "Moda":
         window.location.href = "monitor.php";
         break;
+        case "Gestão Comercial":
+        window.location.href = "monitor.php";
+        break;
       case "Ciências Humanas":
         window.location.href = "monitor.php";
         break;

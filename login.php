@@ -4,8 +4,8 @@ session_start();
 // conexão
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -79,8 +79,8 @@ if ($conn->connect_error) {
 // Conexão com o banco
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 $conn = new mysqli($host, $usuario, $senha, $banco);
 
@@ -109,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_start();
             $_SESSION['nome'] = $usuario['nome'];
             $_SESSION['tipo'] = $usuario['tipo'];
+            $_SESSION['idPessoa'] = $usuario['idPessoa'];
 
             echo "Login realizado com sucesso!";
             header("Location: principal.php");
@@ -118,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "E-mail não encontrado!";
     }
+
 
     $stmt->close();
     $conn->close();
