@@ -126,17 +126,18 @@ if ($result = $conn->query($sqlb)) {
                                 <span>📷</span>
                             </label>
                         </div>
-                            <div class="form-group">
-                                            <select name="coordenador_id">
-                                                <option value="">Selecione um coordenador...</option>
-                                                <?php foreach ($coordenadores as $coord): ?>
-                                                    <option value="<?php echo $coord['idPessoa']; ?>">
-                                                        <?php echo htmlspecialchars($coord['nome'] . ' ' . $coord['sobrenome'] . ' (' . $coord['email'] . ')'); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                </div>                    
+                            <div class="custom-select">
+                            <div class="select-selected">Selecione um coordenador(a)</div>
+                            <div class="select-items">
+                                <?php foreach ($coordenadores as $conn): ?>
+                                    <div data-value="<?php echo $conn['idPessoa']; ?>">
+                                        <?php echo htmlspecialchars($conn['nome'] . ' ' . $conn['sobrenome'] . ' (' . $conn['email'] . ')'); ?>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
+                            <input type="hidden" name="bolsista_id" id="bolsista_id">
+                            </div>
+                        </div>
                     </div>
             </div>
 
@@ -150,16 +151,19 @@ if ($result = $conn->query($sqlb)) {
                                 <span>📷</span>
                             </label>
                         </div>
-                        <div class="form-group">
-                                            <select name="bolsista_id">
-                                                <option value="">Selecione um Bolsista...</option>
-                                                <?php foreach ($bolsista as $bolsis): ?>
-                                                    <option value="<?php echo $bolsis['idPessoa']; ?>">
-                                                        <?php echo htmlspecialchars($bolsis['nome'] . ' ' . $bolsis['sobrenome'] . ' (' . $coord['email'] . ')'); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                </div>
+
+                        <div class="custom-select">
+                            <div class="select-selected">Selecione um bolsista...</div>
+                            <div class="select-items">
+                                <?php foreach ($bolsistas as $bolsista): ?>
+                                    <div data-value="<?php echo $bolsista['idPessoa']; ?>">
+                                        <?php echo htmlspecialchars($bolsista['nome'] . ' ' . $bolsista['sobrenome'] . ' (' . $bolsista['email'] . ')'); ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <input type="hidden" name="bolsista_id" id="bolsista_id">
+                            </div>
+                        </div>                            
                     </div>
                 </div>
             </div>
@@ -179,6 +183,40 @@ if ($result = $conn->query($sqlb)) {
 </div>
 <script src="./assets/js/global.js"></script>
 <script src="./assets/js/cad-aluno.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var customSelects = document.getElementsByClassName("custom-select");
+    
+    for (var i = 0; i < customSelects.length; i++) {
+        var select = customSelects[i];
+        var selectedDiv = select.getElementsByClassName("select-selected")[0];
+        var itemsDiv = select.getElementsByClassName("select-items")[0];
+        var hiddenInput = select.querySelector('input[type="hidden"]');
+        
+        selectedDiv.addEventListener("click", function(e) {
+            e.stopPropagation();
+            this.parentElement.classList.toggle("open");
+            itemsDiv.style.display = itemsDiv.style.display === "block" ? "none" : "block";
+        });
+        
+        var items = itemsDiv.getElementsByTagName("div");
+        for (var j = 0; j < items.length; j++) {
+            items[j].addEventListener("click", function(e) {
+                e.stopPropagation();
+                selectedDiv.textContent = this.textContent;
+                hiddenInput.value = this.getAttribute("data-value");
+                itemsDiv.style.display = "none";
+                select.classList.remove("open");
+            });
+        }
+        
+        document.addEventListener("click", function() {
+            itemsDiv.style.display = "none";
+            select.classList.remove("open");
+        });
+    }
+});
+</script>
 <?php
 // Fechar conexão com o banco
 if (isset($conn) && $conn instanceof mysqli) {
@@ -186,5 +224,87 @@ if (isset($conn) && $conn instanceof mysqli) {
 }
 ?>
 
+<footer>
+    <div class="linha">
+        <div class="footer-container">
+            <div class="Recursos">
+                <h2>Recursos</h2>
+                <ul>
+                    <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
+                    <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
+                    <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
+                    <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
+                    <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
+                    <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
+                </ul>
+            </div>
+            <div class="Comunidade">
+                <h2>Comunidade</h2>
+                <ul>
+                    <li><a href="http://acessoainformacao.ifc.edu.br/">Acesso à Informação</a></li>
+                    <li><a href="https://ifc.edu.br/comite-de-crise/">Calendários Acadêmicos</a></li>
+                    <li><a href="https://cepsh.ifc.edu.br/">CEPSH</a></li>
+                    <li><a href="https://consuper.ifc.edu.br/">Conselho Superior</a></li>
+                    <li><a href="https://sig.ifc.edu.br/public/jsp/portal.jsf">Portal Público</a></li>
+                    <li><a href="https://editais.ifc.edu.br/">Editais IFC</a></li>
+                    <li><a href="http://www.camboriu.ifc.edu.br/pos-graduacao/treinador-e-instrutor-de-caes-guia/">Projetos Cães-guia</a></li>
+                    <li><a href="https://trabalheconosco.ifc.edu.br/">Trabalhe no IFC</a></li>
+                </ul>
+            </div>
+            <div class="Servidor">
+                <h2>Servidor</h2>
+                <ul>
+                    <li><a href="https://ifc.edu.br/desenvolvimento-do-servidor/">Desenvolvimento do Servidor</a></li>
+                    <li><a href="https://manualdoservidor.ifc.edu.br/">Manual do Servidor</a></li>
+                    <li><a href="https://www.siapenet.gov.br/Portal/Servico/Apresentacao.asp">Portal SIAPENET</a></li>
+                    <li><a href="http://suporte.ifc.edu.br/">Suporte TI</a></li>
+                    <li><a href="https://sig.ifc.edu.br/sigrh/public/home.jsf">Sistema Integrado de Gestão (SIG)</a></li>
+                    <li><a href="https://mail.google.com/mail/u/0/#inbox">Webmail</a></li>
+                </ul>
+            </div>
+            <div class="Sites-Relacionados">
+                <h2>Sites Relacionados</h2>
+                <ul>
+                    <li><a href="https://www.gov.br/pt-br">Brasil - GOV</a></li>
+                    <li><a href="https://www.gov.br/capes/pt-br">CAPES - Chamadas Públicas</a></li>
+                    <li><a href="https://www-periodicos-capes-gov-br.ez317.periodicos.capes.gov.br/index.php?">Capes - Portal de Periódicos</a></li>
+                    <li><a href="https://www.gov.br/cnpq/pt-br">CNPq - Chamadas Públicas</a></li>
+                    <li><a href="http://informativo.ifc.edu.br/">Informativo IFC</a></li>
+                    <li><a href="https://www.gov.br/mec/pt-br">MEC - Ministério da Educação</a></li>
+                    <li><a href="https://www.transparencia.gov.br/">Transparência Pública</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="Sobre">
+  <h2 id="Sobre">
+    Sobre este site
+    <span class="arrow">↗</span>
+  </h2>
+  <span id="License"><i>Licença M.I.T.2025</i></span>
+</div>
+    <div class="Ativos">
+        <h2>Dados Atuais</h2>
+        <div id="dados-ativos">
+            <p id="num-projetos">
+                <span>Projetos</span>
+                <h1><?php echo isset($resultado) ? $resultado->num_rows : 0; ?></h1>
+            </p>
+            <p id="num-bolsistas">
+                <span>Bolsistas</span>
+                <h1>18</h1>
+            </p>
+            <p id="num-coordenadores">
+                <span>Coordenadores</span>
+                <h1>4</h1>
+            </p>
+        </div>
+    </div>
+    <div class="acesso-info">
+        <a href="https://www.gov.br/acessoainformacao/pt-br">
+            <img src="../assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
+        </a>
+    </div>
+</footer>
 </body>
 </html>

@@ -318,3 +318,40 @@ console.log('Iniciando cadProjeto.js...');
     console.log('Todos os event listeners configurados!');
 
 console.log('cadProjeto.js carregado com sucesso!');
+
+function setupCategorias() {
+    const selectBox = document.getElementById("categorias-filtrar");
+    const selected = selectBox.querySelector(".select-selected");
+    const optionsContainer = selectBox.querySelector(".select-items");
+    const options = optionsContainer.querySelectorAll("div");
+
+    // Abrir/fechar dropdown
+    selected.addEventListener("click", () => {
+        selectBox.classList.toggle("open");
+    });
+
+    // Selecionar opção
+    options.forEach(option => {
+        option.addEventListener("click", () => {
+            let value = option.getAttribute("data-value");
+
+            // Normalizar categorias (trocar underline por hífen e remover acento)
+            value = value.replace(/_/g, "-"); 
+            value = normalizeString(value);
+
+            filtroAtivoCategoria = value;
+
+            selected.textContent = option.textContent;
+            selectBox.classList.remove("open");
+
+            aplicarFiltros();
+        });
+    });
+
+    // Fechar dropdown ao clicar fora
+    document.addEventListener("click", (e) => {
+        if (!selectBox.contains(e.target)) {
+            selectBox.classList.remove("open");
+        }
+    });
+}
