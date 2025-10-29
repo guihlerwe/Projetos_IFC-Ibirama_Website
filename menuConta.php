@@ -7,7 +7,8 @@ $idPessoa = $_SESSION['idPessoa'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
+//$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -19,7 +20,7 @@ $conn->set_charset("utf8");
 
 // Buscar dados do usuário
 $fotoAtual = '../assets/photos/sem_foto_perfil.png';
-$stmt = $conn->prepare("SELECT nome, sobrenome, email, foto FROM pessoa WHERE idPessoa = ?");
+$stmt = $conn->prepare("SELECT nome, sobrenome, email, foto_perfil FROM pessoa WHERE idPessoa = ?");
 $stmt->bind_param("i", $idPessoa);
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -53,62 +54,47 @@ if ($usuario && $usuario['foto']) {
             <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
         </div>
     </header>
-    <main class="container-perfil">
-        
-        <h1>Minha Conta</h1>
-        <br>
 
-        <!-- Parte superior: foto + formulário -->
-        <section class="secao-superior">
-            <!-- Foto -->
-            <div class="secao-foto">
-                <img src="<?php echo htmlspecialchars($fotoAtual); ?>" alt="Foto de Perfil" class="foto-perfil" id="previewFoto">
-                <form id="formFoto" enctype="multipart/form-data" style="display: none;">
-                    <input type="file" id="inputFoto" name="foto" accept="image/*" required>
-                </form>
-                <button type="button" class="btn" onclick="document.getElementById('inputFoto').click()">Alterar Foto</button>
-                <div id="mensagemFoto"></div>
-            </div>
+    <div class="container-conta">
+  <h2 class="titulo-conta">Minha Conta</h2>
 
-            <!-- Formulário -->
-            <form class="formulario-perfil" id="formularioPerfil">
-                <label class="campoEsquerda">
-                    Nome:
-                    <input type="text" name="nome" placeholder="Digite seu nome" value="<?php echo htmlspecialchars($usuario['nome'] ?? ''); ?>">
-                </label>
+  <div class="conteudo-conta">
+    <!-- Foto de perfil -->
+    <div class="coluna-foto">
+      <div class="foto-perfil">
+        <img src="caminho/para/foto.jpg" alt="Foto de perfil" id="fotoPreview">
+      </div>
+      <button type="button" class="btn-foto" id="btnAlterarFoto">Alterar Foto</button>
+    </div>
 
-                <label class="campoDireita">
-                    Sobrenome:
-                    <input type="text" name="sobrenome" placeholder="Digite seu sobrenome" value="<?php echo htmlspecialchars($usuario['sobrenome'] ?? ''); ?>">
-                </label>
+    <!-- Formulário -->
+    <form class="coluna-formulario" id="formConta">
+      <div class="linha">
+        <input type="text" id="nome" name="nome" placeholder="Nome" value="Sonia">
+        <input type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome" value="Imhof">
+      </div>
 
-                <label class="campoEsquerda">
-                    E-mail:
-                    <input type="email" name="email" placeholder="Digite seu e-mail" value="<?php echo htmlspecialchars($usuario['email'] ?? ''); ?>">
-                </label>
+      <div class="linha">
+        <input type="email" id="email" name="email" placeholder="E-mail" value="sonia@ifc.edu.br">
+        <input type="password" id="senha" name="senha" placeholder="Nova senha (opcional)">
+      </div>
+    </form>
+  </div>
 
-                <label class="campoDireita">
-                    Senha:
-                    <input type="password" name="senha" placeholder="Digite sua nova senha (deixe em branco para não alterar)">
-                </label>
-            </form>
-        </section>
+  <!-- Descrição -->
+  <div class="descricao">
+    <textarea id="descricao" maxlength="1000" placeholder="Escreva algo sobre você..."></textarea>
+    <small id="contador">0/1000</small>
+  </div>
 
-        <!-- Descrição -->
-        <section class="secao-descricao">
-            <label>
-                Descrição:
-                <textarea class="campo-descricao" id="descricao" maxlength="1000" placeholder="Escreva algo sobre você..."></textarea>
-            </label>
-            <div class="contador-caracteres"><span id="contadorAtual">0</span>/1000</div>
-        </section>
+  <!-- Botões -->
+  <div class="botoes">
+    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+    <button type="button" class="btn-excluir">Excluir Conta</button>
+  </div>
+</div>
 
-        <!-- Botões -->
-        <div class="area-botoes">
-            <button class="btn editar" onclick="salvarPerfil()">Salvar</button>
-            <button class="btn excluir" onclick="excluirConta()">Excluir Conta</button>
-        </div>
-    </main>
+
 
     <footer>
         <div class="linha">
