@@ -81,25 +81,70 @@ if ($usuario && $usuario['foto']) {
       </div>
 
     <div class="linha">
-        <?php if ($tipo === 'aluno'|| $tipo === 'bolsista'): ?>
-            <?php $cursoSalvo = htmlspecialchars(trim(strtolower($usuario['curso'] ?? '')));?>
-            <div class="input-group">
-                <div class="custom-select" id="curso-perfil">
-                    <div class="select-selected" data-value="<?php echo $cursoSalvo ?: ''; ?>">
-                        <?php echo $cursoSalvo ? ucfirst($cursoSalvo) : 'Curso'; ?>
-                        <div class="select-items">
-                            <div data-value="administração">Administração</div>
-                            <div data-value="informática">Informática</div>
-                            <div data-value="vestuário">Vestuário</div>
-                            <div data-value="moda">Moda</div>
-                            <div data-value="gestão comercial">Gestão Comercial</div>
-                        </div>
-                    </div>
-                    
-                </div>
-            <input type="hidden" name="curso" id="inputCursoPerfil" value="<?php echo $cursoSalvo; ?>">
+        <?php if ($tipo === 'aluno' || $tipo === 'bolsista'): ?>
+            <?php
+            // pega valor cru do BD
+            $cursoSalvoRaw = $usuario['curso'] ?? '';
+
+            // função utilitária: remove acentos e normaliza para comparação
+            function remover_acentos_e_normalizar($str) {
+                // tenta Normalizer se disponível
+                if (function_exists('transliterator_transliterate')) {
+                    $r = transliterator_transliterate('Any-Latin; Latin-ASCII;', $str);
+                } else {
+                    // fallback para iconv
+                    $r = @iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+                    if ($r === false) $r = $str;
+                }
+                $r = strtolower(trim($r));
+                // remove caracteres que não sejam letras/números/espaço
+                $r = preg_replace('/[^a-z0-9 ]+/', '', $r);
+                return $r;
+            }
+
+            function formatarCursoExibicao($nomeRaw) {
+                $mapa = [
+                    'administracao' => 'Administração',
+                    'informatica' => 'Informática',
+                    'vestuario' => 'Vestuário',
+                    'moda' => 'Moda',
+                    'gestao comercial' => 'Gestão Comercial',
+                    'gestaocomercial' => 'Gestão Comercial',
+                    // adicione aqui outras variações esperadas
+                ];
+
+                $key = remover_acentos_e_normalizar($nomeRaw);
+                // remover espaços para chaves alternativas
+                $keySemEspaco = str_replace(' ', '', $key);
+
+                if (isset($mapa[$key])) return $mapa[$key];
+                if (isset($mapa[$keySemEspaco])) return $mapa[$keySemEspaco];
+                // fallback: capitaliza primeira letra de cada palavra
+                return mb_convert_case(trim($nomeRaw), MB_CASE_TITLE, "UTF-8");
+            }
+
+            $cursoSalvo = htmlspecialchars($cursoSalvoRaw ?? '');
+            $cursoFormatado = $cursoSalvo ? formatarCursoExibicao($cursoSalvoRaw) : 'Curso';
+            ?>
+
+            <div class="custom-select" id="curso-perfil">
+            <div class="select-selected" data-value="<?php echo $cursoSalvo ?: ''; ?>">
+                <?php echo $cursoFormatado; ?>
             </div>
-            <input type="text" name="matricula" id="matricula-perfil" class="campo" placeholder="Matrícula" value="<?php echo htmlspecialchars($usuario['matricula'] ?? ''); ?>">
+            <div class="select-items">
+                <div data-value="administracao">Administração</div>
+                <div data-value="informatica">Informática</div>
+                <div data-value="vestuario">Vestuário</div>
+                <div data-value="moda">Moda</div>
+                <div data-value="gestao comercial">Gestão Comercial</div>
+            </div>
+            </div>
+            <input type="hidden" name="curso" id="inputCursoPerfil" value="<?php echo $cursoSalvo; ?>">
+
+            <input type="text" name="matricula" id="matricula" placeholder="Matrícula"
+                    value="<?php echo htmlspecialchars($usuario['matricula'] ?? ''); ?>">
+
+
 
         <?php elseif ($tipo === 'coordenador'): ?>
             <?php $areaSalva = htmlspecialchars(trim(strtolower($usuario['area'] ?? ''))); ?>
@@ -122,13 +167,8 @@ if ($usuario && $usuario['foto']) {
         <?php endif; ?>
     </div>
 
-
-
     </form>
-  </div>
-
-  <!-- Campos específicos por tipo -->
-    
+  </div>    
 
   <!-- Descrição -->
   <div class="descricao">
@@ -208,59 +248,52 @@ if ($usuario && $usuario['foto']) {
     <script src="../assets/js/global.js"></script>
     <script src="../assets/js/conta.js"></script>
     <script>
-        // Preview da foto antes de enviar
-        document.getElementById('inputFoto').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
+        (function() {
+            const inputFotoInline = document.getElementById('inputFoto') || document.getElementById('input-foto') || document.getElementById('inputFotoPerfil') || null;
+            const previewEl = document.getElementById('previewFoto') || document.getElementById('fotoPreview') || null;
+            const mensagemFotoEl = document.getElementById('mensagemFoto') || null;
+
+            if (inputFotoInline && typeof inputFotoInline.addEventListener === 'function') {
+            inputFotoInline.addEventListener('change', function(e) {
+                const file = e.target.files && e.target.files[0];
+                if (file && previewEl) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    document.getElementById('previewFoto').src = event.target.result;
+                    previewEl.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
-                
-                // Enviar foto via AJAX
-                enviarFoto(file);
-            }
-        });
-
-        function enviarFoto(file) {
-            const formData = new FormData();
-            formData.append('foto', file);
-
-            fetch('processar_foto.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                const msg = document.getElementById('mensagemFoto');
-                if (data.sucesso) {
-                    msg.innerHTML = '<span style="color: green;">Foto enviada com sucesso!</span>';
-                    setTimeout(() => msg.innerHTML = '', 3000);
+                // enviar via fetch se desejar (chamar processar_foto.php)
+                if (typeof enviarFoto === 'function') {
+                    enviarFoto(file);
                 } else {
-                    msg.innerHTML = '<span style="color: red;">Erro: ' + data.erro + '</span>';
+                    // fallback: enviar manualmente
+                    const formData = new FormData();
+                    formData.append('foto', file);
+                    fetch('processar_foto.php', { method: 'POST', body: formData })
+                    .then(r => r.json()).then(data => {
+                        if (mensagemFotoEl) {
+                        mensagemFotoEl.innerHTML = data.sucesso ? '<span style="color:green">Foto enviada com sucesso!</span>' : '<span style="color:red">Erro: '+(data.erro||'')+'</span>';
+                        setTimeout(()=> mensagemFotoEl.innerHTML = '', 3000);
+                        }
+                    }).catch(err => {
+                        console.error('Erro enviar foto (inline):', err);
+                        if (mensagemFotoEl) mensagemFotoEl.innerHTML = '<span style="color:red">Erro ao enviar foto</span>';
+                    });
                 }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                document.getElementById('mensagemFoto').innerHTML = '<span style="color: red;">Erro ao enviar foto</span>';
+                }
             });
-        }
-
-        // Contador de caracteres
-        document.getElementById('descricao').addEventListener('input', function() {
-            document.getElementById('contadorAtual').textContent = this.value.length;
-        });
-
-        function salvarPerfil() {
-            alert('Perfil salvo com sucesso!');
-        }
-
-        function excluirConta() {
-            if (confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.')) {
-                alert('Conta excluída');
             }
-        }
+        })();
+
+        (function(){
+            const descEl = document.getElementById('descricao') || document.getElementById('descricao-perfil');
+            const contadorAtual = document.getElementById('contadorAtual') || document.getElementById('contador') || null;
+            if (descEl && contadorAtual) {
+                descEl.addEventListener('input', function() {
+                    contadorAtual.textContent = this.value.length;
+                });
+            }
+        })();
     </script>
 </body>
 </html>

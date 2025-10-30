@@ -57,6 +57,7 @@ input, textarea, select, button {
   cursor: pointer;
   font-weight: 500;
   transition: 0.2s;
+  font-size: 1rem;
 }
 
 .btn-foto:hover {
@@ -75,7 +76,7 @@ input, textarea, select, button {
   margin-bottom: 20px;
 }
 
-.linha input, .custom-select, .select-items {
+.linha input, .custom-select, .select-items, #matricula {
   flex: 1;
   padding: 10px;
   border: 1px solid #cfcfcf;
@@ -87,6 +88,52 @@ input, textarea, select, button {
 
 .linha input:focus {
   border-color: #1e4d2b;
+}
+/* Garante alinhamento uniforme entre select customizado e inputs */
+.linha .custom-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 42px; /* altura igual à dos inputs */
+  padding: 0 12px;
+}
+
+.linha input {
+  height: 42px;
+}
+
+/* Corrige o espaçamento interno das opções do custom select */
+.custom-select .select-selected {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Igualar visual entre select e input */
+.linha .custom-select,
+.linha input.campo {
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+/* Centralizar verticalmente o texto do select */
+.select-selected {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+}
+
+/* Impedir diferença mínima causada por linha de base */
+.linha .input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .custom-select {
@@ -139,6 +186,28 @@ input, textarea, select, button {
 
 .select-items div:hover {
     background-color: #f0f0f0;
+}
+
+/* === Correção de alinhamento entre Curso e Matrícula === */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espaço entre os dois campos */
+}
+
+.input-group .custom-select,
+.input-group .campo {
+  height: 44px; /* mesma altura */
+  line-height: 44px;
+  box-sizing: border-box;
+}
+
+/* Input (Matrícula) */
+input#matricula-perfil {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .descricao {
@@ -197,3 +266,4 @@ input, textarea, select, button {
   color: #9e4442;
   box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
 }
+

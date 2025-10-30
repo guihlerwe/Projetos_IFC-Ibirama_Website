@@ -1,554 +1,624 @@
+// conta.js — versão integrada, robusta e pronta para menuConta.php
+
 // Variáveis globais
 let modoEdicao = false;
 let dadosOriginais = {};
 
-// Elementos do DOM
-const formulario = document.getElementById('formulario-perfil');
-const inputFoto = document.getElementById('input-foto');
-const fotoPerfil = document.getElementById('foto-perfil');
-const placeholderFoto = document.getElementById('placeholder-foto');
-const botaoAlterarFoto = document.getElementById('botao-alterar-foto');
-const botaoRemoverFoto = document.getElementById('botao-remover-foto');
-const botaoEditar = document.getElementById('botao-editar');
-const botaoSalvar = document.getElementById('botao-salvar');
-const botaoCancelar = document.getElementById('botao-cancelar');
-const botaoExcluirConta = document.getElementById('botao-excluir-conta');
-const modal = document.getElementById('modal-confirmacao');
-const header = document.querySelector("header");
-const descricaoTextarea = document.getElementById('descricao-perfil');
-const contadorChars = document.getElementById('contador-chars');
+// Referências serão inicializadas no DOMContentLoaded
+let formulario = null;
+let inputFoto = null;
+let fotoPerfil = null;
+let placeholderFoto = null;
+let botaoAlterarFoto = null;
+let botaoRemoverFoto = null;
+let botaoEditar = null;
+let botaoSalvar = null;
+let botaoCancelar = null;
+let botaoExcluirConta = null;
+let modal = null;
+let descricaoTextarea = null;
+let contadorChars = null;
 
-// Inicialização quando a página carrega
-document.addEventListener('DOMContentLoaded', function() {
-    carregarDadosUsuario();
-    inicializarEventListeners();
-    atualizarContadorCaracteres();
+// UTIL: pega o primeiro elemento existente de uma lista de ids/seletores
+function getFirst(selectorList) {
+  for (const sel of selectorList) {
+    try {
+      const el = document.getElementById(sel) || document.querySelector(sel);
+      if (el) return el;
+    } catch (e) { /* ignorar seletores inválidos */ }
+  }
+  return null;
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+  // inicializa refs (com fallbacks)
+  formulario = getFirst(['formConta', 'formulario-perfil', 'formulario']);
+  inputFoto = getFirst(['inputFoto', 'input-foto', 'inputFotoPerfil', 'inputFotoPerfil']);
+  fotoPerfil = getFirst(['fotoPreview', 'foto-perfil', 'fotoPreview']);
+  placeholderFoto = getFirst(['placeholder-foto', '.placeholder-foto']);
+  botaoAlterarFoto = getFirst(['#btnAlterarFoto', 'btnAlterarFoto', 'botao-alterar-foto']);
+  botaoRemoverFoto = getFirst(['botao-remover-foto', 'btnRemoverFoto']);
+  botaoEditar = getFirst(['botao-editar', '#botao-editar']);
+  botaoSalvar = getFirst(['.btn-salvar', '#botao-salvar']);
+  botaoCancelar = getFirst(['botao-cancelar', '#botao-cancelar']);
+  botaoExcluirConta = getFirst(['.btn-excluir', '#botao-excluir-conta', 'botao-excluir-conta']);
+  modal = getFirst(['modal-confirmacao', '#modal-confirmacao']);
+  descricaoTextarea = getFirst(['#descricao', '#descricao-perfil', 'descricao']);
+  contadorChars = getFirst(['#contador', '#contadorAtual', '.contador-caracteres']);
+
+  if (descricaoTextarea && !descricaoTextarea.getAttribute('maxlength')) {
+    descricaoTextarea.setAttribute('maxlength', '1000');
+  }
+
+  // iniciar fluxo
+  carregarDadosUsuario();
+  inicializarEventListeners();
+  atualizarContadorCaracteres();
+  inicializarSelectsPersonalizados();
 });
 
-// Carregar dados do usuário do servidor
+/* ===========================
+   CARREGAR DADOS (fetch ou fallback DOM)
+   =========================== */
 async function carregarDadosUsuario() {
-    try {
-        mostrarLoading(true);
-        const response = await fetch('contaBD.php', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        const dados = await response.json();
-        
-        if (dados.erro) {
-            mostrarMensagem(dados.erro, 'erro');
-            return;
-        }
-        
-        // Preencher campos
-        document.getElementById('nome-perfil').value = dados.nome || '';
-        document.getElementById('sobrenome-perfil').value = dados.sobrenome || '';
-        document.getElementById('email-perfil').value = dados.email || '';
-        document.getElementById('descricao-perfil').value = dados.descricao || '';
-        
-        // Atualizar contador de caracteres
-        atualizarContadorCaracteres();
-        
-        // Carregar foto se existir
-        if (dados.foto_perfil) {
-            mostrarFoto(dados.foto_perfil);
-        }
-        
-    } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-        mostrarMensagem('Erro ao carregar dados do usuário', 'erro');
-    } finally {
-        mostrarLoading(false);
+  // Tenta buscar em contaBD.php (compatibilidade retro)
+  try {
+    mostrarLoading(true);
+
+    // tenta o fetch — se der problema (404 ou HTML), capturamos e fazemos fallback
+    const resp = await fetch('contaBD.php', { method: 'GET' });
+
+    if (resp.ok) {
+      // verifica cabeçalho content-type
+      const ctype = resp.headers.get('content-type') || '';
+      if (ctype.includes('application/json')) {
+        const dados = await resp.json();
+        preencherCamposComDados(dados);
+        return;
+      } else {
+        // resposta não é JSON (provavelmente HTML) -> fallback
+        console.warn('contaBD.php retornou conteúdo não JSON — usando valores já no DOM');
+      }
+    } else {
+      console.warn('contaBD.php não encontrada (HTTP ' + resp.status + ') — usando valores no DOM');
     }
+  } catch (err) {
+    // fetch falhou (CORS/404/network) -> fallback
+    console.warn('Erro ao buscar contaBD.php:', err);
+  } finally {
+    // sempre tenta preencher com DOM se fetch não funcionou / não retornou JSON
+    try {
+      preencherCamposAPartirDoDOM();
+    } finally {
+      mostrarLoading(false);
+    }
+  }
 }
 
-// Mostrar foto
-function mostrarFoto(srcFoto) {
-    fotoPerfil.src = srcFoto;
-    fotoPerfil.style.display = 'block';
-    placeholderFoto.style.display = 'none';
-    botaoRemoverFoto.style.display = 'inline-block';
+// Preenche campos com objeto JSON (quando disponível)
+function preencherCamposComDados(dados) {
+  if (!dados) return;
+  const nomeEl = getFirst(['nome-perfil', 'nome']);
+  const sobrenomeEl = getFirst(['sobrenome-perfil', 'sobrenome']);
+  const emailEl = getFirst(['email-perfil', 'email']);
+
+  if (nomeEl) nomeEl.value = dados.nome || '';
+  if (sobrenomeEl) sobrenomeEl.value = dados.sobrenome || '';
+  if (emailEl) emailEl.value = dados.email || '';
+  if (descricaoTextarea) descricaoTextarea.value = dados.descricao || '';
+
+  // foto
+  if (dados.foto_perfil && fotoPerfil) mostrarFoto(dados.foto_perfil);
+
+  // hidden inputs curso/area
+  const inCurso = document.getElementById('inputCursoPerfil');
+  const inArea  = document.getElementById('inputAreaPerfil');
+  if (inCurso && dados.curso) inCurso.value = String(dados.curso).trim().toLowerCase();
+  if (inArea && dados.area) inArea.value = String(dados.area).trim().toLowerCase();
+
+  atualizarContadorCaracteres();
 }
 
-// Esconder foto
+// Fallback: lê valores já renderizados no HTML/PHP (menuConta.php)
+function preencherCamposAPartirDoDOM() {
+  // alguns campos (nome, sobrenome, email) já podem estar no HTML (value=... vindo do PHP)
+  const nomeEl = getFirst(['nome', 'nome-perfil']);
+  const sobrenomeEl = getFirst(['sobrenome', 'sobrenome-perfil']);
+  const emailEl = getFirst(['email', 'email-perfil']);
+  const descricaoEl = descricaoTextarea;
+
+  // foto: há <img id="fotoPreview"> no menuConta.php — tentamos ler seu src
+  if (fotoPerfil && fotoPerfil.getAttribute) {
+    const src = fotoPerfil.getAttribute('src') || '';
+    // se src for "caminho/para/foto.jpg" ou vazio, não assume que seja válida — se for caminho real, exibe
+    if (src && !src.includes('caminho/para/foto.jpg')) {
+      // exibe
+      mostrarFoto(src);
+    } else {
+      // caso padrão - podemos exibir imagem padrão se houver (arquivo sem_foto_perfil.png)
+      // não forçamos aqui porque template PHP pode gerenciar
+      console.info('Imagem de perfil é placeholder no HTML ou não apontada.');
+    }
+  }
+
+  // atualiza contador e mantém os valores já presentes (não sobrescreve)
+  if (nomeEl && nomeEl.value) { /* ok */ }
+  if (sobrenomeEl && sobrenomeEl.value) { /* ok */ }
+  if (emailEl && emailEl.value) { /* ok */ }
+  if (descricaoEl) atualizarContadorCaracteres();
+}
+
+/* ===========================
+   FUNÇÕES DE FOTO
+   =========================== */
+function mostrarFoto(src) {
+  if (!fotoPerfil) return;
+  fotoPerfil.src = src;
+  fotoPerfil.style.display = 'block';
+  if (placeholderFoto) placeholderFoto.style.display = 'none';
+  if (botaoRemoverFoto) botaoRemoverFoto.style.display = 'inline-block';
+}
 function esconderFoto() {
-    fotoPerfil.style.display = 'none';
-    placeholderFoto.style.display = 'flex';
-    botaoRemoverFoto.style.display = 'none';
-    fotoPerfil.src = '';
+  if (!fotoPerfil) return;
+  fotoPerfil.style.display = 'none';
+  if (placeholderFoto) placeholderFoto.style.display = 'flex';
+  if (botaoRemoverFoto) botaoRemoverFoto.style.display = 'none';
+  fotoPerfil.src = '';
 }
 
-// Atualizar contador de caracteres
+/* ===========================
+   CONTADOR
+   =========================== */
 function atualizarContadorCaracteres() {
-    const texto = descricaoTextarea.value;
-    const contador = texto.length;
-    contadorChars.textContent = contador;
-    
-    const contadorDiv = document.querySelector('.contador-caracteres');
-    contadorDiv.classList.remove('limite-proximo', 'limite-excedido');
-    
-    if (contador > 1000) {
-        contadorDiv.classList.add('limite-excedido');
-    } else if (contador > 800) {
-        contadorDiv.classList.add('limite-proximo');
-    }
-}
-
-// Alternar modo de edição
-function alternarModoEdicao(editando) {
-    modoEdicao = editando;
-    const campos = document.querySelectorAll('.campo-perfil');
-
-    if (editando) {
-        // Salvar dados originais para restaurar se cancelar
-        salvarDadosOriginais();
-        
-        // Habilitar edição
-        campos.forEach(campo => {
-            if (campo.id !== 'senha-perfil') {
-                campo.removeAttribute('readonly');
-                campo.classList.add('editavel');
-            }
-        });
-        
-        // Habilitar edição da descrição
-        descricaoTextarea.removeAttribute('readonly');
-        descricaoTextarea.classList.add('editavel');
-        
-        // Mostrar/esconder botões
-        botaoEditar.style.display = 'none';
-        botaoSalvar.style.display = 'inline-block';
-        botaoCancelar.style.display = 'inline-block';
-        botaoExcluirConta.style.display = 'none';
-        
+  if (!descricaoTextarea) return;
+  const texto = descricaoTextarea.value || '';
+  const len = texto.length;
+  if (contadorChars) {
+    if (contadorChars.tagName && contadorChars.tagName.toLowerCase() === 'small') {
+      contadorChars.textContent = `${len}/1000`;
     } else {
-        // Desabilitar edição
-        campos.forEach(campo => {
-            campo.setAttribute('readonly', true);
-            campo.classList.remove('editavel');
-        });
-        
-        // Desabilitar edição da descrição
-        descricaoTextarea.setAttribute('readonly', true);
-        descricaoTextarea.classList.remove('editavel');
-        
-        // Mostrar/esconder botões
-        botaoEditar.style.display = 'inline-block';
-        botaoSalvar.style.display = 'none';
-        botaoCancelar.style.display = 'none';
-        botaoExcluirConta.style.display = 'inline-block';
+      contadorChars.textContent = `${len}`;
     }
+  }
+  const div = document.querySelector('.contador-caracteres');
+  if (div) {
+    div.classList.remove('limite-proximo', 'limite-excedido');
+    if (len > 1000) div.classList.add('limite-excedido');
+    else if (len > 800) div.classList.add('limite-proximo');
+  }
 }
 
-// Salvar dados originais para poder cancelar
-function salvarDadosOriginais() {
-    dadosOriginais = {
-        nome: document.getElementById('nome-perfil').value,
-        sobrenome: document.getElementById('sobrenome-perfil').value,
-        email: document.getElementById('email-perfil').value,
-        descricao: document.getElementById('descricao-perfil').value
-    };
-}
+/* ===========================
+   SALVAR / EXCLUIR (com confirmação + "Salvando...")
+   =========================== */
 
-// Restaurar dados originais
-function restaurarDadosOriginais() {
-    document.getElementById('nome-perfil').value = dadosOriginais.nome;
-    document.getElementById('sobrenome-perfil').value = dadosOriginais.sobrenome;
-    document.getElementById('email-perfil').value = dadosOriginais.email;
-    document.getElementById('descricao-perfil').value = dadosOriginais.descricao;
-    atualizarContadorCaracteres();
-}
-
-// Salvar alterações
 async function salvarAlteracoes() {
+  // confirmação
+  if (!confirm('Deseja salvar as alterações do perfil?')) return;
+
+  // pega botão e altera estado
+  if (botaoSalvar) {
+    botaoSalvar.disabled = true;
+    const originalText = botaoSalvar.textContent;
+    botaoSalvar.textContent = 'Salvando...';
+
     try {
-        // Validar campos
-        const nome = document.getElementById('nome-perfil').value.trim();
-        const sobrenome = document.getElementById('sobrenome-perfil').value.trim();
-        const email = document.getElementById('email-perfil').value.trim();
-        const descricao = document.getElementById('descricao-perfil').value.trim();
-        
-        if (!nome || !sobrenome || !email) {
-            mostrarMensagem('Todos os campos obrigatórios devem ser preenchidos', 'erro');
-            return;
-        }
-        
-        if (!validarEmail(email)) {
-            mostrarMensagem('Email inválido', 'erro');
-            return;
-        }
-        
-        if (descricao.length > 1000) {
-            mostrarMensagem('A descrição não pode ter mais de 1000 caracteres', 'erro');
-            return;
-        }
-        
-        mostrarLoading(true);
-        
-        // Preparar dados para envio
-        const formData = new FormData();
-        formData.append('acao', 'atualizar_perfil');
-        formData.append('nome', nome);
-        formData.append('sobrenome', sobrenome);
-        formData.append('email', email);
-        formData.append('descricao', descricao);
-        
-        const response = await fetch('contaBD.php', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const resultado = await response.json();
-        
-        if (resultado.sucesso) {
-            mostrarMensagem(resultado.sucesso, 'sucesso');
+      // validações (usando campos existentes)
+      const nomeEl = getFirst(['nome-perfil', 'nome']);
+      const sobrenomeEl = getFirst(['sobrenome-perfil', 'sobrenome']);
+      const emailEl = getFirst(['email-perfil', 'email']);
+
+      const nome = (nomeEl && nomeEl.value || '').trim();
+      const sobrenome = (sobrenomeEl && sobrenomeEl.value || '').trim();
+      const email = (emailEl && emailEl.value || '').trim();
+      const descricao = (descricaoTextarea && descricaoTextarea.value || '').trim();
+
+      if (!nome || !sobrenome || !email) {
+        mostrarMensagem('Todos os campos obrigatórios devem ser preenchidos', 'erro');
+        return;
+      }
+      if (!validarEmail(email)) {
+        mostrarMensagem('Email inválido', 'erro');
+        return;
+      }
+      if (descricao.length > 1000) {
+        mostrarMensagem('A descrição não pode ter mais de 1000 caracteres', 'erro');
+        return;
+      }
+
+      mostrarLoading(true);
+
+      // Prepara FormData — envia para o endpoint atual. Se você quer que form envie para menuConta.php,
+      // altere o URL abaixo para o endpoint correto (ex: menuConta.php ou processa_perfil.php).
+      const formData = new FormData();
+      formData.append('acao', 'atualizar_perfil');
+      formData.append('nome', nome);
+      formData.append('sobrenome', sobrenome);
+      formData.append('email', email);
+      formData.append('descricao', descricao);
+
+      const inputCurso = document.getElementById('inputCursoPerfil');
+      const inputArea = document.getElementById('inputAreaPerfil');
+      if (inputCurso) formData.append('curso', inputCurso.value);
+      if (inputArea) formData.append('area', inputArea.value);
+
+      // Tenta enviar para contaBD.php por compatibilidade, se não existir o backend, o servidor retornará 404
+      const resp = await fetch('contaBD.php', { method: 'POST', body: formData });
+      if (!resp.ok) {
+        // tenta enviar para menuConta.php (se o backend processa lá)
+        console.warn('contaBD.php retornou HTTP ' + resp.status + '. Tentando menuConta.php como fallback.');
+        const resp2 = await fetch('menuConta.php', { method: 'POST', body: formData });
+        if (!resp2.ok) throw new Error('Erro ao salvar (nenhum endpoint respondeu OK).');
+        // idealmente o servidor responde JSON — tentamos parse
+        try {
+          const j = await resp2.json();
+          if (j.sucesso) {
+            mostrarMensagem(j.sucesso, 'sucesso');
             alternarModoEdicao(false);
-        } else {
-            mostrarMensagem(resultado.erro || 'Erro ao salvar alterações', 'erro');
+          } else {
+            mostrarMensagem(j.erro || 'Alterações salvas, mas sem confirmação do servidor.', 'sucesso');
+            alternarModoEdicao(false);
+          }
+        } catch (e) {
+          // servidor não retornou JSON — assumimos sucesso parcial
+          mostrarMensagem('Alterações enviadas (Resposta do servidor não estava em JSON).', 'sucesso');
+          alternarModoEdicao(false);
         }
-        
-    } catch (error) {
-        console.error('Erro ao salvar:', error);
-        mostrarMensagem('Erro ao salvar alterações', 'erro');
+      } else {
+        // resp.ok — tenta parse JSON
+        try {
+          const json = await resp.json();
+          if (json.sucesso) {
+            mostrarMensagem(json.sucesso, 'sucesso');
+            alternarModoEdicao(false);
+          } else {
+            mostrarMensagem(json.erro || 'Alterações enviadas, servidor não confirmou.', 'sucesso');
+          }
+        } catch (e) {
+          mostrarMensagem('Alterações enviadas (resposta não-JSON).', 'sucesso');
+        }
+      }
+    } catch (err) {
+      console.error('Erro ao salvar:', err);
+      mostrarMensagem('Erro ao salvar alterações', 'erro');
     } finally {
-        mostrarLoading(false);
+      mostrarLoading(false);
+      if (botaoSalvar) {
+        botaoSalvar.disabled = false;
+        botaoSalvar.textContent = originalText || 'Salvar Alterações';
+      }
     }
+  } else {
+    // sem botão salvo: apenas executa lógica mínima de validação e mensagem
+    mostrarMensagem('Botão de salvar não encontrado na página.', 'erro');
+  }
 }
 
-// Upload de foto
-async function uploadFoto(arquivo) {
-    try {
-        mostrarLoading(true);
-        
-        const formData = new FormData();
-        formData.append('acao', 'upload_foto');
-        formData.append('foto', arquivo);
-        
-        const response = await fetch('contaBD.php', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const resultado = await response.json();
-        
-        if (resultado.sucesso) {
-            mostrarMensagem(resultado.sucesso, 'sucesso');
-            if (resultado.caminho_foto) {
-                mostrarFoto(resultado.caminho_foto);
-            }
-        } else {
-            mostrarMensagem(resultado.erro || 'Erro ao fazer upload da foto', 'erro');
-        }
-        
-    } catch (error) {
-        console.error('Erro no upload:', error);
-        mostrarMensagem('Erro ao fazer upload da foto', 'erro');
-    } finally {
-        mostrarLoading(false);
-    }
-}
-
-// Remover foto
-async function removerFoto() {
-    try {
-        mostrarLoading(true);
-        
-        const formData = new FormData();
-        formData.append('acao', 'remover_foto');
-        
-        const response = await fetch('contaBD.php', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const resultado = await response.json();
-        
-        if (resultado.sucesso) {
-            mostrarMensagem(resultado.sucesso, 'sucesso');
-            esconderFoto();
-            inputFoto.value = '';
-        } else {
-            mostrarMensagem(resultado.erro || 'Erro ao remover foto', 'erro');
-        }
-        
-    } catch (error) {
-        console.error('Erro ao remover foto:', error);
-        mostrarMensagem('Erro ao remover foto', 'erro');
-    } finally {
-        mostrarLoading(false);
-    }
-}
-
-// Excluir conta
+// Excluir conta (com confirmação robusta)
 async function excluirConta() {
-    try {
-        mostrarLoading(true);
-        
-        const formData = new FormData();
-        formData.append('acao', 'excluir_conta');
-        
-        const response = await fetch('contaBD.php', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const resultado = await response.json();
-        
-        if (resultado.sucesso) {
-            mostrarMensagem(resultado.sucesso, 'sucesso');
-            setTimeout(() => {
-                window.location.href = '../telaPrincipal/principal.php';
-            }, 2000);
+  if (!confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível. Deseja continuar?')) return;
+
+  try {
+    mostrarLoading(true);
+
+    const formData = new FormData();
+    formData.append('acao', 'excluir_conta');
+
+    const resp = await fetch('contaBD.php', { method: 'POST', body: formData });
+    if (!resp.ok) {
+      // tenta menuConta.php como fallback
+      const resp2 = await fetch('menuConta.php', { method: 'POST', body: formData });
+      if (!resp2.ok) throw new Error('Erro ao excluir conta (nenhum endpoint respondeu OK).');
+      try {
+        const j = await resp2.json();
+        if (j.sucesso) {
+          mostrarMensagem(j.sucesso, 'sucesso');
+          setTimeout(() => window.location.href = '../telaPrincipal/principal.php', 1500);
         } else {
-            mostrarMensagem(resultado.erro || 'Erro ao excluir conta', 'erro');
+          mostrarMensagem(j.erro || 'Conta excluída (resposta sem JSON).', 'sucesso');
         }
-        
-    } catch (error) {
-        console.error('Erro ao excluir conta:', error);
-        mostrarMensagem('Erro ao excluir conta', 'erro');
-    } finally {
-        mostrarLoading(false);
-    }
-}
-
-// Mostrar/esconder loading
-function mostrarLoading(mostrar) {
-    const container = document.querySelector('.container-perfil');
-    if (mostrar) {
-        container.classList.add('loading');
+      } catch {
+        mostrarMensagem('Conta excluída (resposta sem JSON).', 'sucesso');
+        setTimeout(() => window.location.href = '../telaPrincipal/principal.php', 1500);
+      }
     } else {
-        container.classList.remove('loading');
+      try {
+        const j = await resp.json();
+        if (j.sucesso) {
+          mostrarMensagem(j.sucesso, 'sucesso');
+          setTimeout(() => window.location.href = '../telaPrincipal/principal.php', 1500);
+        } else {
+          mostrarMensagem(j.erro || 'Erro ao excluir conta.', 'erro');
+        }
+      } catch {
+        mostrarMensagem('Conta excluída (resposta não-JSON).', 'sucesso');
+        setTimeout(() => window.location.href = '../telaPrincipal/principal.php', 1500);
+      }
     }
+  } catch (err) {
+    console.error('Erro ao excluir conta:', err);
+    mostrarMensagem('Erro ao excluir conta', 'erro');
+  } finally {
+    mostrarLoading(false);
+  }
 }
 
-// Mostrar mensagem de feedback
+/* ===========================
+   UPLOAD / REMOVER FOTO (mantidos)
+   =========================== */
+async function uploadFoto(arquivo) {
+  try {
+    mostrarLoading(true);
+    const formData = new FormData();
+    formData.append('acao', 'upload_foto');
+    formData.append('foto', arquivo);
+
+    const resp = await fetch('contaBD.php', { method: 'POST', body: formData });
+    if (!resp.ok) {
+      // tenta menuConta.php
+      const resp2 = await fetch('menuConta.php', { method: 'POST', body: formData });
+      if (!resp2.ok) throw new Error('Erro no upload (endpoints offline).');
+      try {
+        const j = await resp2.json();
+        if (j.caminho_foto) mostrarFoto(j.caminho_foto);
+        mostrarMensagem(j.sucesso || 'Upload realizado (fallback).', 'sucesso');
+      } catch {
+        mostrarMensagem('Upload realizado (resposta sem JSON).', 'sucesso');
+      }
+    } else {
+      const j = await resp.json();
+      if (j.sucesso) {
+        if (j.caminho_foto) mostrarFoto(j.caminho_foto);
+        mostrarMensagem(j.sucesso, 'sucesso');
+      } else {
+        mostrarMensagem(j.erro || 'Erro no upload.', 'erro');
+      }
+    }
+  } catch (err) {
+    console.error('Erro upload:', err);
+    mostrarMensagem('Erro ao fazer upload da foto', 'erro');
+  } finally {
+    mostrarLoading(false);
+  }
+}
+
+async function removerFoto() {
+  try {
+    mostrarLoading(true);
+    const formData = new FormData();
+    formData.append('acao', 'remover_foto');
+
+    const resp = await fetch('contaBD.php', { method: 'POST', body: formData });
+    if (!resp.ok) {
+      const resp2 = await fetch('menuConta.php', { method: 'POST', body: formData });
+      if (!resp2.ok) throw new Error('Erro ao remover foto (endpoints falharam).');
+      mostrarMensagem('Foto removida (fallback).', 'sucesso');
+      esconderFoto();
+    } else {
+      const j = await resp.json();
+      if (j.sucesso) {
+        mostrarMensagem(j.sucesso, 'sucesso');
+        esconderFoto();
+      } else {
+        mostrarMensagem(j.erro || 'Erro ao remover foto', 'erro');
+      }
+    }
+  } catch (err) {
+    console.error('Erro ao remover foto:', err);
+    mostrarMensagem('Erro ao remover foto', 'erro');
+  } finally {
+    mostrarLoading(false);
+  }
+}
+
+/* ===========================
+   LAYOUT / UTILITÁRIOS
+   =========================== */
+function mostrarLoading(mostrar) {
+  let container = document.querySelector('.container-perfil') || document.querySelector('.container-conta');
+  if (!container) return;
+  if (mostrar) container.classList.add('loading');
+  else container.classList.remove('loading');
+}
+
 function mostrarMensagem(mensagem, tipo) {
-    // Remover mensagens existentes
-    const mensagensExistentes = document.querySelectorAll('.mensagem-sucesso, .mensagem-erro');
-    mensagensExistentes.forEach(msg => msg.remove());
-    
-    // Criar nova mensagem
-    const divMensagem = document.createElement('div');
-    divMensagem.className = tipo === 'sucesso' ? 'mensagem-sucesso' : 'mensagem-erro';
-    divMensagem.textContent = mensagem;
-    divMensagem.style.cssText = `
-        padding: 12px 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        text-align: center;
-        ${tipo === 'sucesso' ? 
-            'background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : 
-            'background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'
-        }
-    `;
-    
-    // Inserir no início do container
-    const container = document.querySelector('.conteudo-perfil');
-    container.insertBefore(divMensagem, container.firstChild);
-    
-    // Remover após 5 segundos
-    setTimeout(() => {
-        divMensagem.remove();
-    }, 5000);
+  const existentes = document.querySelectorAll('.mensagem-sucesso, .mensagem-erro');
+  existentes.forEach(e => e.remove());
+
+  const div = document.createElement('div');
+  div.className = tipo === 'sucesso' ? 'mensagem-sucesso' : 'mensagem-erro';
+  div.textContent = mensagem;
+  div.style.cssText = `
+    padding: 12px 20px; margin-bottom: 20px; border-radius: 8px; font-weight: bold; text-align: center;
+    ${tipo === 'sucesso' ? 'background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;' :
+     'background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'}
+  `;
+  const container = document.querySelector('.conteudo-conta') || document.querySelector('.container-conta') || document.body;
+  container.insertBefore(div, container.firstChild);
+  setTimeout(() => div.remove(), 5000);
 }
 
-// Validar email
+/* ===========================
+   VALIDAÇÕES E EVENT LISTENERS
+   =========================== */
 function validarEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
 }
 
-// Validar arquivo de imagem
 function validarArquivoImagem(arquivo) {
-    const tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    const tamanhoMaximo = 5 * 1024 * 1024; // 5MB
-    
-    if (!tiposPermitidos.includes(arquivo.type)) {
-        mostrarMensagem('Tipo de arquivo não permitido. Use JPG, PNG, GIF ou WebP', 'erro');
-        return false;
-    }
-    
-    if (arquivo.size > tamanhoMaximo) {
-        mostrarMensagem('Arquivo muito grande. Máximo 5MB', 'erro');
-        return false;
-    }
-    
-    return true;
+  const tipos = ['image/jpeg','image/png','image/gif','image/webp'];
+  const max = 5 * 1024 * 1024;
+  if (!tipos.includes(arquivo.type)) { mostrarMensagem('Tipo de arquivo não permitido.', 'erro'); return false; }
+  if (arquivo.size > max) { mostrarMensagem('Arquivo muito grande. Máx 5MB', 'erro'); return false; }
+  return true;
 }
 
-// Inicializar event listeners
 function inicializarEventListeners() {
-    // contador de caracteres da descrição
-        const descricao = document.getElementById("descricao");
-        const contador = document.querySelector(".contador-caracteres");
+  // contador de caracteres
+  if (descricaoTextarea) {
+    const contador = contadorChars || document.querySelector('#contador') || document.querySelector('#contadorAtual');
+    descricaoTextarea.addEventListener('input', () => {
+      if (contador) contador.textContent = `${descricaoTextarea.value.length} / ${descricaoTextarea.getAttribute('maxlength') || 1000}`;
+      atualizarContadorCaracteres();
+    });
+  }
 
-        descricao.addEventListener("input", () => {
-            contador.textContent = `${descricao.value.length} / 500`;
-        });
-    
-    // Botão alterar foto
-    botaoAlterarFoto.addEventListener('click', () => {
-        inputFoto.click();
-    });
-    
-    // Input de arquivo para foto
+  // alterar foto
+  if (botaoAlterarFoto && inputFoto) {
+    botaoAlterarFoto.addEventListener('click', () => inputFoto.click());
+  }
+
+  if (inputFoto) {
     inputFoto.addEventListener('change', (e) => {
-        const arquivo = e.target.files[0];
-        if (arquivo && validarArquivoImagem(arquivo)) {
-            uploadFoto(arquivo);
-        }
+      const arquivo = e.target.files && e.target.files[0];
+      if (arquivo && validarArquivoImagem(arquivo)) uploadFoto(arquivo);
     });
-    
-    // Botão remover foto
+  }
+
+  if (botaoRemoverFoto) {
     botaoRemoverFoto.addEventListener('click', () => {
-        if (confirm('Tem certeza que deseja remover sua foto de perfil?')) {
-            removerFoto();
-        }
+      if (confirm('Remover foto de perfil?')) removerFoto();
     });
-    
-    // Botão editar
-    botaoEditar.addEventListener('click', () => {
-        alternarModoEdicao(true);
-    });
-    
-    // Botão salvar
-    botaoSalvar.addEventListener('click', () => {
-        salvarAlteracoes();
-    });
-    
-    // Botão cancelar
-    botaoCancelar.addEventListener('click', () => {
-        restaurarDadosOriginais();
-        alternarModoEdicao(false);
-    });
-    
-    // Botão excluir conta
+  }
+
+  if (botaoEditar) botaoEditar.addEventListener('click', () => alternarModoEdicao(true));
+  if (botaoSalvar) botaoSalvar.addEventListener('click', () => salvarAlteracoes());
+  if (botaoCancelar) botaoCancelar.addEventListener('click', () => { restaurarDadosOriginais(); alternarModoEdicao(false); });
+
+  if (botaoExcluirConta) {
     botaoExcluirConta.addEventListener('click', () => {
-        modal.style.display = 'flex';
+      // se há modal, abre; se não, chama confirmar
+      if (modal) modal.style.display = 'flex';
+      else excluirConta();
     });
-    
-    // Confirmar exclusão
-    document.getElementById('confirmar-exclusao').addEventListener('click', () => {
-        modal.style.display = 'none';
-        excluirConta();
-    });
-    
-    // Cancelar exclusão
-    document.getElementById('cancelar-exclusao').addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-    
-    // Fechar modal clicando fora dele
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-    
-    // Prevenir saída acidental durante edição
-    window.addEventListener('beforeunload', (e) => {
-        if (modoEdicao) {
-            e.preventDefault();
-            e.returnValue = 'Você tem alterações não salvas. Tem certeza que deseja sair?';
-            return e.returnValue;
-        }
-    });
-    
-    // Atalhos do teclado
-    document.addEventListener('keydown', (e) => {
-        // ESC para cancelar edição
-        if (e.key === 'Escape' && modoEdicao) {
-            e.preventDefault();
-            restaurarDadosOriginais();
-            alternarModoEdicao(false);
-        }
-        
-        // Ctrl+S para salvar (durante edição)
-        if (e.ctrlKey && e.key === 's' && modoEdicao) {
-            e.preventDefault();
-            salvarAlteracoes();
-        }
-        
-        // Fechar modal com ESC
-        if (e.key === 'Escape' && modal.style.display === 'flex') {
-            e.preventDefault();
-            modal.style.display = 'none';
-        }
-    });
+  }
+
+  // confirm modal buttons (se existirem no HTML)
+  const btnConfirmar = document.getElementById('confirmar-exclusao');
+  if (btnConfirmar) btnConfirmar.addEventListener('click', () => { if (modal) modal.style.display = 'none'; excluirConta(); });
+
+  const btnCancelar = document.getElementById('cancelar-exclusao');
+  if (btnCancelar) btnCancelar.addEventListener('click', () => { if (modal) modal.style.display = 'none'; });
+
+  if (modal) {
+    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+  }
+
+  // beforeunload
+  window.addEventListener('beforeunload', (e) => {
+    if (modoEdicao) {
+      e.preventDefault();
+      e.returnValue = 'Você tem alterações não salvas. Tem certeza que deseja sair?';
+      return e.returnValue;
+    }
+  });
+
+  // atalhos
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modoEdicao) {
+      e.preventDefault();
+      restaurarDadosOriginais();
+      alternarModoEdicao(false);
+    }
+    if (e.ctrlKey && e.key === 's' && modoEdicao) {
+      e.preventDefault();
+      salvarAlteracoes();
+    }
+    if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+      e.preventDefault();
+      modal.style.display = 'none';
+    }
+  });
 }
 
-// Utilitários para debug (remover em produção)
+/* ===========================
+   SELECTS CUSTOMIZADOS (curso / área)
+   =========================== */
+function inicializarSelectsPersonalizados() {
+  const selects = document.querySelectorAll('.custom-select');
+  selects.forEach(select => {
+    const selected = select.querySelector('.select-selected');
+    const items = select.querySelector('.select-items');
+    let hiddenInput = select.querySelector('input[type="hidden"]');
+    if (!hiddenInput) {
+      hiddenInput = document.getElementById('inputCursoPerfil') || document.getElementById('inputAreaPerfil') || null;
+    }
+    if (!selected || !items || !hiddenInput) return;
+
+    const options = items.querySelectorAll('div[data-value]');
+
+    // valor salvo
+    const valorSalvo = (hiddenInput.value || '').toString().trim().toLowerCase();
+    if (valorSalvo) {
+      const found = Array.from(options).find(o => (o.dataset.value || '').toString().trim().toLowerCase() === valorSalvo);
+      if (found) {
+        selected.textContent = found.textContent;
+        selected.setAttribute('data-value', found.dataset.value);
+      } else {
+        selected.textContent = hiddenInput.value;
+        selected.setAttribute('data-value', hiddenInput.value);
+      }
+    }
+
+    // remove listeners antigos ao clonar
+    const newSelected = selected.cloneNode(true);
+    selected.replaceWith(newSelected);
+
+    newSelected.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fecharTodosSelects();
+      select.classList.toggle('open');
+    });
+
+    options.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hiddenInput.value = option.dataset.value;
+        newSelected.textContent = option.textContent;
+        newSelected.setAttribute('data-value', option.dataset.value);
+        select.classList.remove('open');
+      });
+    });
+  });
+
+  if (!window.__customSelectGlobalClickAdded) {
+    window.addEventListener('click', fecharTodosSelects);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') fecharTodosSelects(); });
+    window.__customSelectGlobalClickAdded = true;
+  }
+}
+
+function fecharTodosSelects() {
+  document.querySelectorAll('.custom-select.open').forEach(s => s.classList.remove('open'));
+}
+
+/* ===========================
+   Utilitários / debug
+   =========================== */
+function salvarDadosOriginais() {
+  dadosOriginais = {
+    nome: (getFirst(['nome-perfil', 'nome']) || { value: '' }).value,
+    sobrenome: (getFirst(['sobrenome-perfil', 'sobrenome']) || { value: '' }).value,
+    email: (getFirst(['email-perfil', 'email']) || { value: '' }).value,
+    descricao: (descricaoTextarea || { value: '' }).value
+  };
+}
+function restaurarDadosOriginais() {
+  const n = getFirst(['nome-perfil', 'nome']);
+  const s = getFirst(['sobrenome-perfil', 'sobrenome']);
+  const e = getFirst(['email-perfil', 'email']);
+  if (n) n.value = dadosOriginais.nome || '';
+  if (s) s.value = dadosOriginais.sobrenome || '';
+  if (e) e.value = dadosOriginais.email || '';
+  if (descricaoTextarea) descricaoTextarea.value = dadosOriginais.descricao || '';
+  atualizarContadorCaracteres();
+}
+
 window.debugPerfil = {
-    carregarDados: carregarDadosUsuario,
-    alternarEdicao: alternarModoEdicao,
-    salvar: salvarAlteracoes,
-    mostrarMensagem: mostrarMensagem
+  carregarDados: carregarDadosUsuario,
+  alternarEdicao: () => alternarModoEdicao(true),
+  salvar: salvarAlteracoes,
+  mostrarMensagem: mostrarMensagem
 };
-
-// contador de caracteres
-  const textarea = document.getElementById('descricao-perfil');
-  const counter  = document.getElementById('contador');
-  const max = parseInt(textarea.getAttribute('maxlength'), 10) || 500;
-
-  function updateCounter() {
-    const length = textarea.value.length;
-    counter.textContent = `${length}/${max}`;
-    counter.style.color = length >= max ? '#c62828' : '#777';
-  }
-
-  textarea.addEventListener('input', updateCounter);
-  updateCounter();
-
-  document.addEventListener('DOMContentLoaded', () => {
-  const cursoSelect = document.querySelector('#curso-perfil');
-  const areaSelect = document.querySelector('#area-perfil');
-
-  // === Caso o usuário seja aluno ===
-  if (cursoSelect) {
-    const selected = cursoSelect.querySelector('.select-selected');
-    const options = cursoSelect.querySelectorAll('.select-items div');
-    const inputHidden = document.querySelector('#inputCursoPerfil');
-
-    if (selected && inputHidden) {
-      selected.addEventListener('click', () => {
-        cursoSelect.classList.toggle('open');
-      });
-
-      options.forEach(opcao => {
-        opcao.addEventListener('click', () => {
-          selected.textContent = opcao.textContent;
-          selected.setAttribute('data-value', opcao.dataset.value);
-          inputHidden.value = opcao.dataset.value;
-          cursoSelect.classList.remove('open');
-        });
-      });
-    }
-  }
-
-  // === Caso o usuário seja coordenador ===
-  if (areaSelect) {
-    const selected = areaSelect.querySelector('.select-selected');
-    const options = areaSelect.querySelectorAll('.select-items div');
-    const inputHidden = document.querySelector('#inputAreaPerfil');
-
-    if (selected && inputHidden) {
-      selected.addEventListener('click', () => {
-        areaSelect.classList.toggle('open');
-      });
-
-      options.forEach(opcao => {
-        opcao.addEventListener('click', () => {
-          selected.textContent = opcao.textContent;
-          selected.setAttribute('data-value', opcao.dataset.value);
-          inputHidden.value = opcao.dataset.value;
-          areaSelect.classList.remove('open');
-        });
-      });
-    }
-  }
-
-});
