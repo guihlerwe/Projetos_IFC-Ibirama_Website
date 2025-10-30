@@ -20,7 +20,7 @@ $conn->set_charset("utf8");
 
 // Buscar dados do usuário
 $fotoAtual = '../assets/photos/sem_foto_perfil.png';
-$stmt = $conn->prepare("SELECT nome, sobrenome, email, foto_perfil FROM pessoa WHERE idPessoa = ?");
+$stmt = $conn->prepare("SELECT nome, sobrenome, email, foto_perfil, curso, matricula, area FROM pessoa WHERE idPessoa = ?");
 $stmt->bind_param("i", $idPessoa);
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -30,6 +30,7 @@ if ($usuario && $usuario['foto']) {
     $fotoAtual = $usuario['foto'];
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -69,17 +70,65 @@ if ($usuario && $usuario['foto']) {
 
     <!-- Formulário -->
     <form class="coluna-formulario" id="formConta">
-      <div class="linha">
-        <input type="text" id="nome" name="nome" placeholder="Nome" value="Sonia">
-        <input type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome" value="Imhof">
-      </div>
+        <div class="linha">
+            <input type="text" id="nome" name="nome" placeholder="Nome" value="<?php echo htmlspecialchars($usuario['nome'] ?? ''); ?>">
+            <input type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome" value="<?php echo htmlspecialchars($usuario['sobrenome'] ?? ''); ?>">
+        </div>
 
       <div class="linha">
-        <input type="email" id="email" name="email" placeholder="E-mail" value="sonia@ifc.edu.br">
+        <input type="email" id="email" name="email" placeholder="E-mail" value="<?php echo htmlspecialchars($usuario['email'] ?? ''); ?>">
         <input type="password" id="senha" name="senha" placeholder="Nova senha (opcional)">
       </div>
+
+    <div class="linha">
+        <?php if ($tipo === 'aluno'|| $tipo === 'bolsista'): ?>
+            <?php $cursoSalvo = htmlspecialchars(trim(strtolower($usuario['curso'] ?? '')));?>
+            <div class="input-group">
+                <div class="custom-select" id="curso-perfil">
+                    <div class="select-selected" data-value="<?php echo $cursoSalvo ?: ''; ?>">
+                        <?php echo $cursoSalvo ? ucfirst($cursoSalvo) : 'Curso'; ?>
+                        <div class="select-items">
+                            <div data-value="administração">Administração</div>
+                            <div data-value="informática">Informática</div>
+                            <div data-value="vestuário">Vestuário</div>
+                            <div data-value="moda">Moda</div>
+                            <div data-value="gestão comercial">Gestão Comercial</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            <input type="hidden" name="curso" id="inputCursoPerfil" value="<?php echo $cursoSalvo; ?>">
+            </div>
+            <input type="text" name="matricula" id="matricula-perfil" class="campo" placeholder="Matrícula" value="<?php echo htmlspecialchars($usuario['matricula'] ?? ''); ?>">
+
+        <?php elseif ($tipo === 'coordenador'): ?>
+            <?php $areaSalva = htmlspecialchars(trim(strtolower($usuario['area'] ?? ''))); ?>
+            <div class="custom-select" id="area-perfil">
+            <div class="select-selected" data-value="<?php echo $areaSalva ?: ''; ?>">
+                <?php echo $areaSalva ? ucfirst($areaSalva) : 'Área de estudo'; ?>
+            </div>
+            <div class="select-items">
+                <div data-value="ciências naturais">Ciências Naturais</div>
+                <div data-value="ciências humanas">Ciências Humanas</div>
+                <div data-value="linguagens">Linguagens</div>
+                <div data-value="matemática">Matemática</div>
+                <div data-value="administração">Administração</div>
+                <div data-value="informática">Informática</div>
+                <div data-value="vestuário">Vestuário</div>
+                <div data-value="técnico administrativo">Técnico Administrativo</div>
+            </div>
+            </div>
+            <input type="hidden" name="area" id="inputAreaPerfil" value="<?php echo $areaSalva; ?>">
+        <?php endif; ?>
+    </div>
+
+
+
     </form>
   </div>
+
+  <!-- Campos específicos por tipo -->
+    
 
   <!-- Descrição -->
   <div class="descricao">
@@ -93,8 +142,6 @@ if ($usuario && $usuario['foto']) {
     <button type="button" class="btn-excluir">Excluir Conta</button>
   </div>
 </div>
-
-
 
     <footer>
         <div class="linha">

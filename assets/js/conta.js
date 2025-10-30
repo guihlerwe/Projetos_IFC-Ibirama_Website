@@ -488,3 +488,67 @@ window.debugPerfil = {
     salvar: salvarAlteracoes,
     mostrarMensagem: mostrarMensagem
 };
+
+// contador de caracteres
+  const textarea = document.getElementById('descricao-perfil');
+  const counter  = document.getElementById('contador');
+  const max = parseInt(textarea.getAttribute('maxlength'), 10) || 500;
+
+  function updateCounter() {
+    const length = textarea.value.length;
+    counter.textContent = `${length}/${max}`;
+    counter.style.color = length >= max ? '#c62828' : '#777';
+  }
+
+  textarea.addEventListener('input', updateCounter);
+  updateCounter();
+
+  document.addEventListener('DOMContentLoaded', () => {
+  const cursoSelect = document.querySelector('#curso-perfil');
+  const areaSelect = document.querySelector('#area-perfil');
+
+  // === Caso o usuário seja aluno ===
+  if (cursoSelect) {
+    const selected = cursoSelect.querySelector('.select-selected');
+    const options = cursoSelect.querySelectorAll('.select-items div');
+    const inputHidden = document.querySelector('#inputCursoPerfil');
+
+    if (selected && inputHidden) {
+      selected.addEventListener('click', () => {
+        cursoSelect.classList.toggle('open');
+      });
+
+      options.forEach(opcao => {
+        opcao.addEventListener('click', () => {
+          selected.textContent = opcao.textContent;
+          selected.setAttribute('data-value', opcao.dataset.value);
+          inputHidden.value = opcao.dataset.value;
+          cursoSelect.classList.remove('open');
+        });
+      });
+    }
+  }
+
+  // === Caso o usuário seja coordenador ===
+  if (areaSelect) {
+    const selected = areaSelect.querySelector('.select-selected');
+    const options = areaSelect.querySelectorAll('.select-items div');
+    const inputHidden = document.querySelector('#inputAreaPerfil');
+
+    if (selected && inputHidden) {
+      selected.addEventListener('click', () => {
+        areaSelect.classList.toggle('open');
+      });
+
+      options.forEach(opcao => {
+        opcao.addEventListener('click', () => {
+          selected.textContent = opcao.textContent;
+          selected.setAttribute('data-value', opcao.dataset.value);
+          inputHidden.value = opcao.dataset.value;
+          areaSelect.classList.remove('open');
+        });
+      });
+    }
+  }
+
+});
