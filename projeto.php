@@ -28,17 +28,33 @@ if ($idProjeto <= 0) {
 }
 
 // Como sabemos que a coluna é 'idProjeto', vamos usar diretamente
+
 $stmt = $conn->prepare("SELECT * FROM projeto WHERE idProjeto = ?");
 $stmt->bind_param("i", $idProjeto);
 $stmt->execute();
 $result = $stmt->get_result();
-
 if ($result->num_rows === 0) {
     die("Projeto não encontrado.");
 }
-
 $projeto = $result->fetch_assoc();
 $stmt->close();
+
+// Buscar membros do projeto (coordenador e bolsista)
+$coordenadores = [];
+$bolsistas = [];
+$sqlMembros = "SELECT p.idPessoa, p.nome, p.sobrenome, p.foto_perfil as foto, pp.tipoPessoa FROM pessoa_projeto pp JOIN pessoa p ON pp.idPessoa = p.idPessoa WHERE pp.idProjeto = ?";
+$stmtM = $conn->prepare($sqlMembros);
+$stmtM->bind_param("i", $idProjeto);
+$stmtM->execute();
+$resM = $stmtM->get_result();
+while ($row = $resM->fetch_assoc()) {
+    if ($row['tipoPessoa'] === 'coordenador') {
+        $coordenadores[] = $row;
+    } elseif ($row['tipoPessoa'] === 'bolsista') {
+        $bolsistas[] = $row;
+    }
+}
+$stmtM->close();
 $conn->close();
 
 $nome = $_SESSION['nome'] ?? '';
@@ -77,7 +93,7 @@ $tipo = $_SESSION['tipo'] ?? '';
         <div id="conteudo-projeto">
             <div id="banner">
                 <?php if (!empty($projeto['banner'])): ?>
-                    <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['banner']); ?>" alt="Banner do projeto" id="banner-img">
+                    <img src="/assets/photos/projetos/<?php echo htmlspecialchars($projeto['banner']); ?>" alt="Banner do projeto" id="banner-img">
                 <?php else: ?>
                     <div id="banner-placeholder">
                         <span>Banner do Projeto</span>
@@ -88,7 +104,7 @@ $tipo = $_SESSION['tipo'] ?? '';
             <div id="info-projeto">
                 <div id="div-capa">
                     <?php if (!empty($projeto['capa'])): ?>
-                        <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['capa']); ?>" alt="Capa do projeto" id="capa-img">
+                        <img src="/assets/photos/projetos/<?php echo htmlspecialchars($projeto['capa']); ?>" alt="Capa do projeto" id="capa-img">
                     <?php else: ?>
                         <span id="capa-icon">📷</span>
                     <?php endif; ?>
@@ -129,44 +145,45 @@ $tipo = $_SESSION['tipo'] ?? '';
                     </div>
                 <?php endif; ?>
 
-                <?php if (!empty($projeto['nomeCoordenador']) || !empty($projeto['nomeBolsista'])): ?>
+                <?php if (!empty($coordenadores) || !empty($bolsistas)): ?>
                     <div class="secao">
                         <h2 class="subtitulo">Equipe</h2>
                         <div class="equipe-container">
-                            <!-- coordenador -->
-                            <?php if (!empty($projeto['nomeCoordenador'])): ?>
+                            <?php if (!empty($coordenadores)): ?>
                                 <div class="equipe-categoria">
                                     <h3 class="titulo-equipe">Coordenador(a)</h3>
                                     <div class="membros">
-                                        <div class="membro">
-                                            <div class="foto-membro">
-                                                <?php if (!empty($projeto['fotoCoordenador'])): ?>
-                                                    <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['fotoCoordenador']); ?>" alt="Foto do coordenador">
-                                                <?php else: ?>
-                                                    <span>👤</span>
-                                                <?php endif; ?>
+                                        <?php foreach ($coordenadores as $coord): ?>
+                                            <div class="membro">
+                                                <div class="foto-membro">
+                                                    <?php if (!empty($coord['foto'])): ?>
+                                                        <img src="data:image/jpeg;base64,<?php echo base64_encode($coord['foto']); ?>" alt="Foto do coordenador">
+                                                    <?php else: ?>
+                                                        <span>👤</span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <span class="nome-membro"><?php echo htmlspecialchars($coord['nome'] . ' ' . $coord['sobrenome']); ?></span>
                                             </div>
-                                            <span class="nome-membro"><?php echo htmlspecialchars($projeto['nomeCoordenador']); ?></span>
-                                        </div>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
-
-                            <!-- bolsista -->
-                            <?php if (!empty($projeto['nomeBolsista'])): ?>
+                            <?php if (!empty($bolsistas)): ?>
                                 <div class="equipe-categoria">
                                     <h3 class="titulo-equipe">Bolsista</h3>
                                     <div class="membros">
-                                        <div class="membro">
-                                            <div class="foto-membro">
-                                                <?php if (!empty($projeto['fotoBolsista'])): ?>
-                                                    <img src="../assets/photos/projetos/<?php echo htmlspecialchars($projeto['fotoBolsista']); ?>" alt="Foto do bolsista">
-                                                <?php else: ?>
-                                                    <span>👤</span>
-                                                <?php endif; ?>
+                                        <?php foreach ($bolsistas as $bol): ?>
+                                            <div class="membro">
+                                                <div class="foto-membro">
+                                                    <?php if (!empty($bol['foto'])): ?>
+                                                        <img src="data:image/jpeg;base64,<?php echo base64_encode($bol['foto']); ?>" alt="Foto do bolsista">
+                                                    <?php else: ?>
+                                                        <span>👤</span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <span class="nome-membro"><?php echo htmlspecialchars($bol['nome'] . ' ' . $bol['sobrenome']); ?></span>
                                             </div>
-                                            <span class="nome-membro"><?php echo htmlspecialchars($projeto['nomeBolsista']); ?></span>
-                                        </div>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>

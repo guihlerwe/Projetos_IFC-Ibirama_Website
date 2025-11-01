@@ -67,7 +67,7 @@ if ($result = $conn->query($sqlb)) {
         </div>
     </header>
 
-    <form id="formulario" action="cadastrarBD.php" method="POST" enctype="multipart/form-data">
+    <form id="formulario" action="cad-projetoBD.php" method="POST" enctype="multipart/form-data">
         
         <div id="banner" style="position: relative; width: 100%; height: 200px; background-color: #f0f0f0; overflow: hidden;">
             <label id="upload-banner" style="display: block; width: 100%; height: 100%; cursor: pointer; position: relative;">
@@ -135,7 +135,7 @@ if ($result = $conn->query($sqlb)) {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <input type="hidden" name="bolsista_id" id="bolsista_id">
+                            <input type="hidden" name="coordenador_id" id="coordenador_id" required>
                             </div>
                         </div>
                     </div>
@@ -181,38 +181,56 @@ if ($result = $conn->query($sqlb)) {
         </div>
     </form>
 </div>
-<script src="./assets/js/global.js"></script>
-<script src="./assets/js/cad-aluno.js"></script>
+<script src="../assets/js/global.js"></script>
+<script src="../assets/js/cad-projeto.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var customSelects = document.getElementsByClassName("custom-select");
-    
-    for (var i = 0; i < customSelects.length; i++) {
-        var select = customSelects[i];
-        var selectedDiv = select.getElementsByClassName("select-selected")[0];
-        var itemsDiv = select.getElementsByClassName("select-items")[0];
-        var hiddenInput = select.querySelector('input[type="hidden"]');
-        
-        selectedDiv.addEventListener("click", function(e) {
+    const customSelects = document.querySelectorAll('.custom-select');
+    customSelects.forEach((select) => {
+        const selectedDiv = select.querySelector('.select-selected');
+        const itemsDiv = select.querySelector('.select-items');
+        const hiddenInput = select.querySelector('input[type="hidden"]');
+        if (!selectedDiv || !itemsDiv) return;
+        selectedDiv.addEventListener('click', function(e) {
             e.stopPropagation();
-            this.parentElement.classList.toggle("open");
-            itemsDiv.style.display = itemsDiv.style.display === "block" ? "none" : "block";
+            document.querySelectorAll('.custom-select.open').forEach((other) => {
+                if (other !== select) {
+                    other.classList.remove('open');
+                    const otherItems = other.querySelector('.select-items');
+                    if (otherItems) otherItems.style.display = 'none';
+                }
+            });
+            const isOpen = select.classList.toggle('open');
+            itemsDiv.style.display = isOpen ? 'block' : 'none';
         });
-        
-        var items = itemsDiv.getElementsByTagName("div");
-        for (var j = 0; j < items.length; j++) {
-            items[j].addEventListener("click", function(e) {
+        itemsDiv.querySelectorAll('div').forEach((item) => {
+            item.addEventListener('click', function(e) {
                 e.stopPropagation();
                 selectedDiv.textContent = this.textContent;
-                hiddenInput.value = this.getAttribute("data-value");
-                itemsDiv.style.display = "none";
-                select.classList.remove("open");
+                if (hiddenInput) hiddenInput.value = this.getAttribute('data-value');
+                itemsDiv.style.display = 'none';
+                select.classList.remove('open');
             });
-        }
-        
-        document.addEventListener("click", function() {
-            itemsDiv.style.display = "none";
-            select.classList.remove("open");
+        });
+    });
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.custom-select.open').forEach((s) => {
+            s.classList.remove('open');
+            const items = s.querySelector('.select-items');
+            if (items) items.style.display = 'none';
+        });
+    });
+
+    // Validação para garantir que um coordenador e bolsista foram selecionados
+    const formulario = document.getElementById('formulario');
+    if (formulario) {
+        formulario.addEventListener('submit', function(e) {
+            const coordId = document.getElementById('coordenador_id').value;
+            if (!coordId) {
+                alert('Selecione um coordenador!');
+                e.preventDefault();
+                return false;
+            }
         });
     }
 });

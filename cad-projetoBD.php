@@ -19,11 +19,24 @@
 
     $conn->set_charset("utf8");
 
-    // pasta que guarda as imagens
-    $pastaImagens = '../assets/photos/projetos/';
+    // pasta base para guardar as imagens dos projetos
+    $pastaBaseImagens = __DIR__ . '/../assets/photos/projetos/';
+    $pastaTempImagens = __DIR__ . '/../assets/photos/temp/';
 
-    // função que salva as imagens
-    function salvarImagem($campoArquivo, $pastaDestino) {
+    // Função para limpar pasta temporária
+    function limparPastaTemp($pasta) {
+        if (is_dir($pasta)) {
+            $files = glob($pasta . '*');
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+        }
+    }
+
+    // função que salva as imagens em uma pasta específica
+    function salvarImagemTemp($campoArquivo, $pastaTempDestino) {
         if (isset($_FILES[$campoArquivo]) && $_FILES[$campoArquivo]['error'] === UPLOAD_ERR_OK) {
             $nomeTemp = $_FILES[$campoArquivo]['tmp_name'];
             $nomeOriginal = basename($_FILES[$campoArquivo]['name']);
@@ -31,20 +44,42 @@
             // tipo de arquivo
             $tiposPermitidos = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
             $extensao = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
-            
             if (!in_array($extensao, $tiposPermitidos)) {
                 return null;
             }
             
             // nome único para as imagens
             $nomeFinal = uniqid() . '-' . time() . '.' . $extensao;
-            $caminhoCompleto = $pastaDestino . $nomeFinal;
-
-            if (move_uploaded_file($nomeTemp, $caminhoCompleto)) {
+            $caminhoTempCompleto = $pastaTempDestino . $nomeFinal;
+            
+            // cria a pasta temporária se não existir
+            if (!is_dir($pastaTempDestino)) {
+                if (!mkdir($pastaTempDestino, 0777, true)) {
+                    error_log("Erro ao criar diretório temporário: " . $pastaTempDestino);
+                    return null;
+                }
+            }
+            
+            if (move_uploaded_file($nomeTemp, $caminhoTempCompleto)) {
+                chmod($caminhoTempCompleto, 0644);
                 return $nomeFinal;
             }
         }
         return null;
+    }
+
+    // Função para mover imagens da pasta temporária para a pasta final do projeto
+    function moverImagensParaProjeto($nomeArquivo, $pastaTempDestino, $pastaFinalDestino) {
+        if ($nomeArquivo && file_exists($pastaTempDestino . $nomeArquivo)) {
+            if (!is_dir($pastaFinalDestino)) {
+                mkdir($pastaFinalDestino, 0777, true);
+            }
+            return rename(
+                $pastaTempDestino . $nomeArquivo,
+                $pastaFinalDestino . $nomeArquivo
+            );
+        }
+        return false;
     }
 
     // verifica se é POST
@@ -52,14 +87,28 @@
         die("Erro: Método de requisição inválido.");
     }
 
-    // processa uploads de imagens
-    $nomeBanner = salvarImagem('banner', $pastaImagens);
-    $nomeCapa = salvarImagem('capa', $pastaImagens);
-    $fotoCoordenador = salvarImagem('foto-coordenador', $pastaImagens);
-    $fotoBolsista = salvarImagem('foto-bolsista', $pastaImagens);
+    // cria uma pasta única para o projeto (usa nome do projeto ou um id único)
+    $nomeProjeto = trim($_POST["nome-projeto"] ?? '');
+    $nomeProjetoPasta = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower($nomeProjeto));
+    $pastaImagensProjeto = $pastaBaseImagens . $nomeProjetoPasta . '/';
+    // Criar pasta temporária se não existir
+    if (!is_dir($pastaTempImagens)) {
+        mkdir($pastaTempImagens, 0777, true);
+    }
+    
+    // Limpar arquivos antigos da pasta temporária
+    limparPastaTemp($pastaTempImagens);
+
+    // processa uploads de imagens para pasta temporária
+    $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
+    $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
+    
+    // preparar nomes dos arquivos para o banco
+    $nomeBanner = $nomeBannerArquivo ? ($nomeProjetoPasta . '/' . $nomeBannerArquivo) : null;
+    $nomeCapa = $nomeCapaArquivo ? ($nomeProjetoPasta . '/' . $nomeCapaArquivo) : null;
 
     // captura dados do formulário com validação
-    $nomeProjeto = trim($_POST["nome-projeto"] ?? '');
+    // $nomeProjeto já definido acima
     $tipo = $_POST["eixo"] ?? '';
 
     //  categoria IMEDIATAMENTE após receber do formulário
@@ -91,17 +140,19 @@
     // Converter o valor recebido para o formato do banco
     $categoria = $categoriasMap[$categoriaOriginal] ?? strtolower(str_replace(' ', '-', $categoriaOriginal));
 
+    // Tratamento do ano de início
+    $anoAtual = (int)date('Y');
     $anoInicioRaw = trim($_POST["ano-inicio"] ?? '');
-    $anoInicio = null;
+    $anoInicio = $anoAtual; // valor padrão é o ano atual
+    
     if (!empty($anoInicioRaw)) {
         // extrai apenas números da variável ano-inicio
         preg_match('/\d{4}/', $anoInicioRaw, $matches);
         if (!empty($matches)) {
-            $anoInicio = (int)$matches[0];
-            // valida se é um ano válido 
-            $anoAtual = date('Y');
-            if ($anoInicio < 2010 || $anoInicio > ($anoAtual)) {
-                $anoInicio = null;
+            $anoTemp = (int)$matches[0];
+            // valida se é um ano válido (entre 2010 e ano atual)
+            if ($anoTemp >= 2010 && $anoTemp <= $anoAtual) {
+                $anoInicio = $anoTemp;
             }
         }
     }
@@ -137,8 +188,8 @@
     // prepara e executa a consulta
     $stmt = $conn->prepare("
         INSERT INTO projeto 
-        (nome, tipo, categoria, anoInicio, linkParaInscricao, textoSobre, linkSite, email, numero, linkInstagram, capa, banner, nomeCoordenador, fotoCoordenador, nomeBolsista, fotoBolsista, linkBolsista) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (nome, tipo, categoria, anoInicio, linkParaInscricao, textoSobre, linkSite, email, numero, linkInstagram, capa, banner, linkBolsista) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     if (!$stmt) {
@@ -146,32 +197,64 @@
     }
 
     $stmt->bind_param(
-        "sssisssssssssssss",
-        $nomeProjeto, 
-        $tipo, 
-        $categoria,  // <- AGORA USA O VALOR JÁ MAPEADO
-        $anoInicio,  
+        "sssisssssssss",
+        $nomeProjeto,
+        $tipo,
+        $categoria,
+        $anoInicio,
         $txtLinkInscricao,
-        $txtSobre, 
-        $txtLinkSite, 
-        $email, 
-        $numeroTelefone, 
-        $instagram, 
-        $nomeCapa, 
+        $txtSobre,
+        $txtLinkSite,
+        $email,
+        $numeroTelefone,
+        $instagram,
+        $nomeCapa,
         $nomeBanner,
-        $nomeCoordenador,
-        $fotoCoordenador,
-        $nomeBolsista,
-        $fotoBolsista,
         $txtLinkBolsista
     );
 
     if ($stmt->execute()) {
+        $idProjeto = $conn->insert_id;
+        
+        // Criar pasta final do projeto
+        $pastaFinalProjeto = $pastaBaseImagens . $nomeProjetoPasta . '/';
+        if (!is_dir($pastaFinalProjeto)) {
+            mkdir($pastaFinalProjeto, 0777, true);
+        }
+
+        // Mover imagens da pasta temporária para a pasta final
+        if ($nomeBannerArquivo) {
+            moverImagensParaProjeto($nomeBannerArquivo, $pastaTempImagens, $pastaFinalProjeto);
+        }
+        if ($nomeCapaArquivo) {
+            moverImagensParaProjeto($nomeCapaArquivo, $pastaTempImagens, $pastaFinalProjeto);
+        }
+
+        // Salvar relação com coordenador e bolsista na tabela pessoa_projeto
+        $coordenadorId = $_POST['coordenador_id'] ?? null;
+        $bolsistaId = $_POST['bolsista_id'] ?? null;
+        if ($coordenadorId) {
+            $stmtPessoa = $conn->prepare("INSERT INTO pessoa_projeto (idPessoa, idProjeto, tipoPessoa) VALUES (?, ?, 'coordenador')");
+            $stmtPessoa->bind_param("ii", $coordenadorId, $idProjeto);
+            $stmtPessoa->execute();
+            $stmtPessoa->close();
+        }
+        if ($bolsistaId) {
+            $stmtPessoa = $conn->prepare("INSERT INTO pessoa_projeto (idPessoa, idProjeto, tipoPessoa) VALUES (?, ?, 'bolsista')");
+            $stmtPessoa->bind_param("ii", $bolsistaId, $idProjeto);
+            $stmtPessoa->execute();
+            $stmtPessoa->close();
+        }
+
+        // Limpar pasta temporária
+        limparPastaTemp($pastaTempImagens);
+
         echo "<div style='color: green; font-weight: bold;'>✅ Projeto cadastrado com sucesso!</div>";
-        
-        echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='../telaPrincipal/principal.php';</script>";
-        
+        echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='principal.php';</script>";
     } else {
+        // Se falhou, limpar arquivos temporários
+        limparPastaTemp($pastaTempImagens);
+        
         echo "<div style='color: red; font-weight: bold;'>❌ Erro ao cadastrar projeto:</div>";
         echo "<p>Erro MySQL: " . $stmt->error . "</p>";
         echo "<p>Errno: " . $stmt->errno . "</p>";
