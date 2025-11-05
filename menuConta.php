@@ -17,12 +17,13 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
-// No início do menuConta.php, defina uma imagem base64 padrão
-$imagemPadrao = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2NjYyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjIwIiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+U2VtIEZvdG88L3RleHQ+PC9zdmc+';
+// Imagem padrão (avatar cinza)
+$imagemPadraoBase64 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2RkZCIvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iIzk5OSIvPjxwYXRoIGQ9Ik01MCAxNjAgUTUwIDEyMCAxMDAgMTIwIFQxNTAgMTYwIiBmaWxsPSIjOTk5Ii8+PC9zdmc+';
+
+$fotoAtual = $imagemPadraoBase64;
+$descricaoAtual = '';
 
 // Buscar dados do usuário
-$fotoAtual = $imagemPadrao; // Usa imagem padrão base64
-
 $stmt = $conn->prepare("SELECT nome, sobrenome, email, foto_perfil, descricao, curso, matricula, area FROM pessoa WHERE idPessoa = ?");
 $stmt->bind_param("i", $idPessoa);
 $stmt->execute();
@@ -30,16 +31,21 @@ $resultado = $stmt->get_result();
 $usuario = $resultado->fetch_assoc();
 
 if ($usuario) {
+    $descricaoAtual = $usuario['descricao'] ?? '';
+    
+    // Se tem foto no banco
     if ($usuario['foto_perfil'] && !empty(trim($usuario['foto_perfil']))) {
-        // Verifica se o arquivo existe antes de usar
-        $caminhoFoto = __DIR__ . '/' . $usuario['foto_perfil'];
-        if (file_exists($caminhoFoto)) {
-            $fotoAtual = str_replace(['\\', '//'], '/', $usuario['foto_perfil']);
+        $fotoDB = $usuario['foto_perfil'];
+        
+        // Caminho físico do arquivo (para verificar se existe)
+        $caminhoFisico = __DIR__ . '/' . $fotoDB;
+        
+        if (file_exists($caminhoFisico)) {
+            // Usa o caminho relativo para o HTML
+            $fotoAtual = $fotoDB;
         }
     }
-    $descricaoAtual = $usuario['descricao'] ?? '';
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +72,7 @@ if ($usuario) {
             <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
         </div>
     </header>
-
+    
     <div class="container-conta">
         <h2 class="titulo-conta">Minha Conta</h2>
 
@@ -243,12 +249,12 @@ if ($usuario) {
         </div>
         <div class="acesso-info">
             <a href="https://www.gov.br/acessoainformacao/pt-br">
-                <img src="../assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
+                <img src="assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
             </a>
         </div>
     </footer>
     
-    <script src="../assets/js/conta.js"></script>
+    <script src="assets/js/conta.js"></script>
     <script>
         // Variável global para armazenar o arquivo da foto
         let arquivoFotoSelecionado = null;

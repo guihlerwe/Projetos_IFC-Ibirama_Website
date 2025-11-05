@@ -1,7 +1,7 @@
 <?php
 // contaBD.php
 header('Content-Type: application/json; charset=utf-8');
-ini_set('display_errors', 0);
+ini_set('display_errors', 1); // Mudar para 0 em produção
 error_reporting(E_ALL);
 
 session_start();
@@ -99,10 +99,14 @@ if ($acao === 'atualizar_perfil' || $acao === 'atualizar_com_foto' || $acao === 
             resposta_json(['erro' => 'Arquivo muito grande (máx 5MB).']);
         }
 
-        // Diretório de upload
+        // Diretório de upload (relativo ao contaBD.php)
         $diretorio_upload = __DIR__ . '/assets/photos/fotos_perfil/';
+        
+        // Cria pasta se não existir
         if (!file_exists($diretorio_upload)) {
-            mkdir($diretorio_upload, 0755, true);
+            if (!mkdir($diretorio_upload, 0755, true)) {
+                resposta_json(['erro' => 'Não foi possível criar o diretório de upload.']);
+            }
         }
 
         // Nome do arquivo
@@ -110,10 +114,10 @@ if ($acao === 'atualizar_perfil' || $acao === 'atualizar_com_foto' || $acao === 
         $nomeArquivo = 'perfil_' . $idPessoa . '_' . time() . '.' . $ext;
         $destino = $diretorio_upload . $nomeArquivo;
         
-        // Caminho relativo para salvar no BD
+        // Caminho relativo para salvar no BD (a partir da raiz do site)
         $caminhoFoto = 'assets/photos/fotos_perfil/' . $nomeArquivo;
 
-        // Remove foto anterior
+        // Remove foto anterior se existir
         $stmt = $conn->prepare("SELECT foto_perfil FROM pessoa WHERE idPessoa = ?");
         $stmt->bind_param("i", $idPessoa);
         $stmt->execute();
@@ -130,7 +134,7 @@ if ($acao === 'atualizar_perfil' || $acao === 'atualizar_com_foto' || $acao === 
 
         // Move o arquivo
         if (!move_uploaded_file($arquivo['tmp_name'], $destino)) {
-            resposta_json(['erro' => 'Falha ao salvar arquivo no servidor.']);
+            resposta_json(['erro' => 'Falha ao salvar arquivo no servidor. Verifique as permissões da pasta.']);
         }
     }
 
