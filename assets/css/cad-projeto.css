@@ -148,6 +148,23 @@
     align-items: center;
     margin-bottom: 5px;
     font-size: 24px;
+    overflow: hidden;
+    position: relative;
+}
+
+.foto-membro span {
+    position: absolute;
+    z-index: 1;
+}
+
+.foto-membro img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
 }
 
 .add-membro {
@@ -247,24 +264,59 @@
     left: 0;
     right: 0;
     min-width: 150px;
+    max-height: 300px; /* Altura aproximada para 10 itens */
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     z-index: 99;
     display: none;
-    overflow: hidden;
+    overflow-y: auto; /* Adiciona scroll vertical */
     animation: expandDown 0.2s ease forwards;
+    scrollbar-width: thin; /* Para Firefox */
+    scrollbar-color: #888 #f0f0f0; /* Para Firefox */
+}
+
+/* Estilização da scrollbar para Chrome/Safari/Edge */
+.select-items::-webkit-scrollbar {
+    width: 8px;
+}
+
+.select-items::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.select-items::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.select-items::-webkit-scrollbar-thumb:hover {
+    background: #666;
 }
 
 /* Opções */
 .select-items div {
     padding: 8px 16px;
     transition: background-color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .select-items div:hover {
     background-color: #f0f0f0;
+}
+
+/* Garante que o último item não fique cortado pela borda arredondada */
+.select-items div:last-child {
+    margin-bottom: 2px;
+}
+
+/* Garante que o primeiro item não fique cortado pela borda arredondada */
+.select-items div:first-child {
+    margin-top: 2px;
 }
 
 /* Animação */

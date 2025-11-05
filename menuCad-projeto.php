@@ -19,7 +19,7 @@ $conn->set_charset("utf8");
 
 // Buscar coordenadores para popular o select
 $coordenadores = [];
-$sql = "SELECT idPessoa, nome, sobrenome, email FROM pessoa WHERE tipo = 'coordenador' ORDER BY nome, sobrenome";
+$sql = "SELECT idPessoa, nome, sobrenome, email, foto_perfil FROM pessoa WHERE tipo = 'coordenador' ORDER BY nome, sobrenome";
 if ($result = $conn->query($sql)) {
     while ($row = $result->fetch_assoc()) {
         $coordenadores[] = $row;
@@ -28,7 +28,7 @@ if ($result = $conn->query($sql)) {
 }
 
 $bolsistas = [];
-$sqlb = "SELECT idPessoa, nome, sobrenome, email FROM pessoa WHERE tipo = 'bolsista' ORDER BY nome, sobrenome";
+$sqlb = "SELECT idPessoa, nome, sobrenome, email, foto_perfil FROM pessoa WHERE tipo = 'bolsista' ORDER BY nome, sobrenome";
 if ($result = $conn->query($sqlb)) {
     while ($row = $result->fetch_assoc()) {
         $bolsistas[] = $row;
@@ -121,17 +121,23 @@ if ($result = $conn->query($sqlb)) {
                 <div class="membros">
                     <div class="membro">
                         <div class="foto-membro">
-                            <label>
-                                <input type="file" name="foto-coordenador" accept="image/*" hidden>
-                                <span>📷</span>
-                            </label>
+                            <span>👤</span>
+                            <!-- A imagem será inserida aqui via JavaScript -->
                         </div>
                             <div class="custom-select">
                             <div class="select-selected">Selecione um coordenador(a)</div>
                             <div class="select-items">
-                                <?php foreach ($coordenadores as $conn): ?>
-                                    <div data-value="<?php echo $conn['idPessoa']; ?>">
-                                        <?php echo htmlspecialchars($conn['nome'] . ' ' . $conn['sobrenome'] . ' (' . $conn['email'] . ')'); ?>
+                                <?php foreach ($coordenadores as $coord): ?>
+                                    <?php 
+                                    $foto_path = $coord['foto_perfil'];
+                                    // Se a foto não começar com '/' ou '../', adiciona o caminho base
+                                    if ($foto_path && !preg_match('/^(\/|\.\.\/)/', $foto_path)) {
+                                        $foto_path = '../assets/photos/fotos_perfil/' . $foto_path;
+                                    }
+                                    ?>
+                                    <div data-value="<?php echo $coord['idPessoa']; ?>" 
+                                         data-foto="<?php echo htmlspecialchars($foto_path); ?>">
+                                        <?php echo htmlspecialchars($coord['nome'] . ' ' . $coord['sobrenome'] . ' (' . $coord['email'] . ')'); ?>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -146,17 +152,23 @@ if ($result = $conn->query($sqlb)) {
                 <div class="membros">
                     <div class="membro">
                         <div class="foto-membro">
-                            <label>
-                                <input type="file" name="foto-bolsista" accept="image/*" hidden>
-                                <span>📷</span>
-                            </label>
+                            <span>👤</span>
+                            <!-- A imagem será inserida aqui via JavaScript -->
                         </div>
 
                         <div class="custom-select">
                             <div class="select-selected">Selecione um bolsista...</div>
                             <div class="select-items">
                                 <?php foreach ($bolsistas as $bolsista): ?>
-                                    <div data-value="<?php echo $bolsista['idPessoa']; ?>">
+                                    <?php 
+                                    $foto_path = $bolsista['foto_perfil'];
+                                    // Se a foto não começar com '/' ou '../', adiciona o caminho base
+                                    if ($foto_path && !preg_match('/^(\/|\.\.\/)/', $foto_path)) {
+                                        $foto_path = '../assets/photos/fotos_perfil/' . $foto_path;
+                                    }
+                                    ?>
+                                    <div data-value="<?php echo $bolsista['idPessoa']; ?>"
+                                         data-foto="<?php echo htmlspecialchars($foto_path); ?>">
                                         <?php echo htmlspecialchars($bolsista['nome'] . ' ' . $bolsista['sobrenome'] . ' (' . $bolsista['email'] . ')'); ?>
                                     </div>
                                 <?php endforeach; ?>
@@ -208,6 +220,59 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.stopPropagation();
                 selectedDiv.textContent = this.textContent;
                 if (hiddenInput) hiddenInput.value = this.getAttribute('data-value');
+                
+                // Extrair apenas o nome do texto completo (remove o email)
+                const textoCompleto = this.textContent;
+                const nomeSemEmail = textoCompleto.split('(')[0].trim();
+                selectedDiv.textContent = nomeSemEmail;
+                
+                // Atualizar a foto do membro selecionado
+                const fotoMembro = this.getAttribute('data-foto');
+                const container = select.closest('.membro');
+                const fotoContainer = container.querySelector('.foto-membro');
+                const fotoLabel = fotoContainer.querySelector('label');
+                
+                if (fotoMembro && fotoMembro !== 'null') {
+                    // Se já existe uma imagem, atualiza a src
+                    let img = fotoContainer.querySelector('img');
+                    if (!img) {
+                        // Se não existe imagem, cria uma nova
+                        img = document.createElement('img');
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        fotoContainer.appendChild(img);
+                    }
+                    // Usa o caminho completo se fornecido, ou constrói o caminho
+                    img.src = fotoMembro.startsWith('/') || fotoMembro.startsWith('../') ? 
+                             fotoMembro : 
+                             '../assets/photos/fotos_perfil/' + fotoMembro;
+                    img.style.display = 'block';
+                    fotoContainer.querySelector('span').style.display = 'none';
+                    
+                    // Adiciona tratamento de erro para a imagem
+                    img.onerror = function() {
+                        console.log('Erro ao carregar a imagem:', this.src);
+                        this.style.display = 'none';
+                        fotoContainer.querySelector('span').style.display = 'block';
+                    };
+                } else {
+                    // Se não tem foto, mostra o ícone padrão
+                    const span = fotoContainer.querySelector('span');
+                    const img = fotoContainer.querySelector('img');
+                    if (img) {
+                        fotoContainer.removeChild(img);
+                    }
+                    span.style.display = 'block';
+                }
+                
+                // Debug para verificar o caminho da foto
+                console.log('Valor do data-foto:', fotoMembro);
+                if (fotoMembro && fotoMembro !== 'null') {
+                    console.log('Caminho construído:', fotoMembro.startsWith('/') || fotoMembro.startsWith('../') ? 
+                        fotoMembro : '../assets/photos/fotos_perfil/' + fotoMembro);
+                }
+                
                 itemsDiv.style.display = 'none';
                 select.classList.remove('open');
             });

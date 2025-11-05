@@ -96,10 +96,10 @@ $resultado = $conn->query($sql);
                         case 'extensao':
                             $corClass = 'vermelho';
                             break;
-                    }
-                    
+                    }         
                     // Caminho da imagem de capa
-                    $imagemCapa = !empty($projeto['capa']) ? '../assets/photos/projetos/' . $projeto['capa'] : '../assets/photos/campus-image.jpg';
+                    $nomePastaProjeto = $projeto['capa'];
+                    $imagemCapa = !empty($nomePastaProjeto) ? 'assets/photos/projetos/' . $nomePastaProjeto . '/capa.jpg' : 'assets/photos/campus-image.jpg';
                     
                     // Limitar o texto do nome para não quebrar o layout
                     $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];

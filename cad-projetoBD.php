@@ -48,8 +48,8 @@
                 return null;
             }
             
-            // nome único para as imagens
-            $nomeFinal = uniqid() . '-' . time() . '.' . $extensao;
+            // Define o nome do arquivo baseado no tipo (capa ou banner)
+            $nomeFinal = ($campoArquivo === 'capa' ? 'capa' : 'banner') . '.' . $extensao;
             $caminhoTempCompleto = $pastaTempDestino . $nomeFinal;
             
             // cria a pasta temporária se não existir
@@ -103,9 +103,9 @@
     $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
     $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
     
-    // prepara nomes dos arquivos para o banco (caminho relativo a partir de assets/photos/projetos/)
-    $nomeBanner = $nomeBannerArquivo ? ('projetos/' . $nomeProjetoPasta . '/' . $nomeBannerArquivo) : null;
-    $nomeCapa = $nomeCapaArquivo ? ('projetos/' . $nomeProjetoPasta . '/' . $nomeCapaArquivo) : null;
+    // Salva apenas o nome da pasta do projeto no banco
+    $nomeBanner = $nomeBannerArquivo ? $nomeProjetoPasta : null;
+    $nomeCapa = $nomeCapaArquivo ? $nomeProjetoPasta : null;
 
     // captura dados do formulário com validação
     // $nomeProjeto já definido acima

@@ -65,8 +65,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assets/css/tema-global.css">
-    <link rel="stylesheet" href="../assets/css/projeto.css">
+    <link rel="stylesheet" href="assets/css/tema-global.css">
+    <link rel="stylesheet" href="assets/css/projeto.css">
     <title><?php echo htmlspecialchars($projeto['nome']); ?></title>
 </head>
 <body>
@@ -79,7 +79,7 @@ $tipo = $_SESSION['tipo'] ?? '';
         <header>
             <div class="logo">
                 <div class="icone-nav">
-                    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
+                    <img src="assets/photos/ifc-logo-preto.png" id="icone-ifc">
                 </div>
                 Projetos do Campus Ibirama
             </div>
@@ -93,7 +93,11 @@ $tipo = $_SESSION['tipo'] ?? '';
         <div id="conteudo-projeto">
             <div id="banner">
                 <?php if (!empty($projeto['banner'])): ?>
-                    <img src="assets/photos/<?php echo htmlspecialchars($projeto['banner']); ?>" alt="Banner do projeto" id="banner-img">
+                    <?php
+                    $nomePastaProjeto = $projeto['banner'];
+                    $caminhoImagem = "assets/photos/projetos/{$nomePastaProjeto}/banner.jpg";
+                    ?>
+                    <img src="<?php echo htmlspecialchars($caminhoImagem); ?>" alt="Banner do projeto" id="banner-img">
                 <?php else: ?>
                     <div id="banner-placeholder">
                         <span>Banner do Projeto</span>
@@ -104,7 +108,11 @@ $tipo = $_SESSION['tipo'] ?? '';
             <div id="info-projeto">
                 <div id="div-capa">
                     <?php if (!empty($projeto['capa'])): ?>
-                        <img src="assets/photos/<?php echo htmlspecialchars($projeto['capa']); ?>" alt="Capa do projeto" id="capa-img">
+                        <?php
+                        $nomePastaProjeto = $projeto['capa'];
+                        $caminhoImagem = "assets/photos/projetos/{$nomePastaProjeto}/capa.jpg";
+                        ?>
+                        <img src="<?php echo htmlspecialchars($caminhoImagem); ?>" alt="Capa do projeto" id="capa-img">
                     <?php else: ?>
                         <span id="capa-icon">📷</span>
                     <?php endif; ?>
@@ -294,10 +302,10 @@ $tipo = $_SESSION['tipo'] ?? '';
     </div>
     <div class="acesso-info">
         <a href="https://www.gov.br/acessoainformacao/pt-br">
-            <img src="../assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
+            <img src="assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
         </a>
     </div>
 </footer>
-    <script src="../assets/js/global.js"></script>
-    <script src="../assets/js/projeto.js"></script></body>
+    <script src="assets/js/global.js"></script>
+    <script src="assets/js/projeto.js"></script></body>
 </html>
