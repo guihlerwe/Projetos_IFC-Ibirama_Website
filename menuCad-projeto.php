@@ -63,7 +63,7 @@ if ($result = $conn->query($sqlb)) {
         <div class="navegador">
             <div class="projetos-nav">Projetos</div>
             <div class="monitoria-nav">Monitoria</div>
-            <?php include 'menuUsuario.php'; ?>
+            <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
         </div>
     </header>
 
@@ -301,22 +301,7 @@ if (isset($conn) && $conn instanceof mysqli) {
   </h2>
   <span id="License"><i>Licença M.I.T.2025</i></span>
 </div>
-    <div class="Ativos">
-        <h2>Dados Atuais</h2>
-        <div id="dados-ativos">
-            <p id="num-projetos">
-                <span>Projetos</span>
-                <h1><?php echo isset($resultado) ? $resultado->num_rows : 0; ?></h1>
-            </p>
-            <p id="num-bolsistas">
-                <span>Bolsistas</span>
-                <h1>18</h1>
-            </p>
-            <p id="num-coordenadores">
-                <span>Coordenadores</span>
-                <h1>4</h1>
-            </p>
-        </div>
+    
     </div>
     <div class="acesso-info">
         <a href="https://www.gov.br/acessoainformacao/pt-br">

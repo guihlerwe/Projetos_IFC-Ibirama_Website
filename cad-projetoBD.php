@@ -20,8 +20,8 @@
     $conn->set_charset("utf8");
 
     // pasta base para guardar as imagens dos projetos
-    $pastaBaseImagens = __DIR__ . '/../assets/photos/projetos/';
-    $pastaTempImagens = __DIR__ . '/../assets/photos/temp/';
+    $pastaBaseImagens = __DIR__ . '/assets/photos/projetos/';
+    $pastaTempImagens = __DIR__ . '/assets/photos/temp/';
 
     // Função para limpar pasta temporária
     function limparPastaTemp($pasta) {
@@ -103,9 +103,9 @@
     $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
     $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
     
-    // preparar nomes dos arquivos para o banco
-    $nomeBanner = $nomeBannerArquivo ? ($nomeProjetoPasta . '/' . $nomeBannerArquivo) : null;
-    $nomeCapa = $nomeCapaArquivo ? ($nomeProjetoPasta . '/' . $nomeCapaArquivo) : null;
+    // prepara nomes dos arquivos para o banco (caminho relativo a partir de assets/photos/projetos/)
+    $nomeBanner = $nomeBannerArquivo ? ('projetos/' . $nomeProjetoPasta . '/' . $nomeBannerArquivo) : null;
+    $nomeCapa = $nomeCapaArquivo ? ('projetos/' . $nomeProjetoPasta . '/' . $nomeCapaArquivo) : null;
 
     // captura dados do formulário com validação
     // $nomeProjeto já definido acima

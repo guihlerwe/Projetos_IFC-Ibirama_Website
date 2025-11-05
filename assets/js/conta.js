@@ -44,6 +44,22 @@ function salvarAlteracoes() {
   
   formData.append("acao", "atualizar_perfil");
 
+  // Se o input de foto estiver fora do <form> (como em menuConta.php),
+  // o FormData(form) não o incluirá automaticamente. Tenta adicionar
+  // o arquivo manualmente a partir do input ou da variável global usada
+  // no HTML (`arquivoFotoSelecionado`).
+  try {
+    const inputFoto = document.getElementById('inputFotoPerfil');
+    if (inputFoto && inputFoto.files && inputFoto.files[0]) {
+      formData.append('foto', inputFoto.files[0]);
+    } else if (typeof arquivoFotoSelecionado !== 'undefined' && arquivoFotoSelecionado) {
+      formData.append('foto', arquivoFotoSelecionado);
+    }
+  } catch (e) {
+    // não fatal — apenas log para debug
+    console.debug('Não foi possível anexar foto ao FormData:', e);
+  }
+
   // Mostrar loading
   const btnSalvar = document.getElementById("btnSalvar");
   const textoOriginal = btnSalvar.textContent;

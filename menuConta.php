@@ -7,7 +7,8 @@ $idPessoa = $_SESSION['idPessoa'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -62,7 +63,7 @@ if ($usuario) {
     <header>
         <div class="logo">
             <div class="grid-icon">
-                <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
+                <img src="assets/photos/ifc-logo-preto.png" id="icone-ifc">
             </div>
             Projetos do Campus Ibirama
         </div>
@@ -255,6 +256,7 @@ if ($usuario) {
     </footer>
     
     <script src="assets/js/conta.js"></script>
+    <script src="assets/js/global.js"></script>
     <script>
         // Variável global para armazenar o arquivo da foto
         let arquivoFotoSelecionado = null;

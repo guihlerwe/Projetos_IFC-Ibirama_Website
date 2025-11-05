@@ -4,8 +4,8 @@ session_start();
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco
@@ -42,7 +42,7 @@ $stmt->close();
 // Buscar membros do projeto (coordenador e bolsista)
 $coordenadores = [];
 $bolsistas = [];
-$sqlMembros = "SELECT p.idPessoa, p.nome, p.sobrenome, p.foto_perfil as foto, pp.tipoPessoa FROM pessoa_projeto pp JOIN pessoa p ON pp.idPessoa = p.idPessoa WHERE pp.idProjeto = ?";
+$sqlMembros = "SELECT p.idPessoa, p.nome, p.sobrenome, p.foto_perfil, pp.tipoPessoa FROM pessoa_projeto pp JOIN pessoa p ON pp.idPessoa = p.idPessoa WHERE pp.idProjeto = ?";
 $stmtM = $conn->prepare($sqlMembros);
 $stmtM->bind_param("i", $idProjeto);
 $stmtM->execute();
@@ -93,7 +93,7 @@ $tipo = $_SESSION['tipo'] ?? '';
         <div id="conteudo-projeto">
             <div id="banner">
                 <?php if (!empty($projeto['banner'])): ?>
-                    <img src="/assets/photos/projetos/<?php echo htmlspecialchars($projeto['banner']); ?>" alt="Banner do projeto" id="banner-img">
+                    <img src="assets/photos/<?php echo htmlspecialchars($projeto['banner']); ?>" alt="Banner do projeto" id="banner-img">
                 <?php else: ?>
                     <div id="banner-placeholder">
                         <span>Banner do Projeto</span>
@@ -104,7 +104,7 @@ $tipo = $_SESSION['tipo'] ?? '';
             <div id="info-projeto">
                 <div id="div-capa">
                     <?php if (!empty($projeto['capa'])): ?>
-                        <img src="/assets/photos/projetos/<?php echo htmlspecialchars($projeto['capa']); ?>" alt="Capa do projeto" id="capa-img">
+                        <img src="assets/photos/<?php echo htmlspecialchars($projeto['capa']); ?>" alt="Capa do projeto" id="capa-img">
                     <?php else: ?>
                         <span id="capa-icon">📷</span>
                     <?php endif; ?>
@@ -156,8 +156,8 @@ $tipo = $_SESSION['tipo'] ?? '';
                                         <?php foreach ($coordenadores as $coord): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
-                                                    <?php if (!empty($coord['foto'])): ?>
-                                                        <img src="data:image/jpeg;base64,<?php echo base64_encode($coord['foto']); ?>" alt="Foto do coordenador">
+                                                    <?php if (!empty($coord['foto_perfil'])): ?>
+                                                        <img src="assets/photos/fotos_perfil/<?php echo htmlspecialchars($coord['foto_perfil']); ?>" alt="Foto do coordenador">
                                                     <?php else: ?>
                                                         <span>👤</span>
                                                     <?php endif; ?>
@@ -175,8 +175,8 @@ $tipo = $_SESSION['tipo'] ?? '';
                                         <?php foreach ($bolsistas as $bol): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
-                                                    <?php if (!empty($bol['foto'])): ?>
-                                                        <img src="data:image/jpeg;base64,<?php echo base64_encode($bol['foto']); ?>" alt="Foto do bolsista">
+                                                    <?php if (!empty($bol['foto_perfil'])): ?>
+                                                        <img src="assets/photos/fotos_perfil/<?php echo htmlspecialchars($bol['foto_perfil']); ?>" alt="Foto do bolsista">
                                                     <?php else: ?>
                                                         <span>👤</span>
                                                     <?php endif; ?>
