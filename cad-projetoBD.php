@@ -7,8 +7,8 @@
     // banco de dados
     $host = 'localhost';
     $usuario = 'root';
-    $senha = 'Gui@15600';
-    //$senha = 'root';
+    //$senha = 'Gui@15600';
+    $senha = 'root';
     $banco = 'website';
 
     // conexão com o banco
@@ -37,34 +37,35 @@
 
     // função que salva as imagens em uma pasta específica
     function salvarImagemTemp($campoArquivo, $pastaTempDestino) {
-        if (isset($_FILES[$campoArquivo]) && $_FILES[$campoArquivo]['error'] === UPLOAD_ERR_OK) {
-            $nomeTemp = $_FILES[$campoArquivo]['tmp_name'];
-            $nomeOriginal = basename($_FILES[$campoArquivo]['name']);
-            
-            // tipo de arquivo
-            $tiposPermitidos = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-            $extensao = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
-            if (!in_array($extensao, $tiposPermitidos)) {
+        if (!isset($_FILES[$campoArquivo]) || $_FILES[$campoArquivo]['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+
+        $nomeTemp = $_FILES[$campoArquivo]['tmp_name'];
+        $nomeOriginal = basename($_FILES[$campoArquivo]['name']);
+        
+        $tiposPermitidos = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extensao = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
+        
+        if (!in_array($extensao, $tiposPermitidos)) {
+            return null;
+        }
+        
+        $nomeFinal = ($campoArquivo === 'capa' ? 'capa' : 'banner') . '.' . $extensao;
+        $caminhoTempCompleto = $pastaTempDestino . $nomeFinal;
+        
+        if (!is_dir($pastaTempDestino)) {
+            if (!mkdir($pastaTempDestino, 0777, true)) {
+                error_log("Erro ao criar diretório temporário: " . $pastaTempDestino);
                 return null;
             }
-            
-            // Define o nome do arquivo baseado no tipo (capa ou banner)
-            $nomeFinal = ($campoArquivo === 'capa' ? 'capa' : 'banner') . '.' . $extensao;
-            $caminhoTempCompleto = $pastaTempDestino . $nomeFinal;
-            
-            // cria a pasta temporária se não existir
-            if (!is_dir($pastaTempDestino)) {
-                if (!mkdir($pastaTempDestino, 0777, true)) {
-                    error_log("Erro ao criar diretório temporário: " . $pastaTempDestino);
-                    return null;
-                }
-            }
-            
-            if (move_uploaded_file($nomeTemp, $caminhoTempCompleto)) {
-                chmod($caminhoTempCompleto, 0644);
-                return $nomeFinal;
-            }
         }
+        
+        if (move_uploaded_file($nomeTemp, $caminhoTempCompleto)) {
+            chmod($caminhoTempCompleto, 0644);
+            return $nomeFinal;
+        }
+        
         return null;
     }
 
@@ -72,22 +73,28 @@
     function moverImagensParaProjeto($nomeArquivo, $pastaTempDestino, $pastaFinalDestino) {
         if ($nomeArquivo && file_exists($pastaTempDestino . $nomeArquivo)) {
             if (!is_dir($pastaFinalDestino)) {
-                mkdir($pastaFinalDestino, 0777, true);
+                if (!mkdir($pastaFinalDestino, 0777, true)) {
+                    error_log("Erro ao criar diretório: " . $pastaFinalDestino);
+                    return false;
+                }
             }
-                if (preg_match('/^(capa|banner)\./', $nomeArquivo, $matches)) {
-                    $prefixo = $matches[1];
-                    $existentes = glob($pastaFinalDestino . $prefixo . '.*');
-                    if ($existentes) {
-                        foreach ($existentes as $arquivoExistente) {
-                            @unlink($arquivoExistente);
-                        }
+
+            // Remove arquivo antigo se existir
+            if (preg_match('/^(capa|banner)\./', $nomeArquivo, $matches)) {
+                $prefixo = $matches[1];
+                $existentes = glob($pastaFinalDestino . $prefixo . '.*');
+                foreach ($existentes as $arquivoExistente) {
+                    if (file_exists($arquivoExistente)) {
+                        unlink($arquivoExistente);
                     }
                 }
+            }
 
-                return rename(
-                    $pastaTempDestino . $nomeArquivo,
-                    $pastaFinalDestino . $nomeArquivo
-                );
+            // Move o novo arquivo
+            if (copy($pastaTempDestino . $nomeArquivo, $pastaFinalDestino . $nomeArquivo)) {
+                unlink($pastaTempDestino . $nomeArquivo);
+                return true;
+            }
         }
         return false;
     }
@@ -103,36 +110,62 @@
     $dadosProjetoAnterior = null;
     $pastaProjetoExistente = null;
 
+    // Verifica se é modo de edição
     if ($modoEdicao) {
-        if (!$idPessoaLogado) {
-            die("Erro: usuário não autenticado.");
+        // Buscar dados anteriores do projeto
+        $stmt = $conn->prepare("SELECT capa, banner FROM projetos WHERE idProjeto = ?");
+        $stmt->bind_param("i", $idProjeto);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $dadosProjetoAnterior = $resultado->fetch_assoc();
+        $stmt->close();
+
+        // Corrige: obtém o nome da pasta a partir do nome do arquivo anterior (sem extensão)
+        if (!empty($dadosProjetoAnterior['capa'])) {
+            $pastaProjetoExistente = pathinfo($dadosProjetoAnterior['capa'], PATHINFO_FILENAME);
+        } elseif (!empty($dadosProjetoAnterior['banner'])) {
+            $pastaProjetoExistente = pathinfo($dadosProjetoAnterior['banner'], PATHINFO_FILENAME);
+        } else {
+            $pastaProjetoExistente = null;
         }
 
-        $stmtProjeto = $conn->prepare("SELECT p.* FROM projeto p INNER JOIN pessoa_projeto pp ON pp.idProjeto = p.idProjeto AND pp.tipoPessoa = 'coordenador' WHERE p.idProjeto = ? AND pp.idPessoa = ?");
-        if (!$stmtProjeto) {
-            die("Erro interno ao preparar consulta de projeto: " . $conn->error);
+        // Define o nome da pasta a ser usada (mantém a antiga se existir)
+        $nomeProjetoPasta = $pastaProjetoExistente ?: $nomeProjetoSanitizado;
+
+        // Caminho final para salvar as imagens
+        $pastaImagensProjeto = $pastaBaseImagens . $nomeProjetoPasta . '/';
+
+        // Garante que a pasta exista
+        if (!is_dir($pastaImagensProjeto)) {
+            mkdir($pastaImagensProjeto, 0777, true);
         }
 
-        $stmtProjeto->bind_param('ii', $idProjeto, $idPessoaLogado);
-        $stmtProjeto->execute();
-        $resultadoProjeto = $stmtProjeto->get_result();
-        if (!$resultadoProjeto || $resultadoProjeto->num_rows === 0) {
-            $stmtProjeto->close();
-            die("Erro: projeto não encontrado ou você não possui permissão para editá-lo.");
+        // Processa o banner
+        if (isset($_FILES['banner']) && $_FILES['banner']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
+            $nomeBanner = $nomeBannerArquivo ? $nomeProjetoPasta : $dadosProjetoAnterior['banner'];
+        } else {
+            $nomeBanner = $dadosProjetoAnterior['banner'];
         }
 
-        $dadosProjetoAnterior = $resultadoProjeto->fetch_assoc();
-        $pastaProjetoExistente = $dadosProjetoAnterior['capa'] ?? $dadosProjetoAnterior['banner'] ?? null;
-        $stmtProjeto->close();
+        // Processa a capa
+        if (isset($_FILES['capa']) && $_FILES['capa']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
+            $nomeCapa = $nomeCapaArquivo ? $nomeProjetoPasta : $dadosProjetoAnterior['capa'];
+        } else {
+            $nomeCapa = $dadosProjetoAnterior['capa'];
+        }
+    } else {
+
+    // Cadastro novo: cria pasta baseada no nome sanitizado
+    $nomeProjetoPasta = $nomeProjetoSanitizado;
+    $pastaImagensProjeto = $pastaBaseImagens . $nomeProjetoPasta . '/';
+
+    if (!is_dir($pastaImagensProjeto)) {
+        mkdir($pastaImagensProjeto, 0777, true);
     }
+}
 
-    $nomeProjeto = trim($_POST["nome-projeto"] ?? '');
-    $nomeProjetoSanitizado = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower($nomeProjeto));
-    if ($nomeProjetoSanitizado === '') {
-        $nomeProjetoSanitizado = 'projeto_' . ($modoEdicao ? $idProjeto : time());
-    }
-
-    $nomeProjetoPasta = $modoEdicao ? ($pastaProjetoExistente ?: $nomeProjetoSanitizado) : $nomeProjetoSanitizado;
     $pastaImagensProjeto = $pastaBaseImagens . $nomeProjetoPasta . '/';
 
     if (!is_dir($pastaTempImagens)) {
@@ -141,18 +174,57 @@
 
     limparPastaTemp($pastaTempImagens);
 
-    $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
-    $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
+    // Processamento das imagens
+    $nomeBannerArquivo = null;
+    $nomeCapaArquivo = null;
+    $nomeBanner = null;
+    $nomeCapa = null;
 
-    $nomeBanner = $modoEdicao ? ($dadosProjetoAnterior['banner'] ?? null) : null;
-    $nomeCapa = $modoEdicao ? ($dadosProjetoAnterior['capa'] ?? null) : null;
+    if ($modoEdicao) {
+        // Em modo de edição, usar os dados anteriores como base
+        $nomeBanner = $dadosProjetoAnterior['banner'];
+        $nomeCapa = $dadosProjetoAnterior['capa'];
 
-    if ($nomeBannerArquivo) {
-        $nomeBanner = $nomeProjetoPasta;
-    }
-    if ($nomeCapaArquivo) {
+        // Processar novas imagens apenas se foram enviadas
+        if (isset($_FILES['banner']) && $_FILES['banner']['error'] === UPLOAD_ERR_OK) {
+            $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
+            if ($nomeBannerArquivo) {
+                $nomeBanner = $nomeProjetoPasta;
+            }
+        }
+
+        if (isset($_FILES['capa']) && $_FILES['capa']['error'] === UPLOAD_ERR_OK) {
+            $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
+            if ($nomeCapaArquivo) {
+                $nomeCapa = $nomeProjetoPasta;
+            }
+        }
+    } else {
+        // Em novo cadastro
+        $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
+        $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
+        
+        if (!$nomeCapaArquivo) {
+            die("Erro: É necessário adicionar uma capa para o projeto.");
+        }
+        
+        $nomeBanner = $nomeBannerArquivo ? $nomeProjetoPasta : null;
         $nomeCapa = $nomeProjetoPasta;
     }
+
+    // Adicionar esta função de debug logo após o trecho acima
+    function debugImagemStatus($prefix, $arquivo, $modo) {
+        error_log(sprintf(
+            "%s - Arquivo: %s, Modo: %s, FILES: %s",
+            $prefix,
+            $arquivo,
+            $modo,
+            print_r($_FILES, true)
+        ));
+    }
+
+    // Chamar a função de debug
+    debugImagemStatus('Status Imagens', $nomeCapaArquivo, $modoEdicao ? 'edicao' : 'novo');
 
     $tipo = $_POST["eixo"] ?? '';
     $categoriaOriginal = $_POST["categoria"] ?? '';
@@ -327,6 +399,27 @@
         }
 
         foreach ($bolsistasArray as $bolsistaId) {
+            // Primeiro verifica o tipo atual do usuário
+            $stmtVerificaTipo = $conn->prepare("SELECT tipo FROM pessoa WHERE idPessoa = ?");
+            if ($stmtVerificaTipo) {
+                $stmtVerificaTipo->bind_param('i', $bolsistaId);
+                $stmtVerificaTipo->execute();
+                $resultado = $stmtVerificaTipo->get_result();
+                $usuarioAtual = $resultado->fetch_assoc();
+                $stmtVerificaTipo->close();
+
+                // Se for aluno, atualiza para bolsista
+                if ($usuarioAtual && $usuarioAtual['tipo'] === 'aluno') {
+                    $stmtAtualizaTipo = $conn->prepare("UPDATE pessoa SET tipo = 'bolsista' WHERE idPessoa = ?");
+                    if ($stmtAtualizaTipo) {
+                        $stmtAtualizaTipo->bind_param('i', $bolsistaId);
+                        $stmtAtualizaTipo->execute();
+                        $stmtAtualizaTipo->close();
+                    }
+                }
+            }
+
+            // Insere na tabela pessoa_projeto
             $stmtPessoa = $conn->prepare("INSERT INTO pessoa_projeto (idPessoa, idProjeto, tipoPessoa) VALUES (?, ?, 'bolsista')");
             if ($stmtPessoa) {
                 $stmtPessoa->bind_param('ii', $bolsistaId, $idProjetoExecutado);
@@ -337,7 +430,7 @@
 
         $mensagem = $modoEdicao ? 'Projeto atualizado com sucesso!' : 'Projeto cadastrado com sucesso!';
         echo "<div style='color: green; font-weight: bold;'>✅ {$mensagem}</div>";
-        echo "<script>alert('{$mensagem}'); window.location.href='menuProjetos.php';</script>";
+        echo "<script>alert('{$mensagem}'); window.location.href='menuEditarProjetos.php';</script>";
     } else {
         limparPastaTemp($pastaTempImagens);
         $acao = $modoEdicao ? 'atualizar' : 'cadastrar';

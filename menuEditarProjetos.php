@@ -9,8 +9,8 @@ $idPessoa = $_SESSION['idPessoa'] ?? null;
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
-//$senha = 'root';
+//$senha = 'Gui@15600';
+$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -180,20 +180,6 @@ if ($idPessoa) {
             ?>
         </div> 
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <footer>
     <div class="linha">

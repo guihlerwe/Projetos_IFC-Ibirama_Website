@@ -3,11 +3,10 @@ session_start();
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
 
-// Conexão com o banco de dados (reaproveitado de outros arquivos do projeto)
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
+//$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -17,24 +16,53 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
-// Buscar coordenadores para popular o select
+$idProjetoEditar = isset($_GET['idProjeto']) ? (int) $_GET['idProjeto'] : 0;
+
+// Buscar coordenadores para popular o select, excluindo os já vinculados ao projeto
 $coordenadores = [];
-$sql = "SELECT idPessoa, nome, sobrenome, email, foto_perfil FROM pessoa WHERE tipo = 'coordenador' ORDER BY nome, sobrenome";
-if ($result = $conn->query($sql)) {
+$sql = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil 
+        FROM pessoa p 
+        WHERE p.tipo = 'coordenador' 
+        AND (? = 0 OR p.idPessoa NOT IN (
+            SELECT pp.idPessoa 
+            FROM pessoa_projeto pp 
+            WHERE pp.idProjeto = ? 
+            AND pp.tipoPessoa = 'coordenador'
+        ))
+        ORDER BY p.nome, p.sobrenome";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $idProjetoEditar, $idProjetoEditar);
+if ($stmt->execute()) {
+    $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
         $coordenadores[] = $row;
     }
-    $result->free();
 }
+$stmt->close();
 
+// Buscar bolsistas para popular o select, excluindo os já vinculados ao projeto
 $bolsistas = [];
-$sqlb = "SELECT idPessoa, nome, sobrenome, email, foto_perfil FROM pessoa WHERE tipo = 'bolsista' ORDER BY nome, sobrenome";
-if ($result = $conn->query($sqlb)) {
+$sqlb = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil 
+         FROM pessoa p 
+         WHERE p.tipo IN ('bolsista', 'aluno')
+         AND (? = 0 OR p.idPessoa NOT IN (
+             SELECT pp.idPessoa 
+             FROM pessoa_projeto pp 
+             WHERE pp.idProjeto = ? 
+             AND pp.tipoPessoa = 'bolsista'
+         ))
+         ORDER BY p.nome, p.sobrenome";
+
+$stmt = $conn->prepare($sqlb);
+$stmt->bind_param("ii", $idProjetoEditar, $idProjetoEditar);
+if ($stmt->execute()) {
+    $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
         $bolsistas[] = $row;
     }
-    $result->free();
 }
+$stmt->close();
 
 $placeholderPerfil = '../assets/photos/fotos_perfil/sem_foto_perfil.jpg';
 
@@ -90,7 +118,6 @@ foreach ($bolsistas as &$bol) {
 unset($bol);
 
 $idPessoaLogado = $_SESSION['idPessoa'] ?? null;
-$idProjetoEditar = isset($_GET['idProjeto']) ? (int) $_GET['idProjeto'] : 0;
 $modoEdicao = false;
 $projetoSelecionado = null;
 $bannerAtual = null;
@@ -228,7 +255,9 @@ if ($modoEdicao && $projetoSelecionado) {
     </header>
 
     <form id="formulario" action="cad-projetoBD.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="id-projeto" id="id-projeto" value="<?php echo $modoEdicao ? (int) $idProjetoEditar : ''; ?>">
+        <input type="hidden" name="id-projeto" id="id-projeto"
+            value="<?php echo $modoEdicao ? (int) $idProjetoEditar : ''; ?>">
+
         
         <div id="banner" style="position: relative; width: 100%; height: 200px; overflow: hidden;">
             <label id="upload-banner" style="display: block; width: 100%; height: 100%; cursor: pointer; position: relative;">
@@ -243,8 +272,7 @@ if ($modoEdicao && $projetoSelecionado) {
         <div id="info-projeto">
             <div id="div-capa">
                 <label id="upload-capa">
-                    <input type="file" id="foto-capa" name="capa" accept="image/*" hidden <?php echo (!$modoEdicao || empty($capaAtual)) ? 'required' : ''; ?>>
-                    <span id="capa-icon"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>📷</span>
+                    <input type="file" id="foto-capa" name="capa" accept="image/*" hidden <?php echo !$modoEdicao ? 'required' : ''; ?>>                    <span id="capa-icon"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>📷</span>
                     <img id="capa-preview" <?php if ($modoEdicao && $capaAtual) { echo 'src="' . htmlspecialchars($capaAtual) . '" style="display:block; width:100%; height:100%; object-fit:cover;"'; } else { echo 'style="display: none;"'; } ?>>
                 </label>
             </div>
