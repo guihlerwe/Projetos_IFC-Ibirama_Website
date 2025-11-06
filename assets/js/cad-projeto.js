@@ -228,7 +228,7 @@ console.log('Iniciando cadProjeto.js...');
         });
     }
 
-    // conta a quantidade de caracteres
+    // conta a quantidade de caracteres e ajusta altura automaticamente
     const descricaoTextarea = document.getElementById('descricao');
     if (descricaoTextarea) {
         const contador = document.createElement('div');
@@ -243,6 +243,15 @@ console.log('Iniciando cadProjeto.js...');
         
         descricaoTextarea.parentNode.insertBefore(contador, descricaoTextarea.nextSibling);
         
+        // Função para ajustar altura do textarea
+        function ajustarAltura() {
+            descricaoTextarea.style.height = 'auto';
+            descricaoTextarea.style.height = descricaoTextarea.scrollHeight + 'px';
+        }
+        
+        // Ajustar altura inicial
+        ajustarAltura();
+        
         descricaoTextarea.addEventListener('input', function() {
             const atual = this.value.length;
             contador.textContent = `${atual} / 2000`;
@@ -252,6 +261,9 @@ console.log('Iniciando cadProjeto.js...');
             } else {
                 contador.style.color = '#666';
             }
+            
+            // Ajustar altura dinamicamente
+            ajustarAltura();
         });
     }
 
@@ -264,7 +276,10 @@ console.log('Iniciando cadProjeto.js...');
             const nomeProjeto = document.getElementById('nome-projeto').value.trim();
             const eixo = document.getElementById('eixo').value;
             const categoria = document.getElementById('categoria').value;
-            const capa = document.getElementById('foto-capa').files[0];
+            const capaInput = document.getElementById('foto-capa');
+            const capa = capaInput ? capaInput.files[0] : null;
+            const projetoAtual = (typeof window.projetoSelecionado === 'object' && window.projetoSelecionado !== null) ? window.projetoSelecionado : null;
+            const possuiCapaExistente = projetoAtual && projetoAtual.capaPath;
             
             // verifica se as variáveis obrigatórias estão preenchidas
             if (!nomeProjeto) {
@@ -285,7 +300,7 @@ console.log('Iniciando cadProjeto.js...');
                 return false;
             }
             
-            if (!capa) {
+            if (!capa && !possuiCapaExistente) {
                 alert('Imagem de capa é obrigatória!');
                 e.preventDefault();
                 return false;
@@ -293,10 +308,10 @@ console.log('Iniciando cadProjeto.js...');
             
             console.log('Validações OK, enviando formulário...');
             
-            // mostra que o projeto está sendo criado
+            // mostra que o projeto está sendo criado ou atualizado
             const botaoSubmit = document.getElementById('bt-criar-projeto');
             if (botaoSubmit) {
-                botaoSubmit.textContent = 'Criando projeto...';
+                botaoSubmit.textContent = projetoAtual ? 'Salvando alterações...' : 'Criando projeto...';
                 botaoSubmit.disabled = true;
             }
             

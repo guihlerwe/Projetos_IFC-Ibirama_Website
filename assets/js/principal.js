@@ -9,9 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach(card => {
         card.addEventListener('click', function() {
-            const idProjeto = this.getAttribute('data-id');
-            // Redirecionar para página de detalhes do projeto
-            window.location.href = `projeto.php?id=${idProjeto}`;
+            const viewUrl = this.dataset.viewUrl;
+            if (viewUrl) {
+                window.location.href = viewUrl;
+            }
         });
     });
 

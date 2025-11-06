@@ -3,6 +3,7 @@ session_start();
 $nome = $_SESSION['nome'] ?? '';
 $sobrenome = $_SESSION['sobrenome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
+$idPessoa = $_SESSION['idPessoa'] ?? null;
 
 
 // Conexão com o banco de dados
@@ -19,18 +20,43 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
-// Buscar todos os projetos cadastrados
-// /*
-//if ($nome === 'Select nomeCoordenador from projeto where idCoordenador = ' . $_SESSION['idUsuario']) {
-  //  $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto ORDER BY nome ASC";
- //   $resultado = $conn->query($sql);
-//}else{
-   // $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto WHERE idCoordenador = " . $_SESSION['idUsuario'] . " ORDER BY nome ASC";
-   // $resultado = $conn->query($sql);
-//}*/
+$projetos = [];
 
-   // $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto WHERE nomeCoordenador = " . $_SESSION['nome'] . " ORDER BY nome ASC";
-    //$resultado = $conn->query($sql);
+if ($idPessoa) {
+    if ($tipo === 'coordenador') {
+        $stmt = $conn->prepare("SELECT p.idProjeto, p.nome, p.tipo, p.categoria, p.capa, p.textoSobre, p.anoInicio FROM projeto p INNER JOIN pessoa_projeto pp ON pp.idProjeto = p.idProjeto WHERE pp.idPessoa = ? AND pp.tipoPessoa = 'coordenador' ORDER BY p.nome ASC");
+        if ($stmt) {
+            $stmt->bind_param('i', $idPessoa);
+            if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                $projetos = $resultado->fetch_all(MYSQLI_ASSOC);
+            }
+            $stmt->close();
+        }
+    } elseif ($tipo === 'bolsista') {
+        $stmt = $conn->prepare("SELECT p.idProjeto, p.nome, p.tipo, p.categoria, p.capa, p.textoSobre, p.anoInicio FROM projeto p INNER JOIN pessoa_projeto pp ON pp.idProjeto = p.idProjeto WHERE pp.idPessoa = ? AND pp.tipoPessoa = 'bolsista' ORDER BY p.nome ASC");
+        if ($stmt) {
+            $stmt->bind_param('i', $idPessoa);
+            if ($stmt->execute()) {
+                $resultado = $stmt->get_result();
+                $projetos = $resultado->fetch_all(MYSQLI_ASSOC);
+            }
+            $stmt->close();
+        }
+    } else {
+        $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto ORDER BY nome ASC";
+        if ($resultado = $conn->query($sql)) {
+            $projetos = $resultado->fetch_all(MYSQLI_ASSOC);
+            $resultado->free();
+        }
+    }
+} else {
+    $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto ORDER BY nome ASC";
+    if ($resultado = $conn->query($sql)) {
+        $projetos = $resultado->fetch_all(MYSQLI_ASSOC);
+        $resultado->free();
+    }
+}
 
 ?>
 
@@ -94,11 +120,11 @@ $conn->set_charset("utf8");
 
         <div class="projects-grid">
             <?php
-            if ($resultado->num_rows > 0) {
-                while($projeto = $resultado->fetch_assoc()) {
-                    // Determinar a classe de cor baseada no tipo
+            $placeholderCapa = '../assets/photos/campus-image.jpg';
+            if (!empty($projetos)) {
+                foreach ($projetos as $projeto) {
                     $corClass = '';
-                    switch($projeto['tipo']) {
+                    switch ($projeto['tipo']) {
                         case 'pesquisa':
                             $corClass = 'azul';
                             break;
@@ -109,24 +135,45 @@ $conn->set_charset("utf8");
                             $corClass = 'vermelho';
                             break;
                     }
-                    
-                    // Caminho da imagem de capa
-                    $imagemCapa = !empty($projeto['capa']) ? '../assets/photos/projetos/' . $projeto['capa'] : '../assets/photos/campus-image.jpg';
-                    
-                    // Limitar o texto do nome para não quebrar o layout
-                    $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];
-                    
-                    echo '<div class="project-card ' . ' tipo-' . $projeto['tipo'] . ' categoria-' . $projeto['categoria'] . '" data-id="' . $projeto['idProjeto'] . '" data-tipo="' . $projeto['tipo'] . '" data-categoria="' . $projeto['categoria'] . '">';
-                    echo '<img src="' . $imagemCapa . '" alt="' . htmlspecialchars($projeto['nome']) . '" class="project-image">';
+
+                    $imagemCapa = $placeholderCapa;
+                    if (!empty($projeto['capa'])) {
+                        $basePath = '../assets/photos/projetos/' . $projeto['capa'];
+                        $imagemCapa = (pathinfo($basePath, PATHINFO_EXTENSION)) ? $basePath : $basePath . '/capa.jpg';
+                    }
+
+                    $nomeCompleto = $projeto['nome'] ?? '';
+                    $nomeExibido = (strlen($nomeCompleto) > 40) ? substr($nomeCompleto, 0, 40) . '...' : $nomeCompleto;
+
+                    $idProjeto = (int) ($projeto['idProjeto'] ?? 0);
+                    $viewUrl = 'projeto.php?id=' . $idProjeto;
+                    $badgeMarkup = '';
+
+                    $tipoProjeto = htmlspecialchars($projeto['tipo']);
+                    $categoriaProjeto = htmlspecialchars($projeto['categoria']);
+                    $cardClasses = 'project-card tipo-' . $tipoProjeto . ' categoria-' . $categoriaProjeto;
+
+                	if ($tipo === 'coordenador') {
+                        $viewUrl = 'menuCad-projeto.php?idProjeto=' . $idProjeto;
+                        $cardClasses .= ' project-card-editable';
+                        $badgeMarkup = '<span class="project-edit-badge">Editar</span>';
+                    }
+
+                    echo '<div class="' . $cardClasses . '" data-id="' . $idProjeto . '" data-tipo="' . $tipoProjeto . '" data-categoria="' . $categoriaProjeto . '" data-view-url="' . htmlspecialchars($viewUrl) . '">';
+                    echo '<img src="' . htmlspecialchars($imagemCapa) . '" alt="' . htmlspecialchars($nomeCompleto) . '" class="project-image" onerror="this.onerror=null;this.src=\'' . $placeholderCapa . '\';">';
+                    echo $badgeMarkup;
                     echo '<div class="project-label ' . $corClass . '">' . htmlspecialchars($nomeExibido) . '</div>';
                     echo '</div>';
                 }
             } else {
-                // Caso não tenha projetos cadastrados, mostrar mensagem
                 echo '<div class="no-projects">';
-                echo '<p id="no-projects">Nenhum projeto cadastrado ainda.</p>';
                 if ($tipo === 'coordenador') {
+                    echo '<p id="no-projects">Você ainda não possui projetos cadastrados.</p>';
                     echo '<p><a href="menuCad-projeto.php">Clique aqui para cadastrar o primeiro projeto</a></p>';
+                } elseif ($tipo === 'bolsista') {
+                    echo '<p id="no-projects">Você ainda não participa de nenhum projeto.</p>';
+                } else {
+                    echo '<p id="no-projects">Nenhum projeto encontrado.</p>';
                 }
                 echo '</div>';
             }

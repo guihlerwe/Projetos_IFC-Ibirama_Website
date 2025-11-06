@@ -74,10 +74,20 @@
             if (!is_dir($pastaFinalDestino)) {
                 mkdir($pastaFinalDestino, 0777, true);
             }
-            return rename(
-                $pastaTempDestino . $nomeArquivo,
-                $pastaFinalDestino . $nomeArquivo
-            );
+                if (preg_match('/^(capa|banner)\./', $nomeArquivo, $matches)) {
+                    $prefixo = $matches[1];
+                    $existentes = glob($pastaFinalDestino . $prefixo . '.*');
+                    if ($existentes) {
+                        foreach ($existentes as $arquivoExistente) {
+                            @unlink($arquivoExistente);
+                        }
+                    }
+                }
+
+                return rename(
+                    $pastaTempDestino . $nomeArquivo,
+                    $pastaFinalDestino . $nomeArquivo
+                );
         }
         return false;
     }
@@ -87,46 +97,75 @@
         die("Erro: Método de requisição inválido.");
     }
 
-    // cria uma pasta única para o projeto (usa nome do projeto ou um id único)
+    $idProjeto = isset($_POST['id-projeto']) ? (int) $_POST['id-projeto'] : 0;
+    $modoEdicao = $idProjeto > 0;
+    $idPessoaLogado = $_SESSION['idPessoa'] ?? null;
+    $dadosProjetoAnterior = null;
+    $pastaProjetoExistente = null;
+
+    if ($modoEdicao) {
+        if (!$idPessoaLogado) {
+            die("Erro: usuário não autenticado.");
+        }
+
+        $stmtProjeto = $conn->prepare("SELECT p.* FROM projeto p INNER JOIN pessoa_projeto pp ON pp.idProjeto = p.idProjeto AND pp.tipoPessoa = 'coordenador' WHERE p.idProjeto = ? AND pp.idPessoa = ?");
+        if (!$stmtProjeto) {
+            die("Erro interno ao preparar consulta de projeto: " . $conn->error);
+        }
+
+        $stmtProjeto->bind_param('ii', $idProjeto, $idPessoaLogado);
+        $stmtProjeto->execute();
+        $resultadoProjeto = $stmtProjeto->get_result();
+        if (!$resultadoProjeto || $resultadoProjeto->num_rows === 0) {
+            $stmtProjeto->close();
+            die("Erro: projeto não encontrado ou você não possui permissão para editá-lo.");
+        }
+
+        $dadosProjetoAnterior = $resultadoProjeto->fetch_assoc();
+        $pastaProjetoExistente = $dadosProjetoAnterior['capa'] ?? $dadosProjetoAnterior['banner'] ?? null;
+        $stmtProjeto->close();
+    }
+
     $nomeProjeto = trim($_POST["nome-projeto"] ?? '');
-    $nomeProjetoPasta = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower($nomeProjeto));
+    $nomeProjetoSanitizado = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower($nomeProjeto));
+    if ($nomeProjetoSanitizado === '') {
+        $nomeProjetoSanitizado = 'projeto_' . ($modoEdicao ? $idProjeto : time());
+    }
+
+    $nomeProjetoPasta = $modoEdicao ? ($pastaProjetoExistente ?: $nomeProjetoSanitizado) : $nomeProjetoSanitizado;
     $pastaImagensProjeto = $pastaBaseImagens . $nomeProjetoPasta . '/';
-    // Criar pasta temporária se não existir
+
     if (!is_dir($pastaTempImagens)) {
         mkdir($pastaTempImagens, 0777, true);
     }
-    
-    // Limpar arquivos antigos da pasta temporária
+
     limparPastaTemp($pastaTempImagens);
 
-    // processa uploads de imagens para pasta temporária
     $nomeBannerArquivo = salvarImagemTemp('banner', $pastaTempImagens);
     $nomeCapaArquivo = salvarImagemTemp('capa', $pastaTempImagens);
-    
-    // Salva apenas o nome da pasta do projeto no banco
-    $nomeBanner = $nomeBannerArquivo ? $nomeProjetoPasta : null;
-    $nomeCapa = $nomeCapaArquivo ? $nomeProjetoPasta : null;
 
-    // captura dados do formulário com validação
-    // $nomeProjeto já definido acima
+    $nomeBanner = $modoEdicao ? ($dadosProjetoAnterior['banner'] ?? null) : null;
+    $nomeCapa = $modoEdicao ? ($dadosProjetoAnterior['capa'] ?? null) : null;
+
+    if ($nomeBannerArquivo) {
+        $nomeBanner = $nomeProjetoPasta;
+    }
+    if ($nomeCapaArquivo) {
+        $nomeCapa = $nomeProjetoPasta;
+    }
+
     $tipo = $_POST["eixo"] ?? '';
-
-    //  categoria IMEDIATAMENTE após receber do formulário
     $categoriaOriginal = $_POST["categoria"] ?? '';
 
-    // Mapear valores do formulário para os valores do ENUM
-    // Mapear valores do formulário para os valores do ENUM
     $categoriasMap = [
-        'ciencias_naturais' => 'ciencias-naturais',      // underscore → hífen
-        'ciencias_humanas' => 'ciencias-humanas',        // underscore → hífen
-        'linguagens' => 'linguagens',                    // igual
-        'matematica' => 'matematica',                    // igual
-        'administracao' => 'administracao',              // igual
-        'informatica' => 'informatica',                  // igual
-        'vestuario' => 'vestuario',                      // igual
-        'moda' => 'moda',                                // igual
-        
-        // Manter também os valores com acentos caso venham do formulário
+        'ciencias_naturais' => 'ciencias-naturais',
+        'ciencias_humanas' => 'ciencias-humanas',
+        'linguagens' => 'linguagens',
+        'matematica' => 'matematica',
+        'administracao' => 'administracao',
+        'informatica' => 'informatica',
+        'vestuario' => 'vestuario',
+        'moda' => 'moda',
         'Ciências Naturais' => 'ciencias-naturais',
         'Ciências Humanas' => 'ciencias-humanas',
         'Linguagens' => 'linguagens',
@@ -137,25 +176,22 @@
         'Moda' => 'moda'
     ];
 
-    // Converter o valor recebido para o formato do banco
     $categoria = $categoriasMap[$categoriaOriginal] ?? strtolower(str_replace(' ', '-', $categoriaOriginal));
 
-    // Tratamento do ano de início
-    $anoAtual = (int)date('Y');
+    $anoAtual = (int) date('Y');
     $anoInicioRaw = trim($_POST["ano-inicio"] ?? '');
-    $anoInicio = $anoAtual; // valor padrão é o ano atual
-    
+    $anoInicio = $modoEdicao && isset($dadosProjetoAnterior['anoInicio']) ? (int) $dadosProjetoAnterior['anoInicio'] : $anoAtual;
+
     if (!empty($anoInicioRaw)) {
-        // extrai apenas números da variável ano-inicio
         preg_match('/\d{4}/', $anoInicioRaw, $matches);
         if (!empty($matches)) {
-            $anoTemp = (int)$matches[0];
-            // valida se é um ano válido (entre 2010 e ano atual)
+            $anoTemp = (int) $matches[0];
             if ($anoTemp >= 2010 && $anoTemp <= $anoAtual) {
                 $anoInicio = $anoTemp;
             }
         }
     }
+
     $txtLinkInscricao = trim($_POST["txt-link-inscricao"] ?? '');
     $txtSobre = trim($_POST["descricao"] ?? '');
     $txtLinkSite = trim($_POST["site-projeto"] ?? '');
@@ -163,10 +199,30 @@
     $email = trim($_POST["email"] ?? '');
     $numeroTelefone = trim($_POST["numero-telefone"] ?? '');
     $instagram = trim($_POST["instagram"] ?? '');
-    $nomeCoordenador = trim($_POST["nome-coordenador"] ?? '');
-    $nomeBolsista = trim($_POST["nome-bolsista"] ?? '');
 
-    // validações das variaveis obrigatórias
+    $coordenadoresIdsRaw = $_POST['coordenadores_ids'] ?? '';
+    $bolsistasIdsRaw = $_POST['bolsistas_ids'] ?? '';
+
+    $coordenadoresArray = [];
+    foreach (array_filter(array_map('trim', explode(',', $coordenadoresIdsRaw))) as $idCoordenador) {
+        if ($idCoordenador !== '' && ctype_digit($idCoordenador)) {
+            $coordenadoresArray[] = (int) $idCoordenador;
+        }
+    }
+    $coordenadoresArray = array_values(array_unique($coordenadoresArray));
+
+    if ($modoEdicao && $idPessoaLogado && !in_array((int) $idPessoaLogado, $coordenadoresArray, true)) {
+        $coordenadoresArray[] = (int) $idPessoaLogado;
+    }
+
+    $bolsistasArray = [];
+    foreach (array_filter(array_map('trim', explode(',', $bolsistasIdsRaw))) as $idBolsista) {
+        if ($idBolsista !== '' && ctype_digit($idBolsista)) {
+            $bolsistasArray[] = (int) $idBolsista;
+        }
+    }
+    $bolsistasArray = array_values(array_unique($bolsistasArray));
+
     if (empty($nomeProjeto)) {
         die("Erro: Nome do projeto é obrigatório.");
     }
@@ -179,50 +235,70 @@
         die("Erro: Categoria é obrigatória.");
     }
 
-    // Verificar se a tabela existe e sua estrutura
+    if (count($coordenadoresArray) === 0) {
+        die("Erro: selecione ao menos um coordenador para o projeto.");
+    }
+
     $result = $conn->query("DESCRIBE projeto");
     if (!$result) {
         die("Erro: Tabela 'projeto' não encontrada. " . $conn->error);
     }
 
-    // prepara e executa a consulta
-    $stmt = $conn->prepare("
-        INSERT INTO projeto 
-        (nome, tipo, categoria, anoInicio, linkParaInscricao, textoSobre, linkSite, email, numero, linkInstagram, capa, banner, linkBolsista) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+    if ($modoEdicao) {
+        $stmt = $conn->prepare("UPDATE projeto SET nome = ?, tipo = ?, categoria = ?, anoInicio = ?, linkParaInscricao = ?, textoSobre = ?, linkSite = ?, email = ?, numero = ?, linkInstagram = ?, capa = ?, banner = ?, linkBolsista = ? WHERE idProjeto = ?");
+        if (!$stmt) {
+            die("Erro na preparação da consulta de atualização: " . $conn->error);
+        }
 
-    if (!$stmt) {
-        die("Erro na preparação da consulta: " . $conn->error);
+        $stmt->bind_param(
+            "sssisssssssssi",
+            $nomeProjeto,
+            $tipo,
+            $categoria,
+            $anoInicio,
+            $txtLinkInscricao,
+            $txtSobre,
+            $txtLinkSite,
+            $email,
+            $numeroTelefone,
+            $instagram,
+            $nomeCapa,
+            $nomeBanner,
+            $txtLinkBolsista,
+            $idProjeto
+        );
+    } else {
+        $stmt = $conn->prepare("INSERT INTO projeto (nome, tipo, categoria, anoInicio, linkParaInscricao, textoSobre, linkSite, email, numero, linkInstagram, capa, banner, linkBolsista) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        if (!$stmt) {
+            die("Erro na preparação da consulta de inserção: " . $conn->error);
+        }
+
+        $stmt->bind_param(
+            "sssisssssssss",
+            $nomeProjeto,
+            $tipo,
+            $categoria,
+            $anoInicio,
+            $txtLinkInscricao,
+            $txtSobre,
+            $txtLinkSite,
+            $email,
+            $numeroTelefone,
+            $instagram,
+            $nomeCapa,
+            $nomeBanner,
+            $txtLinkBolsista
+        );
     }
 
-    $stmt->bind_param(
-        "sssisssssssss",
-        $nomeProjeto,
-        $tipo,
-        $categoria,
-        $anoInicio,
-        $txtLinkInscricao,
-        $txtSobre,
-        $txtLinkSite,
-        $email,
-        $numeroTelefone,
-        $instagram,
-        $nomeCapa,
-        $nomeBanner,
-        $txtLinkBolsista
-    );
-
     if ($stmt->execute()) {
-        $idProjeto = $conn->insert_id;
-        
-        // Criar pasta final do projeto
+        $idProjetoExecutado = $modoEdicao ? $idProjeto : $conn->insert_id;
+
         $pastaFinalProjeto = $pastaBaseImagens . $nomeProjetoPasta . '/';
         if (!is_dir($pastaFinalProjeto)) {
             mkdir($pastaFinalProjeto, 0777, true);
         }
 
-        // Mover imagens da pasta temporária para a pasta final
         if ($nomeBannerArquivo) {
             moverImagensParaProjeto($nomeBannerArquivo, $pastaTempImagens, $pastaFinalProjeto);
         }
@@ -230,32 +306,42 @@
             moverImagensParaProjeto($nomeCapaArquivo, $pastaTempImagens, $pastaFinalProjeto);
         }
 
-        // Salvar relação com coordenador e bolsista na tabela pessoa_projeto
-        $coordenadorId = $_POST['coordenador_id'] ?? null;
-        $bolsistaId = $_POST['bolsista_id'] ?? null;
-        if ($coordenadorId) {
+        limparPastaTemp($pastaTempImagens);
+
+        if ($modoEdicao) {
+            $stmtDelete = $conn->prepare("DELETE FROM pessoa_projeto WHERE idProjeto = ?");
+            if ($stmtDelete) {
+                $stmtDelete->bind_param('i', $idProjetoExecutado);
+                $stmtDelete->execute();
+                $stmtDelete->close();
+            }
+        }
+
+        foreach ($coordenadoresArray as $coordenadorId) {
             $stmtPessoa = $conn->prepare("INSERT INTO pessoa_projeto (idPessoa, idProjeto, tipoPessoa) VALUES (?, ?, 'coordenador')");
-            $stmtPessoa->bind_param("ii", $coordenadorId, $idProjeto);
-            $stmtPessoa->execute();
-            $stmtPessoa->close();
+            if ($stmtPessoa) {
+                $stmtPessoa->bind_param('ii', $coordenadorId, $idProjetoExecutado);
+                $stmtPessoa->execute();
+                $stmtPessoa->close();
+            }
         }
-        if ($bolsistaId) {
+
+        foreach ($bolsistasArray as $bolsistaId) {
             $stmtPessoa = $conn->prepare("INSERT INTO pessoa_projeto (idPessoa, idProjeto, tipoPessoa) VALUES (?, ?, 'bolsista')");
-            $stmtPessoa->bind_param("ii", $bolsistaId, $idProjeto);
-            $stmtPessoa->execute();
-            $stmtPessoa->close();
+            if ($stmtPessoa) {
+                $stmtPessoa->bind_param('ii', $bolsistaId, $idProjetoExecutado);
+                $stmtPessoa->execute();
+                $stmtPessoa->close();
+            }
         }
 
-        // Limpar pasta temporária
-        limparPastaTemp($pastaTempImagens);
-
-        echo "<div style='color: green; font-weight: bold;'>✅ Projeto cadastrado com sucesso!</div>";
-        echo "<script>alert('Projeto cadastrado com sucesso!'); window.location.href='principal.php';</script>";
+        $mensagem = $modoEdicao ? 'Projeto atualizado com sucesso!' : 'Projeto cadastrado com sucesso!';
+        echo "<div style='color: green; font-weight: bold;'>✅ {$mensagem}</div>";
+        echo "<script>alert('{$mensagem}'); window.location.href='menuProjetos.php';</script>";
     } else {
-        // Se falhou, limpar arquivos temporários
         limparPastaTemp($pastaTempImagens);
-        
-        echo "<div style='color: red; font-weight: bold;'>❌ Erro ao cadastrar projeto:</div>";
+        $acao = $modoEdicao ? 'atualizar' : 'cadastrar';
+        echo "<div style='color: red; font-weight: bold;'>❌ Erro ao {$acao} projeto:</div>";
         echo "<p>Erro MySQL: " . $stmt->error . "</p>";
         echo "<p>Errno: " . $stmt->errno . "</p>";
     }

@@ -104,8 +104,9 @@ $resultado = $conn->query($sql);
                     // Limitar o texto do nome para não quebrar o layout
                     $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];
                     
-                    echo '<div class="project-card ' . ' tipo-' . $projeto['tipo'] . ' categoria-' . $projeto['categoria'] . '" data-id="' . $projeto['idProjeto'] . '" data-tipo="' . $projeto['tipo'] . '" data-categoria="' . $projeto['categoria'] . '">';
-                    echo '<img src="' . $imagemCapa . '" alt="' . htmlspecialchars($projeto['nome']) . '" class="project-image">';
+                    $viewUrl = 'projeto.php?id=' . (int) $projeto['idProjeto'];
+                    echo '<div class="project-card tipo-' . htmlspecialchars($projeto['tipo']) . ' categoria-' . htmlspecialchars($projeto['categoria']) . '" data-id="' . (int) $projeto['idProjeto'] . '" data-tipo="' . htmlspecialchars($projeto['tipo']) . '" data-categoria="' . htmlspecialchars($projeto['categoria']) . '" data-view-url="' . htmlspecialchars($viewUrl) . '">';
+                    echo '<img src="' . htmlspecialchars($imagemCapa) . '" alt="' . htmlspecialchars($projeto['nome']) . '" class="project-image" onerror="this.onerror=null;this.src=\'assets/photos/campus-image.jpg\';">';
                     echo '<div class="project-label ' . $corClass . '">' . htmlspecialchars($nomeExibido) . '</div>';
                     echo '</div>';
                 }

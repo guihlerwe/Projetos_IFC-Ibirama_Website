@@ -11,6 +11,8 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
     --dropdown-bg: #ffffff;
     --dropdown-hover: #e0e0e0;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
 }
 
 /* Modo escuro automático baseado na preferência do sistema */
@@ -28,12 +30,19 @@
         --shadow-color: rgba(0, 0, 0, 0.3);
         --dropdown-bg: #2a2a2a;
         --dropdown-hover: #3a3a3a;
+        --card-bg: #2a2a2a;
+        --input-bg: #2a2a2a;
     }
 }
 
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
 .monitoria-nav{
-    background-color: #eeeeee;
-    color: rgb(0, 0, 0);
+    background-color: var(--nav-hover);
+    color: var(--text-color);
 }
 
 .barra-pesquisar {
@@ -51,33 +60,44 @@
     border-radius: 20px;
     width: 200px;
     font-size: 14px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
 }
 
 .btn-filtrar {
     padding: 8px 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
-    background-color: #ffffff;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
 }
 
-.btn-filtrar.tecnico:hover {
-    background-color:#2e7d32;
-    color: rgb(217, 233, 221);
+/* Hover e Estado ativo para cada categoria */
+.btn-filtrar.tecnico:hover,
+.btn-filtrar.tecnico.ativo {
+    background-color: #2e7d32 !important;
+    color: white !important;
     text-shadow: none;
+    border-color: #2e7d32 !important;
 }
 
-.btn-filtrar.superior:hover {
-    background-color: #8F4CA0;
-    color: rgb(217, 233, 221);
+.btn-filtrar.superior:hover,
+.btn-filtrar.superior.ativo {
+    background-color: #8F4CA0 !important;
+    color: white !important;
     text-shadow: none;
+    border-color: #8F4CA0 !important;
 }
 
-.btn-filtrar.geral:hover {
-    background-color:#d32f2f;
-    color: rgb(217, 233, 221);
+.btn-filtrar.geral:hover,
+.btn-filtrar.geral.ativo {
+    background-color: #d32f2f !important;
+    color: white !important;
     text-shadow: none;
+    border-color: #d32f2f !important;
 }
 
 .dropdown-arrow {
@@ -85,7 +105,7 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid #333;
+    border-top: 5px solid var(--text-color);
 }
 
 .projects-grid {
@@ -158,16 +178,17 @@
     position: relative;
     border-radius: 2vh;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px var(--shadow-color);
     aspect-ratio: 16/9;
-    transition: all 0.3s ease; /* Adiciona transição suave para todos os efeitos */
+    transition: all 0.3s ease;
+    background-color: var(--card-bg);
 }
 
 /* Efeito quando o mouse passa por cima do cartão */
 .project-card:hover {
-    transform: translateY(-10px); /* Move o cartão 10px para cima */
-    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada e distante */
-    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    transform: translateY(-10px);
+    box-shadow: 0 15px 20px var(--shadow-color);
+    cursor: pointer;
 }
 
 /* Opcional: efeito sutil de zoom na imagem ao passar o mouse */
@@ -183,6 +204,18 @@
     footer .footer-container {
         flex-direction: column;
         align-items: flex-start;
+    }
+}
+
+/* Animação para aparecer cards */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

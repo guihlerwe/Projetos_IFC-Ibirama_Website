@@ -1,5 +1,9 @@
 body {
   font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary-bg);
+  color: var(--text-primary);
 }
 
 /* Faz inputs e textareas herdarem a mesma fonte */
@@ -9,11 +13,12 @@ input, textarea, select, button {
 
 .container-conta {
   max-width: 950px;
-  margin: 50px auto;
+  margin: 0 auto;
+  margin-top: 90px;
   padding: 40px;
-  background-color: #fff;
+  background-color: var(--card-bg);
   border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px var(--card-shadow);
   text-align: center;
   font-family: "Poppins", sans-serif;
 }
@@ -21,8 +26,14 @@ input, textarea, select, button {
 .titulo-conta {
   font-size: 2rem;
   font-weight: 700;
-  color: #1e4d2b;
+  color: var(--text-primary);
   margin-bottom: 40px;
+}
+
+.container-formulario {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .conteudo-conta {
@@ -79,15 +90,17 @@ input, textarea, select, button {
 .linha input, .custom-select, .select-items, #matricula {
   flex: 1;
   padding: 10px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid var(--input-border);
   border-radius: 10px;
   font-size: 1rem;
   outline: none;
   transition: border-color 0.2s;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 .linha input:focus {
-  border-color: #1e4d2b;
+  border-color: var(--input-focus);
 }
 /* Garante alinhamento uniforme entre select customizado e inputs */
 .linha .custom-select {
@@ -114,11 +127,12 @@ input, textarea, select, button {
 .linha input.campo {
   height: 42px;
   padding: 0 14px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border);
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 16px;
-  background-color: #fff;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 /* Centralizar verticalmente o texto do select */
@@ -140,10 +154,11 @@ input, textarea, select, button {
     position: relative;
     display: block;
     cursor: pointer;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
     border-radius: 10px;
     padding: 8px 16px;
-    background-color: #fff;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
     user-select: none;
     min-width: 150px;
     margin-top: 5px;
@@ -155,6 +170,7 @@ input, textarea, select, button {
     width: 100%;
     font-size: 16px;
     display: block;
+    color: var(--text-primary);
 }
 
 /* Oculta as opções por padrão */
@@ -164,10 +180,10 @@ input, textarea, select, button {
     top: calc(100% + 5px);
     left: 0;
     right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: var(--card-bg);
+    border: 1px solid var(--input-border);
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px var(--card-shadow);
     z-index: 99;
     overflow: hidden;
     animation: expandDown 0.3s ease forwards;
@@ -182,10 +198,11 @@ input, textarea, select, button {
 .select-items div {
     padding: 8px 12px;
     transition: background-color 0.2s;
+    color: var(--text-primary);
 }
 
 .select-items div:hover {
-    background-color: #f0f0f0;
+    background-color: var(--nav-active);
 }
 
 /* === Correção de alinhamento entre Curso e Matrícula === */
@@ -218,18 +235,20 @@ input#matricula-perfil {
 .descricao textarea {
   width: 100%;
   min-height: 120px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid var(--input-border);
   border-radius: 10px;
   padding: 10px;
   resize: none;
   font-size: 1rem;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 .descricao small {
   display: block;
   text-align: right;
   margin-top: 5px;
-  color: #777;
+  color: var(--text-secondary);
 }
 
 /* Botões iguais ao cadastro */

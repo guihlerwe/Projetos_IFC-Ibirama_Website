@@ -50,7 +50,7 @@ if ($conn->connect_error) {
                 <form action="login.php" method="POST">            
                     <div class="imagem-container">
                         <img src="../assets/photos/campus-image.jpg" id="foto-ifc">
-                        <h1 class="titulo-sobre-imagem">Login</h1>
+                        <h1 class="titulo-sobre-imagem">Entrar</h1>
                     </div>
                     <p class="subtitulo">Preencha os dados para entrar.</p>
                     <fieldset class="grupo">

@@ -57,6 +57,55 @@ while ($row = $resM->fetch_assoc()) {
 $stmtM->close();
 $conn->close();
 
+
+function gerarSrcFotoPerfil(?string $fotoPerfil): string
+{
+    $fallback = 'assets/photos/fotos_perfil/sem_foto_perfil.jpg';
+
+    if ($fotoPerfil === null) {
+        return $fallback;
+    }
+
+    $fotoPerfil = trim((string) $fotoPerfil);
+    if ($fotoPerfil === '') {
+        return $fallback;
+    }
+
+    if (stripos($fotoPerfil, 'data:image/') === 0 || stripos($fotoPerfil, 'http://') === 0 || stripos($fotoPerfil, 'https://') === 0) {
+        return $fotoPerfil;
+    }
+
+    if (strpos($fotoPerfil, 'assets/') === 0 || strpos($fotoPerfil, 'uploads/') === 0) {
+        return $fotoPerfil;
+    }
+
+    if (!ctype_print($fotoPerfil)) {
+        static $finfo = null;
+        if ($finfo === null && class_exists('finfo')) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+        }
+
+        $mimeType = ($finfo instanceof finfo) ? $finfo->buffer($fotoPerfil) : null;
+        if (!$mimeType || strpos($mimeType, 'image/') !== 0) {
+            $mimeType = 'image/jpeg';
+        }
+
+        return 'data:' . $mimeType . ';base64,' . base64_encode($fotoPerfil);
+    }
+
+    return 'assets/photos/fotos_perfil/' . ltrim($fotoPerfil, '/');
+}
+
+foreach ($coordenadores as &$coord) {
+    $coord['foto_src'] = gerarSrcFotoPerfil($coord['foto_perfil'] ?? null);
+}
+unset($coord);
+
+foreach ($bolsistas as &$bol) {
+    $bol['foto_src'] = gerarSrcFotoPerfil($bol['foto_perfil'] ?? null);
+}
+unset($bol);
+
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
 ?>
@@ -164,11 +213,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                                         <?php foreach ($coordenadores as $coord): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
-                                                    <?php if (!empty($coord['foto_perfil'])): ?>
-                                                        <img src="assets/photos/fotos_perfil/<?php echo htmlspecialchars($coord['foto_perfil']); ?>" alt="Foto do coordenador">
-                                                    <?php else: ?>
-                                                        <span>👤</span>
-                                                    <?php endif; ?>
+                                                    <img src="<?php echo htmlspecialchars($coord['foto_src']); ?>" alt="Foto do coordenador">
                                                 </div>
                                                 <span class="nome-membro"><?php echo htmlspecialchars($coord['nome'] . ' ' . $coord['sobrenome']); ?></span>
                                             </div>
@@ -183,11 +228,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                                         <?php foreach ($bolsistas as $bol): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
-                                                    <?php if (!empty($bol['foto_perfil'])): ?>
-                                                        <img src="assets/photos/fotos_perfil/<?php echo htmlspecialchars($bol['foto_perfil']); ?>" alt="Foto do bolsista">
-                                                    <?php else: ?>
-                                                        <span>👤</span>
-                                                    <?php endif; ?>
+                                                    <img src="<?php echo htmlspecialchars($bol['foto_src']); ?>" alt="Foto do bolsista">
                                                 </div>
                                                 <span class="nome-membro"><?php echo htmlspecialchars($bol['nome'] . ' ' . $bol['sobrenome']); ?></span>
                                             </div>

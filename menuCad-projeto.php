@@ -36,6 +36,159 @@ if ($result = $conn->query($sqlb)) {
     $result->free();
 }
 
+$placeholderPerfil = '../assets/photos/fotos_perfil/sem_foto_perfil.jpg';
+
+function gerarSrcPerfil(?string $foto, string $placeholder)
+{
+    if ($foto === null) {
+        return $placeholder;
+    }
+
+    $foto = trim((string) $foto);
+    if ($foto === '') {
+        return $placeholder;
+    }
+
+    if (stripos($foto, 'data:image/') === 0 || stripos($foto, 'http://') === 0 || stripos($foto, 'https://') === 0) {
+        return $foto;
+    }
+
+    if (strpos($foto, '../') === 0 || strpos($foto, '/assets') === 0 || strpos($foto, 'assets/') === 0) {
+        return $foto;
+    }
+
+    if (!ctype_print($foto)) {
+        static $finfo = null;
+        if ($finfo === null && class_exists('finfo')) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+        }
+        $mimeType = ($finfo instanceof finfo) ? $finfo->buffer($foto) : null;
+        if (!$mimeType || strpos($mimeType, 'image/') !== 0) {
+            $mimeType = 'image/jpeg';
+        }
+
+        return 'data:' . $mimeType . ';base64,' . base64_encode($foto);
+    }
+
+    return '../assets/photos/fotos_perfil/' . ltrim($foto, '/');
+}
+
+foreach ($coordenadores as &$coord) {
+    $coord['foto_src'] = gerarSrcPerfil($coord['foto_perfil'] ?? null, $placeholderPerfil);
+    if (isset($coord['foto_perfil']) && !mb_check_encoding($coord['foto_perfil'], 'UTF-8')) {
+        unset($coord['foto_perfil']);
+    }
+}
+unset($coord);
+
+foreach ($bolsistas as &$bol) {
+    $bol['foto_src'] = gerarSrcPerfil($bol['foto_perfil'] ?? null, $placeholderPerfil);
+    if (isset($bol['foto_perfil']) && !mb_check_encoding($bol['foto_perfil'], 'UTF-8')) {
+        unset($bol['foto_perfil']);
+    }
+}
+unset($bol);
+
+$idPessoaLogado = $_SESSION['idPessoa'] ?? null;
+$idProjetoEditar = isset($_GET['idProjeto']) ? (int) $_GET['idProjeto'] : 0;
+$modoEdicao = false;
+$projetoSelecionado = null;
+$bannerAtual = null;
+$capaAtual = null;
+$coordenadoresProjeto = [];
+$bolsistasProjeto = [];
+
+$categoriaLabelMap = [
+    'ciencias-naturais' => 'Ciências Naturais',
+    'ciencias-humanas' => 'Ciências Humanas',
+    'linguagens' => 'Linguagens',
+    'matematica' => 'Matemática',
+    'administracao' => 'Administração',
+    'informatica' => 'Informática',
+    'vestuario' => 'Vestuário',
+    'moda' => 'Moda',
+];
+
+function buscarImagemProjeto(?string $pasta, string $prefixo): ?string
+{
+    if (!$pasta) {
+        return null;
+    }
+
+    $baseDir = __DIR__ . '/assets/photos/projetos/' . $pasta . '/';
+    if (!is_dir($baseDir)) {
+        return null;
+    }
+
+    $arquivos = glob($baseDir . $prefixo . '.*');
+    if (!$arquivos) {
+        return null;
+    }
+
+    $arquivo = basename($arquivos[0]);
+    return '../assets/photos/projetos/' . $pasta . '/' . $arquivo;
+}
+
+if ($idProjetoEditar > 0 && $idPessoaLogado && $tipo === 'coordenador') {
+    $stmtProjeto = $conn->prepare("SELECT p.* FROM projeto p INNER JOIN pessoa_projeto pp ON pp.idProjeto = p.idProjeto AND pp.tipoPessoa = 'coordenador' WHERE p.idProjeto = ? AND pp.idPessoa = ?");
+    if ($stmtProjeto) {
+        $stmtProjeto->bind_param('ii', $idProjetoEditar, $idPessoaLogado);
+        if ($stmtProjeto->execute()) {
+            $resultadoProjeto = $stmtProjeto->get_result();
+            if ($dadosProjeto = $resultadoProjeto->fetch_assoc()) {
+                $modoEdicao = true;
+                $projetoSelecionado = $dadosProjeto;
+                $bannerAtual = buscarImagemProjeto($dadosProjeto['banner'] ?? null, 'banner');
+                $capaAtual = buscarImagemProjeto($dadosProjeto['capa'] ?? null, 'capa');
+
+                $stmtEquipe = $conn->prepare("SELECT pe.idPessoa, pe.nome, pe.sobrenome, pe.email, pe.foto_perfil, pp.tipoPessoa FROM pessoa_projeto pp INNER JOIN pessoa pe ON pe.idPessoa = pp.idPessoa WHERE pp.idProjeto = ? ORDER BY pe.nome, pe.sobrenome");
+                if ($stmtEquipe) {
+                    $stmtEquipe->bind_param('i', $idProjetoEditar);
+                    if ($stmtEquipe->execute()) {
+                        $resultadoEquipe = $stmtEquipe->get_result();
+                        while ($linha = $resultadoEquipe->fetch_assoc()) {
+                            $linha['foto_src'] = gerarSrcPerfil($linha['foto_perfil'] ?? null, $placeholderPerfil);
+                            if (isset($linha['foto_perfil']) && !mb_check_encoding($linha['foto_perfil'], 'UTF-8')) {
+                                unset($linha['foto_perfil']);
+                            }
+                            if ($linha['tipoPessoa'] === 'coordenador') {
+                                $coordenadoresProjeto[] = $linha;
+                            } elseif ($linha['tipoPessoa'] === 'bolsista') {
+                                $bolsistasProjeto[] = $linha;
+                            }
+                        }
+                    }
+                    $stmtEquipe->close();
+                }
+            }
+        }
+        $stmtProjeto->close();
+    }
+}
+
+$projetoEditData = null;
+if ($modoEdicao && $projetoSelecionado) {
+    $projetoEditData = [
+        'idProjeto' => (int) $projetoSelecionado['idProjeto'],
+        'nome' => $projetoSelecionado['nome'] ?? '',
+        'tipo' => $projetoSelecionado['tipo'] ?? '',
+        'tipoLabel' => ucfirst($projetoSelecionado['tipo'] ?? ''),
+        'categoria' => $projetoSelecionado['categoria'] ?? '',
+        'categoriaOption' => str_replace('-', '_', $projetoSelecionado['categoria'] ?? ''),
+        'categoriaLabel' => $categoriaLabelMap[$projetoSelecionado['categoria'] ?? ''] ?? ucwords(str_replace('-', ' ', $projetoSelecionado['categoria'] ?? '')),
+        'anoInicio' => $projetoSelecionado['anoInicio'] ?? '',
+        'linkInscricao' => $projetoSelecionado['linkParaInscricao'] ?? '',
+        'descricao' => $projetoSelecionado['textoSobre'] ?? '',
+        'linkSite' => $projetoSelecionado['linkSite'] ?? '',
+        'linkBolsista' => $projetoSelecionado['linkBolsista'] ?? '',
+        'email' => $projetoSelecionado['email'] ?? '',
+        'numero' => $projetoSelecionado['numero'] ?? '',
+        'instagram' => $projetoSelecionado['linkInstagram'] ?? '',
+        'bannerPath' => $bannerAtual,
+        'capaPath' => $capaAtual,
+    ];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -50,6 +203,13 @@ if ($result = $conn->query($sqlb)) {
 <script>
     sessionStorage.setItem('usuarioLogado', '<?php echo $nome; ?>');
     sessionStorage.setItem('tipoUsuario', '<?php echo $tipo; ?>');
+    
+    // Dados dos coordenadores e bolsistas para JavaScript
+    const coordenadoresData = <?php echo json_encode($coordenadores); ?>;
+    const bolsistasData = <?php echo json_encode($bolsistas); ?>;
+    const projetoSelecionado = <?php echo $projetoEditData ? json_encode($projetoEditData, JSON_UNESCAPED_UNICODE) : 'null'; ?>;
+    const coordenadoresProjetoSelecionados = <?php echo $modoEdicao ? json_encode(array_values($coordenadoresProjeto), JSON_UNESCAPED_UNICODE) : '[]'; ?>;
+    const bolsistasProjetoSelecionados = <?php echo $modoEdicao ? json_encode(array_values($bolsistasProjeto), JSON_UNESCAPED_UNICODE) : '[]'; ?>;
 </script>
 
 <div class="container">
@@ -68,128 +228,103 @@ if ($result = $conn->query($sqlb)) {
     </header>
 
     <form id="formulario" action="cad-projetoBD.php" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="id-projeto" id="id-projeto" value="<?php echo $modoEdicao ? (int) $idProjetoEditar : ''; ?>">
         
-        <div id="banner" style="position: relative; width: 100%; height: 200px; background-color: #f0f0f0; overflow: hidden;">
+        <div id="banner" style="position: relative; width: 100%; height: 200px; overflow: hidden;">
             <label id="upload-banner" style="display: block; width: 100%; height: 100%; cursor: pointer; position: relative;">
                 <input type="file" id="banner-projeto" name="banner" accept="image/*" hidden>
-                <span id="banner-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; color: #666; font-size: 16px;">Clique para adicionar banner</span>
-                <img id="banner-preview" style="display: none;">
+                <span id="banner-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; font-size: 16px;<?php echo ($modoEdicao && $bannerAtual) ? ' display:none;' : ''; ?>">
+                    <?php echo $modoEdicao ? 'Clique para alterar banner' : 'Clique para adicionar banner'; ?>
+                </span>
+                <img id="banner-preview" <?php if ($modoEdicao && $bannerAtual) { echo 'src="' . htmlspecialchars($bannerAtual) . '" style="display:block; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:5;"'; } else { echo 'style="display: none;"'; } ?>>
             </label>
         </div>
 
         <div id="info-projeto">
             <div id="div-capa">
                 <label id="upload-capa">
-                    <input type="file" id="foto-capa" name="capa" accept="image/*" hidden required>
-                    <span id="capa-icon">📷</span>
-                    <img id="capa-preview" style="display: none;">
+                    <input type="file" id="foto-capa" name="capa" accept="image/*" hidden <?php echo (!$modoEdicao || empty($capaAtual)) ? 'required' : ''; ?>>
+                    <span id="capa-icon"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>📷</span>
+                    <img id="capa-preview" <?php if ($modoEdicao && $capaAtual) { echo 'src="' . htmlspecialchars($capaAtual) . '" style="display:block; width:100%; height:100%; object-fit:cover;"'; } else { echo 'style="display: none;"'; } ?>>
                 </label>
             </div>
             <div id="dados-projeto">
                 <div class="div-eixo--categoria-ano">
-                    <select id="eixo" name="eixo" required>
-                        <option value="">Tipo</option>
-                        <option value="ensino">Ensino</option>
-                        <option value="pesquisa">Pesquisa</option>
-                        <option value="extensao">Extensão</option>
-                    </select>
-                    <select id="categoria" name="categoria" required>
-                        <option value="">Área de estudo</option>
-                        <option value="ciencias_naturais">Ciências Naturais</option>
-                        <option value="ciencias_humanas">Ciências Humanas</option>
-                        <option value="linguagens">Linguagens</option>
-                        <option value="matematica">Matemática</option>
-                        <option value="administracao">Administração</option>
-                        <option value="informatica">Informática</option>
-                        <option value="vestuario">Vestuário</option>
-                    </select>
-                    <input type="text" id="ano-inicio" name="ano-inicio" placeholder="Desde (ano)">
+                    <div class="custom-select" id="eixo-select">
+                        <div class="select-selected"><?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['tipoLabel']) : 'Tipo'; ?></div>
+                        <div class="select-items">
+                            <div data-value="ensino">Ensino</div>
+                            <div data-value="pesquisa">Pesquisa</div>
+                            <div data-value="extensao">Extensão</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="eixo" name="eixo" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['tipo']) : ''; ?>" required>
+                    
+                    <div class="custom-select" id="categoria-select">
+                        <div class="select-selected"><?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['categoriaLabel']) : 'Área de estudo'; ?></div>
+                        <div class="select-items">
+                            <div data-value="ciencias_naturais">Ciências Naturais</div>
+                            <div data-value="ciencias_humanas">Ciências Humanas</div>
+                            <div data-value="linguagens">Linguagens</div>
+                            <div data-value="matematica">Matemática</div>
+                            <div data-value="administracao">Administração</div>
+                            <div data-value="informatica">Informática</div>
+                            <div data-value="vestuario">Vestuário</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="categoria" name="categoria" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['categoriaOption']) : ''; ?>" required>
+                    
+                    <input type="text" id="ano-inicio" name="ano-inicio" placeholder="Desde (ano)" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars((string) $projetoEditData['anoInicio']) : ''; ?>">
                 </div>
-                <input type="text" id="nome-projeto" name="nome-projeto" placeholder="Nome do Projeto" required>
+                <input type="text" id="nome-projeto" name="nome-projeto" placeholder="Nome do Projeto" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['nome']) : ''; ?>" required>
             </div>
-            <input type="text" id="txt-link-inscricao" name="txt-link-inscricao" placeholder="Link p/ formulário de inscrição">
+            <input type="text" id="txt-link-inscricao" name="txt-link-inscricao" placeholder="Link p/ formulário de inscrição" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['linkInscricao']) : ''; ?>">
         </div>
 
         <div id="conteudo">
             <h2 class="subtitulo">Sobre (2000 max.)</h2>
-            <textarea id="descricao" name="descricao" maxlength="2000" placeholder="Descreva o projeto..."></textarea>
+            <textarea id="descricao" name="descricao" maxlength="2000" placeholder="Descreva o projeto..."><?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['descricao']) : ''; ?></textarea>
 
-            <input type="text" id="site-projeto" name="site-projeto" placeholder="Insira Link do site">
+            <input type="text" id="site-projeto" name="site-projeto" placeholder="Insira Link do site" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['linkSite']) : ''; ?>">
 
             <div class="equipe">
                 <h2 class="subtitulo">Coordenadores(as)</h2>
-                <div class="membros">
-                    <div class="membro">
-                        <div class="foto-membro">
-                            <span>👤</span>
-                            <!-- A imagem será inserida aqui via JavaScript -->
+                <div class="membros" id="coordenadores-container">
+                    <!-- Coordenadores serão adicionados aqui dinamicamente -->
+                    <div class="membro add-membro" id="add-coordenador">
+                        <div class="foto-membro foto-add">
+                            <span>➕</span>
                         </div>
-                            <div class="custom-select">
-                            <div class="select-selected">Selecione um coordenador(a)</div>
-                            <div class="select-items">
-                                <?php foreach ($coordenadores as $coord): ?>
-                                    <?php 
-                                    $foto_path = $coord['foto_perfil'];
-                                    // Se a foto não começar com '/' ou '../', adiciona o caminho base
-                                    if ($foto_path && !preg_match('/^(\/|\.\.\/)/', $foto_path)) {
-                                        $foto_path = '../assets/photos/fotos_perfil/' . $foto_path;
-                                    }
-                                    ?>
-                                    <div data-value="<?php echo $coord['idPessoa']; ?>" 
-                                         data-foto="<?php echo htmlspecialchars($foto_path); ?>">
-                                        <?php echo htmlspecialchars($coord['nome'] . ' ' . $coord['sobrenome'] . ' (' . $coord['email'] . ')'); ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                            <input type="hidden" name="coordenador_id" id="coordenador_id" required>
-                            </div>
-                        </div>
+                        <div class="nome-membro">Adicionar</div>
                     </div>
+                </div>
+                <input type="hidden" name="coordenadores_ids" id="coordenadores_ids">
             </div>
 
             <div class="equipe">
                 <h2 class="subtitulo">Bolsistas</h2>
-                <div class="membros">
-                    <div class="membro">
-                        <div class="foto-membro">
-                            <span>👤</span>
-                            <!-- A imagem será inserida aqui via JavaScript -->
+                <div class="membros" id="bolsistas-container">
+                    <!-- Bolsistas serão adicionados aqui dinamicamente -->
+                    <div class="membro add-membro" id="add-bolsista">
+                        <div class="foto-membro foto-add">
+                            <span>➕</span>
                         </div>
-
-                        <div class="custom-select">
-                            <div class="select-selected">Selecione um bolsista...</div>
-                            <div class="select-items">
-                                <?php foreach ($bolsistas as $bolsista): ?>
-                                    <?php 
-                                    $foto_path = $bolsista['foto_perfil'];
-                                    // Se a foto não começar com '/' ou '../', adiciona o caminho base
-                                    if ($foto_path && !preg_match('/^(\/|\.\.\/)/', $foto_path)) {
-                                        $foto_path = '../assets/photos/fotos_perfil/' . $foto_path;
-                                    }
-                                    ?>
-                                    <div data-value="<?php echo $bolsista['idPessoa']; ?>"
-                                         data-foto="<?php echo htmlspecialchars($foto_path); ?>">
-                                        <?php echo htmlspecialchars($bolsista['nome'] . ' ' . $bolsista['sobrenome'] . ' (' . $bolsista['email'] . ')'); ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                            <input type="hidden" name="bolsista_id" id="bolsista_id">
-                            </div>
-                        </div>                            
+                        <div class="nome-membro">Adicionar</div>
                     </div>
                 </div>
+                <input type="hidden" name="bolsistas_ids" id="bolsistas_ids">
             </div>
 
-            <input type="text" id="link-bolsista" name="link-bolsista" placeholder="Se há vagas para bolsistas, cole o link para inscrição aqui">
+                <input type="text" id="link-bolsista" name="link-bolsista" placeholder="Se há vagas para bolsistas, cole o link para inscrição aqui" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['linkBolsista']) : ''; ?>">
 
             <div id="contato">
                 <h2 class="subtitulo">Contato com Projeto</h2>
-                <input type="email" id="email" name="email" placeholder="E-mail para o projeto">
-                <input type="text" id="numero-telefone" name="numero-telefone" placeholder="Número para contato (opcional)">
-                <input type="text" id="instagram" name="instagram" placeholder="Instagram do projeto (opcional)">
+                    <input type="email" id="email" name="email" placeholder="E-mail para o projeto" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['email']) : ''; ?>">
+                    <input type="text" id="numero-telefone" name="numero-telefone" placeholder="Número para contato (opcional)" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['numero']) : ''; ?>">
+                    <input type="text" id="instagram" name="instagram" placeholder="Instagram do projeto (opcional)" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['instagram']) : ''; ?>">
             </div>
 
-            <button type="submit" id="bt-criar-projeto">Criar Projeto</button>
+                <button type="submit" id="bt-criar-projeto"><?php echo $modoEdicao ? 'Salvar alterações' : 'Criar Projeto'; ?></button>
         </div>
     </form>
 </div>
@@ -197,107 +332,264 @@ if ($result = $conn->query($sqlb)) {
 <script src="../assets/js/cad-projeto.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const customSelects = document.querySelectorAll('.custom-select');
-    customSelects.forEach((select) => {
-        const selectedDiv = select.querySelector('.select-selected');
-        const itemsDiv = select.querySelector('.select-items');
-        const hiddenInput = select.querySelector('input[type="hidden"]');
-        if (!selectedDiv || !itemsDiv) return;
-        selectedDiv.addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.querySelectorAll('.custom-select.open').forEach((other) => {
-                if (other !== select) {
-                    other.classList.remove('open');
-                    const otherItems = other.querySelector('.select-items');
-                    if (otherItems) otherItems.style.display = 'none';
-                }
-            });
-            const isOpen = select.classList.toggle('open');
-            itemsDiv.style.display = isOpen ? 'block' : 'none';
+    // Arrays para armazenar os IDs selecionados
+    let coordenadoresSelecionados = [];
+    let bolsistasSelecionados = [];
+    const FOTO_PLACEHOLDER = '../assets/photos/fotos_perfil/sem_foto_perfil.jpg';
+    
+    // Função para criar um membro na interface
+    function criarMembroHTML(pessoa, tipo) {
+        const membro = document.createElement('div');
+        membro.className = 'membro';
+        membro.dataset.id = pessoa.idPessoa;
+        membro.dataset.tipo = tipo;
+        
+        const fotoSrc = pessoa.foto_src && pessoa.foto_src !== 'null' ? pessoa.foto_src : FOTO_PLACEHOLDER;
+        
+        // Nome completo
+        const nomeCompleto = pessoa.nome + ' ' + pessoa.sobrenome;
+        const nomeCurto = nomeCompleto.length > 15 ? nomeCompleto.substring(0, 12) + '...' : nomeCompleto;
+        
+        membro.innerHTML = `
+            <div class="foto-membro-wrapper">
+                <div class="foto-membro">
+                    <img src="${fotoSrc}" alt="${nomeCompleto}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
+                </div>
+                <div class="btn-remover" title="Remover">
+                    <span>➖</span>
+                </div>
+            </div>
+            <div class="nome-membro" title="${nomeCompleto}">${nomeCurto}</div>
+        `;
+        
+        // Evento de remover
+        const btnRemover = membro.querySelector('.btn-remover');
+        btnRemover.addEventListener('click', function() {
+            removerMembro(pessoa.idPessoa, tipo);
         });
-        itemsDiv.querySelectorAll('div').forEach((item) => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-                selectedDiv.textContent = this.textContent;
-                if (hiddenInput) hiddenInput.value = this.getAttribute('data-value');
+        
+        return membro;
+    }
+    
+    // Função para abrir modal de seleção
+    function abrirModalSelecao(tipo) {
+        const dados = tipo === 'coordenador' ? coordenadoresData : bolsistasData;
+        const jaSelecionados = tipo === 'coordenador' ? coordenadoresSelecionados : bolsistasSelecionados;
+        
+        // Criar modal
+        const modal = document.createElement('div');
+        modal.className = 'modal-selecao';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Selecione ${tipo === 'coordenador' ? 'um Coordenador' : 'um Bolsista'}</h3>
+                    <span class="modal-close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="modal-search" placeholder="Buscar por nome ou email...">
+                    <div class="modal-lista"></div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        const lista = modal.querySelector('.modal-lista');
+        const searchInput = modal.querySelector('.modal-search');
+        
+        // Função para renderizar a lista
+        function renderizarLista(filtro = '') {
+            lista.innerHTML = '';
+            
+            const dadosFiltrados = dados.filter(pessoa => {
+                if (jaSelecionados.includes(pessoa.idPessoa)) return false;
                 
-                // Extrair apenas o nome do texto completo (remove o email)
-                const textoCompleto = this.textContent;
-                const nomeSemEmail = textoCompleto.split('(')[0].trim();
-                selectedDiv.textContent = nomeSemEmail;
-                
-                // Atualizar a foto do membro selecionado
-                const fotoMembro = this.getAttribute('data-foto');
-                const container = select.closest('.membro');
-                const fotoContainer = container.querySelector('.foto-membro');
-                const fotoLabel = fotoContainer.querySelector('label');
-                
-                if (fotoMembro && fotoMembro !== 'null') {
-                    // Se já existe uma imagem, atualiza a src
-                    let img = fotoContainer.querySelector('img');
-                    if (!img) {
-                        // Se não existe imagem, cria uma nova
-                        img = document.createElement('img');
-                        img.style.width = '100%';
-                        img.style.height = '100%';
-                        img.style.objectFit = 'cover';
-                        fotoContainer.appendChild(img);
-                    }
-                    // Usa o caminho completo se fornecido, ou constrói o caminho
-                    img.src = fotoMembro.startsWith('/') || fotoMembro.startsWith('../') ? 
-                             fotoMembro : 
-                             '../assets/photos/fotos_perfil/' + fotoMembro;
-                    img.style.display = 'block';
-                    fotoContainer.querySelector('span').style.display = 'none';
-                    
-                    // Adiciona tratamento de erro para a imagem
-                    img.onerror = function() {
-                        console.log('Erro ao carregar a imagem:', this.src);
-                        this.style.display = 'none';
-                        fotoContainer.querySelector('span').style.display = 'block';
-                    };
-                } else {
-                    // Se não tem foto, mostra o ícone padrão
-                    const span = fotoContainer.querySelector('span');
-                    const img = fotoContainer.querySelector('img');
-                    if (img) {
-                        fotoContainer.removeChild(img);
-                    }
-                    span.style.display = 'block';
+                if (filtro) {
+                    const texto = `${pessoa.nome} ${pessoa.sobrenome} ${pessoa.email}`.toLowerCase();
+                    return texto.includes(filtro.toLowerCase());
                 }
-                
-                // Debug para verificar o caminho da foto
-                console.log('Valor do data-foto:', fotoMembro);
-                if (fotoMembro && fotoMembro !== 'null') {
-                    console.log('Caminho construído:', fotoMembro.startsWith('/') || fotoMembro.startsWith('../') ? 
-                        fotoMembro : '../assets/photos/fotos_perfil/' + fotoMembro);
-                }
-                
-                itemsDiv.style.display = 'none';
-                select.classList.remove('open');
+                return true;
             });
+            
+            if (dadosFiltrados.length === 0) {
+                lista.innerHTML = '<div class="sem-resultados">Nenhuma pessoa disponível</div>';
+                return;
+            }
+            
+            dadosFiltrados.forEach(pessoa => {
+                const item = document.createElement('div');
+                item.className = 'modal-item';
+                
+                const fotoSrc = pessoa.foto_src && pessoa.foto_src !== 'null' ? pessoa.foto_src : FOTO_PLACEHOLDER;
+                
+                item.innerHTML = `
+                    <div class="modal-item-foto">
+                        <img src="${fotoSrc}" alt="${pessoa.nome}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
+                    </div>
+                    <div class="modal-item-info">
+                        <div class="modal-item-nome">${pessoa.nome} ${pessoa.sobrenome}</div>
+                        <div class="modal-item-email">${pessoa.email}</div>
+                    </div>
+                `;
+                
+                item.addEventListener('click', function() {
+                    adicionarMembro(pessoa, tipo);
+                    document.body.removeChild(modal);
+                });
+                
+                lista.appendChild(item);
+            });
+        }
+        
+        renderizarLista();
+        
+        // Busca
+        searchInput.addEventListener('input', function() {
+            renderizarLista(this.value);
         });
+        
+        // Fechar modal
+        const closeBtn = modal.querySelector('.modal-close');
+        closeBtn.addEventListener('click', function() {
+            document.body.removeChild(modal);
+        });
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+        
+        // Focar no input de busca
+        setTimeout(() => searchInput.focus(), 100);
+    }
+    
+    // Função para adicionar membro
+    function adicionarMembro(pessoa, tipo) {
+        if (tipo === 'coordenador') {
+            coordenadoresSelecionados.push(pessoa.idPessoa);
+            const container = document.getElementById('coordenadores-container');
+            const addBtn = document.getElementById('add-coordenador');
+            container.insertBefore(criarMembroHTML(pessoa, 'coordenador'), addBtn);
+        } else {
+            bolsistasSelecionados.push(pessoa.idPessoa);
+            const container = document.getElementById('bolsistas-container');
+            const addBtn = document.getElementById('add-bolsista');
+            container.insertBefore(criarMembroHTML(pessoa, 'bolsista'), addBtn);
+        }
+        
+        atualizarInputsHidden();
+    }
+    
+    // Função para remover membro
+    function removerMembro(id, tipo) {
+        if (tipo === 'coordenador') {
+            coordenadoresSelecionados = coordenadoresSelecionados.filter(item => item != id);
+            const membro = document.querySelector(`#coordenadores-container .membro[data-id="${id}"]`);
+            if (membro) membro.remove();
+        } else {
+            bolsistasSelecionados = bolsistasSelecionados.filter(item => item != id);
+            const membro = document.querySelector(`#bolsistas-container .membro[data-id="${id}"]`);
+            if (membro) membro.remove();
+        }
+        
+        atualizarInputsHidden();
+    }
+    
+    // Função para atualizar inputs hidden
+    function atualizarInputsHidden() {
+        document.getElementById('coordenadores_ids').value = coordenadoresSelecionados.join(',');
+        document.getElementById('bolsistas_ids').value = bolsistasSelecionados.join(',');
+    }
+
+    if (Array.isArray(coordenadoresProjetoSelecionados) && coordenadoresProjetoSelecionados.length > 0) {
+        coordenadoresProjetoSelecionados.forEach((pessoa) => {
+            if (!coordenadoresSelecionados.includes(pessoa.idPessoa)) {
+                adicionarMembro(pessoa, 'coordenador');
+            }
+        });
+    }
+
+    if (Array.isArray(bolsistasProjetoSelecionados) && bolsistasProjetoSelecionados.length > 0) {
+        bolsistasProjetoSelecionados.forEach((pessoa) => {
+            if (!bolsistasSelecionados.includes(pessoa.idPessoa)) {
+                adicionarMembro(pessoa, 'bolsista');
+            }
+        });
+    }
+    
+    // Eventos dos botões adicionar
+    document.getElementById('add-coordenador').addEventListener('click', function() {
+        abrirModalSelecao('coordenador');
     });
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.custom-select.open').forEach((s) => {
-            s.classList.remove('open');
-            const items = s.querySelector('.select-items');
-            if (items) items.style.display = 'none';
-        });
+    
+    document.getElementById('add-bolsista').addEventListener('click', function() {
+        abrirModalSelecao('bolsista');
     });
 
-    // Validação para garantir que um coordenador e bolsista foram selecionados
+    // Validação para garantir que pelo menos um coordenador foi selecionado
     const formulario = document.getElementById('formulario');
     if (formulario) {
         formulario.addEventListener('submit', function(e) {
-            const coordId = document.getElementById('coordenador_id').value;
-            if (!coordId) {
-                alert('Selecione um coordenador!');
+            if (coordenadoresSelecionados.length === 0) {
+                alert('Selecione pelo menos um coordenador!');
                 e.preventDefault();
                 return false;
             }
         });
     }
+    
+    // Configurar custom selects para Tipo e Área de Estudo
+    function setupCustomSelect(selectId, hiddenInputId) {
+        const customSelect = document.getElementById(selectId);
+        if (!customSelect) return;
+        
+        const selectedDiv = customSelect.querySelector('.select-selected');
+        const itemsDiv = customSelect.querySelector('.select-items');
+        const hiddenInput = document.getElementById(hiddenInputId);
+        
+        if (!selectedDiv || !itemsDiv || !hiddenInput) return;
+        
+        // Abrir/fechar dropdown
+        selectedDiv.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Fechar outros dropdowns
+            document.querySelectorAll('.custom-select.open').forEach((other) => {
+                if (other !== customSelect) {
+                    other.classList.remove('open');
+                }
+            });
+            
+            // Toggle este dropdown
+            customSelect.classList.toggle('open');
+        });
+        
+        // Selecionar item
+        itemsDiv.querySelectorAll('div').forEach((item) => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const text = this.textContent;
+                
+                selectedDiv.textContent = text;
+                hiddenInput.value = value;
+                
+                customSelect.classList.remove('open');
+            });
+        });
+    }
+    
+    // Inicializar custom selects
+    setupCustomSelect('eixo-select', 'eixo');
+    setupCustomSelect('categoria-select', 'categoria');
+    
+    // Fechar dropdowns ao clicar fora
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.custom-select.open').forEach((select) => {
+            select.classList.remove('open');
+        });
+    });
 });
 </script>
 <?php
