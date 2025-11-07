@@ -116,6 +116,9 @@ $tipo = $_SESSION['tipo'] ?? '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/tema-global.css">
     <link rel="stylesheet" href="assets/css/projeto.css">
+    <!-- Adicionar os arquivos CSS e JS necessários -->
+    <link rel="stylesheet" href="assets/css/popup.css">
+    <script src="assets/js/popup.js"></script>
     <title><?php echo htmlspecialchars($projeto['nome']); ?></title>
 </head>
 <body>
@@ -210,27 +213,40 @@ $tipo = $_SESSION['tipo'] ?? '';
                                 <div class="equipe-categoria">
                                     <h3 class="titulo-equipe">Coordenador(a)</h3>
                                     <div class="membros">
-                                        <?php foreach ($coordenadores as $coord): ?>
+                                        <?php foreach ($coordenadores as $coordenador): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
-                                                    <img src="<?php echo htmlspecialchars($coord['foto_src']); ?>" alt="Foto do coordenador">
+                                                    <img src="<?php echo $coordenador['foto_src']; ?>"
+                                                         alt="Foto de <?php echo htmlspecialchars($coordenador['nome']); ?>"
+                                                         onmouseover="showUserInfo(<?php echo $coordenador['idPessoa']; ?>)"
+                                                         onmouseout="hidePopup()"
+                                                         class="foto-perfil">
                                                 </div>
-                                                <span class="nome-membro"><?php echo htmlspecialchars($coord['nome'] . ' ' . $coord['sobrenome']); ?></span>
+                                                <span class="nome-membro">
+                                                    <?php echo htmlspecialchars($coordenador['nome'] . ' ' . $coordenador['sobrenome']); ?>
+                                                </span>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
+
                             <?php if (!empty($bolsistas)): ?>
                                 <div class="equipe-categoria">
                                     <h3 class="titulo-equipe">Bolsista</h3>
                                     <div class="membros">
-                                        <?php foreach ($bolsistas as $bol): ?>
+                                        <?php foreach ($bolsistas as $bolsista): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
-                                                    <img src="<?php echo htmlspecialchars($bol['foto_src']); ?>" alt="Foto do bolsista">
+                                                    <img src="<?php echo $bolsista['foto_src']; ?>"
+                                                         alt="Foto de <?php echo htmlspecialchars($bolsista['nome']); ?>"
+                                                         onmouseover="showUserInfo(<?php echo $bolsista['idPessoa']; ?>)"
+                                                         onmouseout="hidePopup()"
+                                                         class="foto-perfil">
                                                 </div>
-                                                <span class="nome-membro"><?php echo htmlspecialchars($bol['nome'] . ' ' . $bol['sobrenome']); ?></span>
+                                                <span class="nome-membro">
+                                                    <?php echo htmlspecialchars($bolsista['nome'] . ' ' . $bolsista['sobrenome']); ?>
+                                                </span>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
@@ -348,5 +364,17 @@ $tipo = $_SESSION['tipo'] ?? '';
     </div>
 </footer>
     <script src="assets/js/global.js"></script>
-    <script src="assets/js/projeto.js"></script></body>
+    <script src="assets/js/projeto.js"></script>
+
+    <script>
+        console.log('=== TESTE DE DEBUG ===');
+        console.log('Função showUserInfo existe?', typeof showUserInfo);
+        console.log('Testando chamar a função...');
+        if (typeof showUserInfo === 'function') {
+            showUserInfo(9);
+        } else {
+            console.error('ERRO: Função showUserInfo não encontrada!');
+        }
+    </script>
+</body>
 </html>
