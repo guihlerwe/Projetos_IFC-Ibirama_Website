@@ -1,8 +1,8 @@
 // Gerenciador do popup de informações do usuário
 
 let popupElement = null;
-let hideTimeout = null;
-let currentHoveredElement = null;
+let currentOpenUserId = null;
+let currentTargetElement = null;
 
 // Criar o elemento do popup uma vez quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
@@ -17,20 +17,20 @@ function createPopupElement() {
     popupElement.className = 'user-info-popup';
     popupElement.id = 'userInfoPopup';
     document.body.appendChild(popupElement);
-    
-    // Eventos para manter o popup visível quando o mouse estiver sobre ele
-    popupElement.addEventListener('mouseenter', function() {
-        clearTimeout(hideTimeout);
-    });
-    
-    popupElement.addEventListener('mouseleave', function() {
-        hidePopup();
-    });
 }
 
-// Função principal chamada no onmouseover das fotos
-function showUserInfo(idPessoa) {
-    clearTimeout(hideTimeout);
+// Função para lidar com clicks nas fotos
+function toggleUserInfo(idPessoa, event) {
+    event.stopPropagation();
+    
+    // Se clicar no mesmo usuário que já está aberto, fecha
+    if (currentOpenUserId === idPessoa && popupElement.classList.contains('show')) {
+        closePopup();
+        return;
+    }
+    
+    currentOpenUserId = idPessoa;
+    currentTargetElement = event.target;
     
     // Buscar informações do usuário
     fetch(`usuario-popup.php?idPessoa=${idPessoa}`)
@@ -42,7 +42,7 @@ function showUserInfo(idPessoa) {
             }
             
             displayPopup(data);
-            positionPopup(event);
+            positionPopup(event.target);
         })
         .catch(error => {
             console.error('Erro na requisição:', error);
@@ -53,15 +53,16 @@ function showUserInfo(idPessoa) {
 function displayPopup(userData) {
     if (!popupElement) createPopupElement();
     
-    // Montar o HTML do popup
+    // Montar o HTML do popup com botão de fechar
     let html = `
+        <button class="popup-close-btn" title="Fechar">×</button>
         <div class="popup-header">
             <div class="popup-foto">
                 <img src="${userData.foto}" alt="Foto de ${userData.nome}">
             </div>
             <div class="popup-info-principal">
-                <div class="popup-nome">${userData.nome} ${userData.sobrenome}</div>
-                <div class="popup-email">${userData.email}</div>
+                <div class="popup-nome">${escapeHtml(userData.nome)} ${escapeHtml(userData.sobrenome)}</div>
+                <div class="popup-email">${escapeHtml(userData.email)}</div>
                 ${userData.tipo === 'coordenador' && userData.area ? 
                     `<div class="popup-curso-area"><strong>Área:</strong> ${formatarArea(userData.area)}</div>` : 
                     userData.curso ? 
@@ -83,50 +84,118 @@ function displayPopup(userData) {
     
     popupElement.innerHTML = html;
     popupElement.classList.add('show');
+    
+    // Adicionar evento de click no botão de fechar
+    const closeBtn = popupElement.querySelector('.popup-close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closePopup();
+        });
+    }
 }
 
-// Função para posicionar o popup próximo ao cursor
-function positionPopup(event) {
-    if (!popupElement || !event) return;
+// Função para posicionar o popup próximo à foto clicada
+function positionPopup(targetElement) {
+    if (!popupElement || !targetElement) return;
     
-    const mouseX = event.clientX || event.pageX;
-    const mouseY = event.clientY || event.pageY;
+    // Obter posição do elemento em relação ao documento
+    const rect = targetElement.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
     
-    const offset = 15;
-    let left = mouseX + offset;
-    let top = mouseY + offset;
+    // Posição absoluta do elemento no documento
+    const targetTop = rect.top + scrollTop;
+    const targetLeft = rect.left + scrollLeft;
+    const targetRight = targetLeft + rect.width;
     
-    // Garantir que o popup não saia da tela
-    const popupRect = popupElement.getBoundingClientRect();
+    const popupWidth = 400;
+    const popupHeight = popupElement.offsetHeight;
+    const spacing = 10;
+    
+    // Calcula posição inicial (à direita da foto)
+    let left = targetRight + spacing;
+    let top = targetTop;
+    
+    // Verifica se o popup sairia da tela à direita
     const viewportWidth = window.innerWidth;
+    if (left + popupWidth > scrollLeft + viewportWidth) {
+        // Posiciona à esquerda da foto
+        left = targetLeft - popupWidth - spacing;
+    }
+    
+    // Verifica se o popup sairia da tela à esquerda
+    if (left < scrollLeft) {
+        // Centraliza horizontalmente na viewport
+        left = scrollLeft + (viewportWidth - popupWidth) / 2;
+    }
+    
+    // Ajusta a posição vertical se necessário
     const viewportHeight = window.innerHeight;
-    
-    // Ajustar horizontalmente
-    if (left + popupRect.width > viewportWidth) {
-        left = mouseX - popupRect.width - offset;
+    if (top - scrollTop + popupHeight > viewportHeight) {
+        top = scrollTop + viewportHeight - popupHeight - 10;
     }
     
-    // Ajustar verticalmente
-    if (top + popupRect.height > viewportHeight) {
-        top = mouseY - popupRect.height - offset;
+    if (top < scrollTop) {
+        top = scrollTop + 10;
     }
     
-    // Garantir que não fique fora da tela na esquerda/topo
-    left = Math.max(10, left);
-    top = Math.max(10, top);
-    
+    // Usa posição absoluta para o popup acompanhar a página
+    popupElement.style.position = 'absolute';
     popupElement.style.left = `${left}px`;
     popupElement.style.top = `${top}px`;
+    popupElement.style.transform = 'none';
 }
 
-// Função para esconder o popup
-function hidePopup() {
-    hideTimeout = setTimeout(() => {
-        if (popupElement) {
-            popupElement.classList.remove('show');
-        }
-    }, 200); // Delay de 200ms antes de esconder
+// Função para verificar se o elemento target está visível na viewport
+function isElementVisible(element) {
+    if (!element) return false;
+    
+    const rect = element.getBoundingClientRect();
+    const header = document.querySelector('header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    
+    // Considera visível se pelo menos parte do elemento está na viewport
+    // (excluindo a área do header)
+    return (
+        rect.bottom > headerHeight &&
+        rect.top < window.innerHeight &&
+        rect.right > 0 &&
+        rect.left < window.innerWidth
+    );
 }
+
+// Função para fechar o popup
+function closePopup() {
+    if (popupElement) {
+        popupElement.classList.remove('show');
+        popupElement.style.visibility = 'visible'; // Garante que volta a visível
+        currentOpenUserId = null;
+        currentTargetElement = null;
+    }
+}
+
+// Listener para reposicionar o popup ao rolar a página
+window.addEventListener('scroll', function() {
+    if (popupElement && popupElement.classList.contains('show') && currentTargetElement) {
+        // Verifica se o elemento alvo ainda está visível
+        if (!isElementVisible(currentTargetElement)) {
+            // Se não estiver visível, esconde o popup temporariamente usando visibility
+            popupElement.style.visibility = 'hidden';
+        } else {
+            // Se estiver visível, mostra o popup e reposiciona
+            popupElement.style.visibility = 'visible';
+            positionPopup(currentTargetElement);
+        }
+    }
+});
+
+// Listener para reposicionar o popup ao redimensionar a janela
+window.addEventListener('resize', function() {
+    if (popupElement && popupElement.classList.contains('show') && currentTargetElement) {
+        positionPopup(currentTargetElement);
+    }
+});
 
 // Função auxiliar para formatar curso
 function formatarCurso(curso) {
@@ -172,18 +241,20 @@ function escapeHtml(text) {
     return div.innerHTML.replace(/\n/g, '<br>');
 }
 
-// Adicionar evento de mouseleave nas fotos para esconder o popup
-document.addEventListener('DOMContentLoaded', function() {
-    // Adicionar eventos em todas as fotos de perfil
-    document.querySelectorAll('.foto-perfil').forEach(foto => {
-        foto.addEventListener('mouseleave', function() {
-            hidePopup();
-        });
-    });
+// Fechar popup ao clicar fora dele
+document.addEventListener('click', function(event) {
+    if (popupElement && 
+        popupElement.classList.contains('show') && 
+        !popupElement.contains(event.target) &&
+        !event.target.classList.contains('foto-perfil') &&
+        !event.target.closest('.foto-membro')) {
+        closePopup();
+    }
 });
 
-document.addEventListener('mousemove', function(event) {
-    if (popupElement && popupElement.classList.contains('show')) {
-        positionPopup(event);
+// Fechar popup ao pressionar ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && popupElement && popupElement.classList.contains('show')) {
+        closePopup();
     }
 });

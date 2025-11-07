@@ -1,21 +1,50 @@
 /* Popup de informações do usuário */
 .user-info-popup {
     display: none;
-    position: fixed;
-    background-color: #2d2d2d;
+    position: absolute;
+    background-color: var(--card-bg);
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    z-index: 10000;
+    box-shadow: 0 8px 32px var(--card-shadow);
+    z-index: 9999;
     min-width: 350px;
     max-width: 450px;
-    color: #ffffff;
+    color: var(--text-primary);
     font-family: Arial, sans-serif;
-    border: 1px solid #404040;
+    border: 1px solid var(--border-color);
 }
 
 .user-info-popup.show {
     display: block;
+    animation: fadeInPopup 0.2s ease-out;
+}
+
+/* Botão de fechar */
+.popup-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    z-index: 10000;
+}
+
+.popup-close-btn:hover {
+    background-color: var(--hover-overlay);
+    color: var(--text-primary);
+    transform: rotate(90deg);
 }
 
 /* Cabeçalho com foto e nome */
@@ -23,6 +52,7 @@
     display: flex;
     gap: 15px;
     margin-bottom: 15px;
+    padding-right: 30px;
 }
 
 .popup-foto {
@@ -34,7 +64,7 @@
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #404040;
+    border: 2px solid var(--border-color);
 }
 
 .popup-info-principal {
@@ -48,48 +78,50 @@
 .popup-nome {
     font-size: 18px;
     font-weight: bold;
-    color: #ffffff;
+    color: var(--text-primary);
     line-height: 1.2;
 }
 
 .popup-email {
     font-size: 14px;
-    color: #b0b0b0;
+    color: var(--text-secondary);
     word-break: break-word;
 }
 
 /* Linha de curso/área */
 .popup-curso-area {
     font-size: 14px;
-    color: #b0b0b0;
+    color: var(--text-secondary);
     padding-top: 4px;
 }
 
 .popup-curso-area strong {
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 /* Descrição (opcional) */
 .popup-descricao {
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid #404040;
+    border-top: 1px solid var(--border-color);
 }
 
 .popup-descricao-titulo {
     font-size: 13px;
     font-weight: bold;
-    color: #b0b0b0;
+    color: var(--text-secondary);
     margin-bottom: 8px;
 }
 
 .popup-descricao-texto {
     font-size: 14px;
-    color: #e0e0e0;
+    color: var(--text-primary);
     line-height: 1.5;
-    max-height: 120px;
+    max-height: 7.5em;
     overflow-y: auto;
     padding-right: 8px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 /* Scrollbar personalizada para a descrição */
@@ -98,46 +130,50 @@
 }
 
 .popup-descricao-texto::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: var(--secondary-bg);
     border-radius: 3px;
 }
 
 .popup-descricao-texto::-webkit-scrollbar-thumb {
-    background: #555555;
+    background: var(--text-muted);
     border-radius: 3px;
 }
 
 .popup-descricao-texto::-webkit-scrollbar-thumb:hover {
-    background: #666666;
+    background: var(--text-secondary);
 }
 
 /* Animação suave */
-.user-info-popup {
-    animation: fadeInPopup 0.2s ease-out;
-}
-
 @keyframes fadeInPopup {
     from {
         opacity: 0;
-        transform: translateY(-10px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
     .user-info-popup {
-        min-width: 280px;
-        max-width: 90vw;
-        padding: 15px;
+        width: 90%;
+        max-width: 400px;
+        min-width: unset;
+        position: fixed !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+    
+    .popup-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
     
     .popup-foto img {
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
     }
     
     .popup-nome {
@@ -148,4 +184,15 @@
     .popup-curso-area {
         font-size: 13px;
     }
+}
+
+/* Indicador visual de que é clicável */
+.foto-perfil {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.foto-perfil:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px var(--card-shadow);
 }

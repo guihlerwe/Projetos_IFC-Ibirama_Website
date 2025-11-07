@@ -216,10 +216,10 @@ $tipo = $_SESSION['tipo'] ?? '';
                                         <?php foreach ($coordenadores as $coordenador): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
+                                                    <!-- Substituir as imagens dos coordenadores: -->
                                                     <img src="<?php echo $coordenador['foto_src']; ?>"
                                                          alt="Foto de <?php echo htmlspecialchars($coordenador['nome']); ?>"
-                                                         onmouseover="showUserInfo(<?php echo $coordenador['idPessoa']; ?>)"
-                                                         onmouseout="hidePopup()"
+                                                         onclick="toggleUserInfo(<?php echo $coordenador['idPessoa']; ?>, event)"
                                                          class="foto-perfil">
                                                 </div>
                                                 <span class="nome-membro">
@@ -238,10 +238,10 @@ $tipo = $_SESSION['tipo'] ?? '';
                                         <?php foreach ($bolsistas as $bolsista): ?>
                                             <div class="membro">
                                                 <div class="foto-membro">
+                                                    <!-- Substituir as imagens dos bolsistas: -->
                                                     <img src="<?php echo $bolsista['foto_src']; ?>"
                                                          alt="Foto de <?php echo htmlspecialchars($bolsista['nome']); ?>"
-                                                         onmouseover="showUserInfo(<?php echo $bolsista['idPessoa']; ?>)"
-                                                         onmouseout="hidePopup()"
+                                                         onclick="toggleUserInfo(<?php echo $bolsista['idPessoa']; ?>, event)"
                                                          class="foto-perfil">
                                                 </div>
                                                 <span class="nome-membro">
