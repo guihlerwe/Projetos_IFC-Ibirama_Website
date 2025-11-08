@@ -259,3 +259,27 @@ body {
     }
 }
 
+/* Badge de edição */
+.project-card-editable {
+    position: relative;
+    cursor: pointer;
+}
+
+.project-edit-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #006620;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.project-card-editable:hover .project-edit-badge {
+    background-color: #004d18;
+}
+

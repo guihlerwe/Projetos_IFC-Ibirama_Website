@@ -21,7 +21,6 @@ $conn->set_charset("utf8");
 $id = $_GET['id'] ?? null;
 $monitoria = null;
 $monitor = null;
-$podeEditar = false;
 
 if ($id) {
     // Buscar dados da monitoria
@@ -35,7 +34,7 @@ if ($id) {
     // Buscar dados do monitor vinculado
     if ($monitoria) {
         $stmtMonitor = $conn->prepare("
-            SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.curso, p.foto_perfil 
+            SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.curso, p.foto_perfil, p.descricao 
             FROM monitoria_pessoa mp 
             INNER JOIN pessoa p ON p.idPessoa = mp.idPessoa 
             WHERE mp.idMonitoria = ? AND mp.tipoPessoa = 'monitor'
@@ -45,11 +44,6 @@ if ($id) {
         $resultMonitor = $stmtMonitor->get_result();
         $monitor = $resultMonitor->fetch_assoc();
         $stmtMonitor->close();
-        
-        // Verificar se o usuário logado é coordenador e pode editar
-        if ($tipo === 'coordenador' && $idPessoaLogado) {
-            $podeEditar = true; // Qualquer coordenador pode editar
-        }
     }
 }
 
@@ -144,11 +138,13 @@ if (!$monitoria) {
 }
 
 // Preparar dados para exibição
-$capaPath = !empty($monitoria['capa']) ? 'assets/photos/monitorias/' . $monitoria['capa'] : 'assets/photos/default-capa.jpg';
+$capaPath = !empty($monitoria['capa']) ? 'assets/photos/monitorias/' . $monitoria['capa'] . '/capa.jpg' : 'assets/photos/default-monitoria.jpg';
 $fotoMonitor = $monitor ? gerarSrcPerfil($monitor['foto_perfil'] ?? null, $placeholderPerfil) : $placeholderPerfil;
 $nomeMonitor = $monitor ? $monitor['nome'] . ' ' . $monitor['sobrenome'] : 'Monitor não informado';
-$emailMonitor = $monitor['email'] ?? $monitoria['email'] ?? 'Não informado';
+$emailMonitorPessoal = $monitor['email'] ?? '';
+$emailMonitoria = $monitoria['email'] ?? 'Não informado';
 $cursoMonitor = $monitor && !empty($monitor['curso']) ? formatarCurso($monitor['curso']) : '';
+$descricaoMonitor = $monitor['descricao'] ?? ''; // Nova linha
 ?>
 
 <!DOCTYPE html>
@@ -183,26 +179,22 @@ $cursoMonitor = $monitor && !empty($monitor['curso']) ? formatarCurso($monitor['
         </header>
 
         <div class="monitoria-container">
+            <!-- Cabeçalho com capa e informações principais -->
             <div class="monitoria-header">
                 <div class="monitoria-capa">
-                    <img src="<?php echo htmlspecialchars($capaPath); ?>" alt="Capa da monitoria">
+                    <img src="<?php echo htmlspecialchars($capaPath); ?>" 
+                         alt="Capa da monitoria"
+                         onerror="this.onerror=null; this.src='assets/photos/default-monitoria.jpg';">
                 </div>
                 <div class="monitoria-info-principal">
                     <div class="tipo-monitoria">
                         <?php echo htmlspecialchars(formatarTipoMonitoria($monitoria['tipoMonitoria'])); ?>
                     </div>
                     <h1 class="monitoria-titulo"><?php echo htmlspecialchars($monitoria['nome']); ?></h1>
-                    
-                    <?php if ($podeEditar): ?>
-                    <div class="acoes-monitoria">
-                        <a href="menuCad-monitoria.php?idMonitoria=<?php echo $id; ?>" class="btn-editar">
-                            ✏️ Editar Monitoria
-                        </a>
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
 
+            <!-- Conteúdo principal -->
             <div class="monitoria-conteudo">
                 <!-- Sobre a Monitoria -->
                 <?php if (!empty($monitoria['textoSobre'])): ?>
@@ -211,21 +203,6 @@ $cursoMonitor = $monitor && !empty($monitor['curso']) ? formatarCurso($monitor['
                     <p><?php echo nl2br(htmlspecialchars($monitoria['textoSobre'])); ?></p>
                 </section>
                 <?php endif; ?>
-
-                <!-- Horários e Dias -->
-                <section class="secao horarios-atendimento">
-                    <h2>Horários de Atendimento</h2>
-                    <div class="horario-info">
-                        <div class="info-item">
-                            <strong>Dias:</strong>
-                            <span><?php echo formatarDiasSemana($monitoria['diasSemana']); ?></span>
-                        </div>
-                        <div class="info-item">
-                            <strong>Horário:</strong>
-                            <span><?php echo formatarHorario($monitoria['horarioInicio'], $monitoria['horarioFim']); ?></span>
-                        </div>
-                    </div>
-                </section>
 
                 <!-- Monitor -->
                 <section class="secao monitor-secao">
@@ -237,34 +214,62 @@ $cursoMonitor = $monitor && !empty($monitor['curso']) ? formatarCurso($monitor['
                                  onerror="this.onerror=null; this.src='<?php echo $placeholderPerfil; ?>';">
                         </div>
                         <div class="monitor-info">
-                            <div class="monitor-nome"><?php echo htmlspecialchars($nomeMonitor); ?></div>
-                            <?php if ($cursoMonitor): ?>
-                            <div class="monitor-curso"><?php echo htmlspecialchars($cursoMonitor); ?></div>
-                            <?php endif; ?>
-                            <div class="monitor-email">
-                                <a href="mailto:<?php echo htmlspecialchars($emailMonitor); ?>">
-                                    <?php echo htmlspecialchars($emailMonitor); ?>
-                                </a>
+                            <div class="monitor-dados">
+                                <div class="monitor-nome"><?php echo htmlspecialchars($nomeMonitor); ?></div>
+                                <?php if ($cursoMonitor): ?>
+                                <div class="monitor-curso"><?php echo htmlspecialchars($cursoMonitor); ?></div>
+                                <?php endif; ?>
+                                <?php if (!empty($emailMonitorPessoal)): ?>
+                                <div class="monitor-email">
+                                    <a href="mailto:<?php echo htmlspecialchars($emailMonitorPessoal); ?>">
+                                        <?php echo htmlspecialchars($emailMonitorPessoal); ?>
+                                    </a>
+                                </div>
+                                <?php endif; ?>
                             </div>
+                            
+                            <?php if (!empty($descricaoMonitor)): ?>
+                            <div class="monitor-descricao-inline">
+                                <strong>Sobre o Monitor</strong>
+                                <p><?php echo nl2br(htmlspecialchars($descricaoMonitor)); ?></p>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </section>
 
-                <!-- Contato -->
-                <?php if (!empty($monitoria['email'])): ?>
-                <section class="secao contato-monitoria">
-                    <h2>Contato</h2>
-                    <p>
-                        Para mais informações, entre em contato através do e-mail: 
-                        <a href="mailto:<?php echo htmlspecialchars($monitoria['email']); ?>">
-                            <?php echo htmlspecialchars($monitoria['email']); ?>
-                        </a>
-                    </p>
-                </section>
-                <?php endif; ?>
+                <!-- Área de Contato e Horários lado a lado -->
+                <div class="secao-dupla">
+                    <!-- Horários de Atendimento - Agora à esquerda -->
+                    <section class="secao-metade horarios-atendimento">
+                        <h2>Horários de Atendimento</h2>
+                        <div class="horario-info">
+                            <div class="info-item">
+                                <strong>Dias:</strong>
+                                <span><?php echo formatarDiasSemana($monitoria['diasSemana']); ?></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Horário:</strong>
+                                <span><?php echo formatarHorario($monitoria['horarioInicio'], $monitoria['horarioFim']); ?></span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Contato - Agora à direita -->
+                    <section class="secao-metade contato-monitoria">
+                        <h2>Agendar Horário</h2>
+                        <div class="contato-box">
+                            <p class="texto-agendamento">Para agendar seu horário de monitoria, envie um e-mail para:</p>
+                            <a href="mailto:<?php echo htmlspecialchars($emailMonitoria); ?>" class="email-destaque">
+                                <?php echo htmlspecialchars($emailMonitoria); ?>
+                            </a>
+                        </div>
+                    </section>
+                </div>
             </div>
         </div>
     </div>
+
     <footer>
             <div class="linha">
                 <div class="footer-container">

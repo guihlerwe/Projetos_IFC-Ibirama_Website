@@ -47,6 +47,7 @@
     }
     to {
         opacity: 1;
+        transform: translateX(0);
     }
 }
 
@@ -100,28 +101,6 @@
     animation: fadeInLeft 0.6s ease-out 0.4s backwards;
 }
 
-.acoes-monitoria {
-    margin-top: 15px;
-    animation: fadeInScale 0.6s ease-out 0.5s backwards;
-}
-
-.btn-editar {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #006620;
-    color: white;
-    text-decoration: none;
-    border-radius: 2vh;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-.btn-editar:hover {
-    background-color: #004d18;
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 102, 32, 0.3);
-}
-
 /* Conteúdo */
 .monitoria-conteudo {
     padding: 0;
@@ -158,14 +137,230 @@
 }
 
 /* Sobre a Monitoria */
+.sobre-monitoria {
+    animation: fadeInLeft 0.6s ease-out 0.7s backwards;
+}
+
 .sobre-monitoria p {
     color: var(--text-secondary);
     line-height: 1.7;
 }
 
-/* Horários */
+/* Monitor Card */
+.monitor-secao {
+    animation: fadeInRight 0.6s ease-out 0.8s backwards;
+}
+
+.monitor-secao h2 {
+    border-bottom: none;
+}
+
+.monitor-card-display {
+    display: flex;
+    gap: 20px;
+    align-items: center; /* Centraliza verticalmente todos os elementos */
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.monitor-card-display:hover {
+    background-color: var(--card-hover);
+}
+
+.monitor-foto {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--border-color);
+    flex-shrink: 0;
+    background-color: var(--card-bg);
+}
+
+.monitor-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.monitor-info {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    min-width: 0;
+    align-items: center; /* Centraliza verticalmente dados e descrição */
+}
+
+.monitor-dados {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente o conteúdo dos dados */
+}
+
+.monitor-nome {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.monitor-curso {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+.monitor-email {
+    font-size: 14px;
+}
+
+.monitor-email a {
+    color: #4caf50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.monitor-email a:hover {
+    color: #006620;
+    text-decoration: underline;
+}
+
+/* Descrição do Monitor ao lado */
+.monitor-descricao-inline {
+    flex: 1;
+    padding-left: 20px;
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente */
+    min-width: 0; /* Importante para permitir que o flex-item encolha */
+}
+
+.monitor-descricao-inline strong {
+    font-size: 15px;
+    color: var(--text-color);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.monitor-descricao-inline p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0;
+    max-height: calc(1.6em * 3); /* 3 linhas: tamanho da fonte (1em) x line-height (1.6) x 3 linhas */
+    overflow-y: auto;
+    overflow-x: hidden; /* Esconde overflow horizontal */
+    padding-right: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word; /* Força quebra de palavras longas */
+    white-space: normal; /* Permite quebra de linha */
+    hyphens: auto; /* Adiciona hifenização automática */
+}
+
+/* Estilização da scrollbar */
+.monitor-descricao-inline p::-webkit-scrollbar {
+    width: 6px;
+}
+
+.monitor-descricao-inline p::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+
+.monitor-descricao-inline p::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.monitor-descricao-inline p::-webkit-scrollbar-thumb:hover {
+    background: #4caf50;
+}
+
+/* Firefox */
+.monitor-descricao-inline p {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+/* Seção Dupla - Contato e Horários lado a lado */
+.secao-dupla {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    animation: fadeIn 0.6s ease-out 0.9s backwards;
+    align-items: flex-start;
+}
+
+.secao-metade {
+    flex: 1;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.secao-metade h2 {
+    font-size: 22px;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    font-weight: bold;
+    border-bottom: none;
+    padding-bottom: 5px;
+}
+
+/* Contato - Agora à direita */
+.contato-monitoria {
+    animation: fadeInRight 0.6s ease-out 0.9s backwards;
+}
+
+.contato-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.texto-agendamento {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+    padding-left: 0;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.email-destaque {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #4caf50;
+    text-decoration: none;
+    padding: 12px 15px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    margin-top: 0;
+}
+
+.email-destaque:hover {
+    color: #006620;
+    background-color: var(--card-hover);
+    border-color: #4caf50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+}
+
+/* Horários - Agora à esquerda */
 .horarios-atendimento {
-    animation: fadeInRight 0.6s ease-out 0.7s backwards;
+    animation: fadeInLeft 0.6s ease-out 0.9s backwards;
 }
 
 .horario-info {
@@ -200,101 +395,6 @@
     opacity: 0.8;
 }
 
-/* Monitor Card */
-.monitor-secao {
-    animation: fadeInLeft 0.6s ease-out 0.8s backwards;
-}
-
-.monitor-card-display {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
-}
-
-.monitor-card-display:hover {
-    background-color: var(--card-hover);
-}
-
-.monitor-foto {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--border-color);
-    flex-shrink: 0;
-    background-color: var(--card-bg);
-}
-
-.monitor-foto img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.monitor-info {
-    flex: 1;
-}
-
-.monitor-nome {
-    font-size: 20px;
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 5px;
-}
-
-.monitor-curso {
-    font-size: 14px;
-    color: var(--text-secondary);
-    font-style: italic;
-    margin-bottom: 8px;
-}
-
-.monitor-email {
-    font-size: 14px;
-}
-
-.monitor-email a {
-    color: #4caf50;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.monitor-email a:hover {
-    color: #006620;
-    text-decoration: underline;
-}
-
-/* Contato */
-.contato-monitoria {
-    animation: fadeInRight 0.6s ease-out 0.9s backwards;
-}
-
-.contato-monitoria p {
-    font-size: 16px;
-    color: var(--text-secondary);
-    padding: 12px 15px;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
-
-.contato-monitoria a {
-    color: #4caf50;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.contato-monitoria a:hover {
-    color: #006620;
-    text-decoration: underline;
-}
-
 /* Responsividade para tablets e mobile */
 @media (max-width: 768px) {
     .monitoria-container {
@@ -323,20 +423,51 @@
         padding: 5px 12px;
     }
     
-    .secao h2 {
+    .secao h2,
+    .secao-metade h2 {
         font-size: 18px;
+    }
+    
+    /* Seções lado a lado viram empilhadas */
+    .secao-dupla {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .secao-metade {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .secao-metade:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
     
     .monitor-card-display {
         flex-direction: column;
         text-align: center;
         padding: 15px;
+        align-items: center;
     }
     
     .monitor-foto {
         width: 80px;
         height: 80px;
         border-width: 2px;
+    }
+    
+    .monitor-info {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .monitor-dados {
+        width: 100%;
     }
     
     .monitor-nome {
@@ -346,6 +477,24 @@
     .monitor-curso,
     .monitor-email {
         font-size: 13px;
+    }
+    
+    .monitor-descricao-inline {
+        width: 100%;
+        padding-left: 0;
+        padding-top: 15px;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .monitor-descricao-inline strong {
+        font-size: 14px;
+    }
+    
+    .monitor-descricao-inline p {
+        font-size: 13px;
+        max-height: calc(1.6em * 3);
+        text-align: left;
     }
     
     .info-item {
@@ -359,14 +508,17 @@
         min-width: auto;
     }
     
-    .btn-editar {
-        font-size: 13px;
-        padding: 8px 16px;
+    .texto-agendamento {
+        font-size: 14px;
+        padding-left: 0;
+        text-align: left;
+        min-height: auto;
+        margin-bottom: 8px;
     }
     
-    /* Remove transform em hover para mobile */
-    .btn-editar:hover {
-        transform: none;
+    .email-destaque {
+        font-size: 14px;
+        padding: 10px 12px;
     }
 }
 
@@ -390,7 +542,8 @@
         padding-bottom: 20px;
     }
     
-    .secao h2 {
+    .secao h2,
+    .secao-metade h2 {
         font-size: 16px;
     }
     
@@ -403,7 +556,24 @@
         height: 70px;
     }
     
-    .contato-monitoria p {
-        padding: 10px 12px;
+    .monitor-descricao-inline strong {
+        font-size: 13px;
+    }
+    
+    .monitor-descricao-inline p {
+        font-size: 12px;
+        max-height: calc(1.5em * 3);
+    }
+    
+    .texto-agendamento {
+        font-size: 13px;
+        padding-left: 0;
+        min-height: auto;
+        margin-bottom: 6px;
+    }
+    
+    .email-destaque {
+        font-size: 13px;
+        padding: 8px 10px;
     }
 }

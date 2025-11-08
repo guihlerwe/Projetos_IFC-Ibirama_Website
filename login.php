@@ -13,6 +13,46 @@ $conn = new mysqli($host, $usuario, $senha, $banco);
 if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
+
+// Processar login antes de exibir o HTML
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $senhaDigitada = $_POST['senha'] ?? '';
+
+    // Buscar usuário pelo e-mail
+    $sql = "SELECT * FROM pessoa WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows > 0) {
+        $usuario = $resultado->fetch_assoc();
+
+        // Verificar a senha
+        if (password_verify($senhaDigitada, $usuario['senha'])) {
+            // Login bem-sucedido - salvar todas as informações na sessão
+            $_SESSION['nome'] = $usuario['nome'];
+            $_SESSION['sobrenome'] = $usuario['sobrenome'] ?? '';
+            $_SESSION['tipo'] = $usuario['tipo'];
+            $_SESSION['idPessoa'] = $usuario['idPessoa'];
+            $_SESSION['email'] = $usuario['email']; // ADICIONAR ESTA LINHA
+            $_SESSION['curso'] = $usuario['curso'] ?? '';
+
+            // Redirecionar para a página principal
+            header("Location: principal.php");
+            exit;
+        } else {
+            $erro = "Senha incorreta!";
+        }
+    } else {
+        $erro = "E-mail não encontrado!";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +71,7 @@ if ($conn->connect_error) {
         <header>
             <div class="logo">
                 <div class="icone-nav">
-                    <img src="../assets/photos/ifc-logo-preto.png" id="icone-ifc">
+                    <img src="assets/photos/ifc-logo-preto.png" id="icone-ifc">
                 </div>
                 Projetos do Campus Ibirama
             </div>
@@ -47,9 +87,15 @@ if ($conn->connect_error) {
         <!-- Formulário -->
         <div class="container-formulario">
             <div class="divformulario">
+                <?php if (isset($erro)): ?>
+                    <div class="mensagem-erro">
+                        <?php echo htmlspecialchars($erro); ?>
+                    </div>
+                <?php endif; ?>
+                
                 <form action="login.php" method="POST">            
                     <div class="imagem-container">
-                        <img src="../assets/photos/campus-image.jpg" id="foto-ifc">
+                        <img src="assets/photos/campus-image.jpg" id="foto-ifc">
                         <h1 class="titulo-sobre-imagem">Entrar</h1>
                     </div>
                     <p class="subtitulo">Preencha os dados para entrar.</p>
@@ -66,62 +112,11 @@ if ($conn->connect_error) {
             </div>
             <div class="cadastrar">
                 <p class="cadastro">Ainda não possui cadastro?</p>
-                <p class="cadastro-sublinhado"> <a href="cad-usuario.php"> Clique aqui para cadastrar-se!</p>
+                <p class="cadastro-sublinhado"> <a href="cad-usuario.php"> Clique aqui para cadastrar-se!</a></p>
             </div>
         </div>
     </div>
     
-    <script src="../assets/js/global.js"></script>
+    <script src="assets/js/global.js"></script>
 </body>
 </html>
-
-<?php
-// Conexão com o banco
-$host = 'localhost';
-$usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
-$banco = 'website';
-$conn = new mysqli($host, $usuario, $senha, $banco);
-
-// Verificar conexão
-if ($conn->connect_error) {
-    die("Erro na conexão: " . $conn->connect_error);
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $senhaDigitada = $_POST['senha'] ?? '';
-
-    // Buscar usuário pelo e-mail
-    $sql = "SELECT * FROM pessoa WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-
-    if ($resultado->num_rows > 0) {
-        $usuario = $resultado->fetch_assoc();
-
-        // Verificar a senha
-        if (password_verify($senhaDigitada, $usuario['senha'])) {
-            // Login bem-sucedido
-            session_start();
-            $_SESSION['nome'] = $usuario['nome'];
-            $_SESSION['tipo'] = $usuario['tipo'];
-            $_SESSION['idPessoa'] = $usuario['idPessoa'];
-
-            echo "Login realizado com sucesso!";
-            header("Location: principal.php");
-        } else {
-            echo "Senha incorreta!";
-        }
-    } else {
-        echo "E-mail não encontrado!";
-    }
-
-
-    $stmt->close();
-    $conn->close();
-}
-?>

@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Variável para armazenar seleção
+    // Variáveis para armazenar seleções
+    let coordenadoresSelecionados = [];
     let monitorSelecionado = null;
     const FOTO_PLACEHOLDER = '../assets/photos/fotos_perfil/sem_foto_perfil.jpg';
     
@@ -12,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const capaIcon = document.getElementById('capa-icon');
     
     if (fotoCapa) {
-        fotoCapa.addEventListener('change', function() {
-            const file = this.files[0];
+        fotoCapa.addEventListener('change', function(e) {
+            const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -26,220 +27,242 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Função para criar card do monitor
-    function criarMonitorCard(pessoa) {
-        const card = document.createElement('div');
-        card.className = 'monitor-card';
-        card.dataset.id = pessoa.idPessoa;
+    // Contador de caracteres da descrição
+    const descricao = document.getElementById('descricao');
+    const charCount = document.getElementById('char-count');
+    
+    if (descricao && charCount) {
+        // Atualizar contador inicial
+        charCount.textContent = descricao.value.length;
         
-        const fotoSrc = pessoa.foto_src && pessoa.foto_src !== 'null' ? pessoa.foto_src : FOTO_PLACEHOLDER;
-        const nomeCompleto = pessoa.nome + ' ' + pessoa.sobrenome;
-        const curso = pessoa.curso ? formatarCurso(pessoa.curso) : 'Curso não informado';
-        
-        card.innerHTML = `
-            <div class="monitor-card-foto">
-                <img src="${fotoSrc}" alt="${nomeCompleto}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
-            </div>
-            <div class="monitor-card-info">
-                <div class="monitor-card-nome">${nomeCompleto}</div>
-                <div class="monitor-card-email">${pessoa.email}</div>
-                <div class="monitor-card-curso">${curso}</div>
-            </div>
-            <button type="button" class="btn-remover-monitor" title="Remover monitor">×</button>
-        `;
-        
-        card.querySelector('.btn-remover-monitor').addEventListener('click', function() {
-            removerMonitor();
+        descricao.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
         });
-        
-        return card;
     }
     
-    // Função para formatar nome do curso
-    function formatarCurso(curso) {
-        const mapa = {
-            'administracao': 'Administração',
-            'informatica': 'Informática',
-            'vestuario': 'Vestuário',
-            'moda': 'Moda'
-        };
-        return mapa[curso.toLowerCase()] || curso.charAt(0).toUpperCase() + curso.slice(1);
+    // Configuração do modal de seleção de monitor
+    const btnSelecionarMonitor = document.querySelector('.btn-selecionar');
+    const monitorInfoContainer = document.getElementById('monitor-info-container');
+    const monitorIdInput = document.getElementById('monitor_id');
+    
+    if (btnSelecionarMonitor) {
+        btnSelecionarMonitor.addEventListener('click', function() {
+            abrirModalMonitor();
+        });
     }
     
-    // Modal de seleção de monitor
+    // Função para abrir modal de seleção de monitor
     function abrirModalMonitor() {
-        const dados = monitoresData;
-        
+        // Criar modal
         const modal = document.createElement('div');
-        modal.className = 'modal-selecao';
+        modal.className = 'modal-overlay';
         modal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Selecione um Monitor</h3>
-                    <span class="modal-close">&times;</span>
+                    <h2>Selecionar Monitor(a)</h2>
+                    <button type="button" class="btn-fechar-modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="modal-search" placeholder="Buscar por nome, email ou curso...">
-                    <div class="modal-lista"></div>
+                    <input type="text" id="busca-monitor" placeholder="Buscar por nome..." class="input-busca">
+                    <div class="lista-monitores" id="lista-monitores"></div>
                 </div>
             </div>
         `;
         
         document.body.appendChild(modal);
         
-        const lista = modal.querySelector('.modal-lista');
-        const searchInput = modal.querySelector('.modal-search');
+        // Preencher lista de monitores
+        preencherListaMonitores();
         
-        function renderizarLista(filtro = '') {
-            lista.innerHTML = '';
-            
-            const dadosFiltrados = dados.filter(pessoa => {
-                if (filtro) {
-                    const curso = pessoa.curso || '';
-                    const texto = `${pessoa.nome} ${pessoa.sobrenome} ${pessoa.email} ${curso}`.toLowerCase();
-                    return texto.includes(filtro.toLowerCase());
-                }
-                return true;
-            });
-            
-            if (dadosFiltrados.length === 0) {
-                lista.innerHTML = '<div class="sem-resultados">Nenhum monitor disponível</div>';
-                return;
-            }
-            
-            dadosFiltrados.forEach(pessoa => {
-                const item = document.createElement('div');
-                item.className = 'modal-item';
-                
-                const fotoSrc = pessoa.foto_src && pessoa.foto_src !== 'null' ? pessoa.foto_src : FOTO_PLACEHOLDER;
-                const curso = pessoa.curso ? formatarCurso(pessoa.curso) : 'Curso não informado';
-                
-                item.innerHTML = `
-                    <div class="modal-item-foto">
-                        <img src="${fotoSrc}" alt="${pessoa.nome}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
-                    </div>
-                    <div class="modal-item-info">
-                        <div class="modal-item-nome">${pessoa.nome} ${pessoa.sobrenome}</div>
-                        <div class="modal-item-email">${pessoa.email}</div>
-                        <div class="modal-item-curso" style="font-size: 12px; color: var(--text-secondary); font-style: italic;">${curso}</div>
-                    </div>
-                `;
-                
-                item.addEventListener('click', function() {
-                    adicionarMonitor(pessoa);
-                    document.body.removeChild(modal);
-                });
-                
-                lista.appendChild(item);
+        // Busca em tempo real
+        const inputBusca = document.getElementById('busca-monitor');
+        if (inputBusca) {
+            inputBusca.addEventListener('input', function() {
+                preencherListaMonitores(this.value.toLowerCase());
             });
         }
         
-        renderizarLista();
+        // Fechar modal
+        const btnFechar = modal.querySelector('.btn-fechar-modal');
+        if (btnFechar) {
+            btnFechar.addEventListener('click', function() {
+                document.body.removeChild(modal);
+            });
+        }
         
-        searchInput.addEventListener('input', function() {
-            renderizarLista(this.value);
-        });
-        
-        const closeBtn = modal.querySelector('.modal-close');
-        closeBtn.addEventListener('click', function() {
-            document.body.removeChild(modal);
-        });
-        
+        // Fechar ao clicar fora
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 document.body.removeChild(modal);
             }
         });
+    }
+    
+    // Função para preencher lista de monitores
+    function preencherListaMonitores(filtro = '') {
+        const listaMonitores = document.getElementById('lista-monitores');
+        if (!listaMonitores) return;
         
-        setTimeout(() => searchInput.focus(), 100);
+        listaMonitores.innerHTML = '';
+        
+        const monitoresFiltrados = monitoresData.filter(monitor => {
+            const nomeCompleto = `${monitor.nome} ${monitor.sobrenome}`.toLowerCase();
+            return nomeCompleto.includes(filtro);
+        });
+        
+        if (monitoresFiltrados.length === 0) {
+            listaMonitores.innerHTML = '<p class="sem-resultados">Nenhum monitor encontrado</p>';
+            return;
+        }
+        
+        monitoresFiltrados.forEach(monitor => {
+            const cursoFormatado = formatarCurso(monitor.curso);
+            
+            const monitorCard = document.createElement('div');
+            monitorCard.className = 'monitor-card-modal';
+            monitorCard.innerHTML = `
+                <img src="${monitor.foto_src}" alt="${monitor.nome}" class="monitor-foto-modal">
+                <div class="monitor-info-modal">
+                    <div class="monitor-nome-modal">${monitor.nome} ${monitor.sobrenome}</div>
+                    ${cursoFormatado ? `<div class="monitor-curso-modal">${cursoFormatado}</div>` : ''}
+                </div>
+                <button type="button" class="btn-selecionar-modal">Selecionar</button>
+            `;
+            
+            const btnSelecionar = monitorCard.querySelector('.btn-selecionar-modal');
+            btnSelecionar.addEventListener('click', function() {
+                selecionarMonitor(monitor);
+                const modal = document.querySelector('.modal-overlay');
+                if (modal) document.body.removeChild(modal);
+            });
+            
+            listaMonitores.appendChild(monitorCard);
+        });
     }
     
-    // Funções de adicionar/remover
-    function adicionarMonitor(pessoa) {
-        monitorSelecionado = pessoa;
-        const container = document.getElementById('monitor-info-container');
-        container.innerHTML = '';
-        container.appendChild(criarMonitorCard(pessoa));
-        atualizarInputMonitor();
-    }
-    
-    function removerMonitor() {
-        monitorSelecionado = null;
-        const container = document.getElementById('monitor-info-container');
-        container.innerHTML = `
-            <div class="selecionar-monitor" id="selecionar-monitor">
-                <button type="button" class="btn-selecionar">Selecionar Monitor(a)</button>
+    // Função para selecionar monitor
+    function selecionarMonitor(monitor) {
+        monitorSelecionado = monitor;
+        monitorIdInput.value = monitor.idPessoa;
+        
+        const cursoFormatado = formatarCurso(monitor.curso);
+        
+        // Atualizar container com o monitor selecionado
+        monitorInfoContainer.innerHTML = `
+            <div class="monitor-selecionado-preview">
+                <div class="monitor-foto-preview">
+                    <img src="${monitor.foto_src}" alt="${monitor.nome}">
+                </div>
+                <div class="monitor-dados-preview">
+                    <div class="monitor-nome-preview">${monitor.nome} ${monitor.sobrenome}</div>
+                    ${cursoFormatado ? `<div class="monitor-curso-preview">${cursoFormatado}</div>` : ''}
+                </div>
+                <button type="button" class="btn-remover-monitor">Remover</button>
             </div>
         `;
         
-        // Re-adicionar evento
-        document.getElementById('selecionar-monitor').querySelector('.btn-selecionar').addEventListener('click', abrirModalMonitor);
+        // Adicionar evento de remover
+        const btnRemover = monitorInfoContainer.querySelector('.btn-remover-monitor');
+        if (btnRemover) {
+            btnRemover.addEventListener('click', function() {
+                removerMonitor();
+            });
+        }
+    }
+    
+    // Função para remover monitor
+    function removerMonitor() {
+        monitorSelecionado = null;
+        monitorIdInput.value = '';
         
-        atualizarInputMonitor();
+        monitorInfoContainer.innerHTML = `
+            <div class="selecionar-monitor" id="selecionar-monitor">
+                <button type="button" class="btn-selecionar">+ Selecionar Monitor(a)</button>
+            </div>
+        `;
+        
+        // Re-adicionar evento de clique
+        const btnSelecionarNovo = monitorInfoContainer.querySelector('.btn-selecionar');
+        if (btnSelecionarNovo) {
+            btnSelecionarNovo.addEventListener('click', function() {
+                abrirModalMonitor();
+            });
+        }
     }
     
-    function atualizarInputMonitor() {
-        document.getElementById('monitor_id').value = monitorSelecionado ? monitorSelecionado.idPessoa : '';
+    // Função auxiliar para formatar nome do curso
+    function formatarCurso(curso) {
+        const cursoMap = {
+            'administracao': 'Administração',
+            'informatica': 'Informática',
+            'vestuario': 'Vestuário',
+            'moda': 'Moda'
+        };
+        return cursoMap[curso] || curso;
     }
     
-    // Carregar dados se estiver editando
-    if (monitoriaSelecionada && monitoresMonitoriaSelecionados.length > 0) {
-        adicionarMonitor(monitoresMonitoriaSelecionados[0]);
-    }
-    
-    // Eventos
-    const btnSelecionarMonitor = document.querySelector('#selecionar-monitor .btn-selecionar');
-    if (btnSelecionarMonitor) {
-        btnSelecionarMonitor.addEventListener('click', abrirModalMonitor);
+    // Carregar monitor se estiver em modo de edição
+    if (monitoresMonitoriaSelecionados && monitoresMonitoriaSelecionados.length > 0) {
+        selecionarMonitor(monitoresMonitoriaSelecionados[0]);
     }
     
     // Validação do formulário
-    document.getElementById('formulario').addEventListener('submit', function(e) {
-        const diasSelecionados = document.querySelectorAll('input[name="dias-semana[]"]:checked');
-        if (diasSelecionados.length === 0) {
-            alert('Selecione pelo menos um dia da semana!');
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // Função para configurar custom select
-    function setupCustomSelect(selectId, hiddenInputId) {
-        const customSelect = document.getElementById(selectId);
-        if (!customSelect) return;
-        
-        const selectedDiv = customSelect.querySelector('.select-selected');
-        const itemsDiv = customSelect.querySelector('.select-items');
-        const hiddenInput = document.getElementById(hiddenInputId);
-        
-        if (!selectedDiv || !itemsDiv || !hiddenInput) return;
-        
-        selectedDiv.addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.querySelectorAll('.custom-select.open').forEach(other => {
-                if (other !== customSelect) other.classList.remove('open');
-            });
-            customSelect.classList.toggle('open');
-        });
-        
-        itemsDiv.querySelectorAll('div').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const value = this.getAttribute('data-value');
-                const text = this.textContent;
-                
-                selectedDiv.textContent = text;
-                hiddenInput.value = value;
-                
-                customSelect.classList.remove('open');
-            });
+    const formulario = document.getElementById('formulario');
+    if (formulario) {
+        formulario.addEventListener('submit', function(e) {
+            // Validar se pelo menos um dia foi selecionado
+            const diasSelecionados = document.querySelectorAll('.dia-checkbox:checked');
+            if (diasSelecionados.length === 0) {
+                e.preventDefault();
+                alert('Por favor, selecione pelo menos um dia de atendimento.');
+                return false;
+            }
+            
+            // Validar se um monitor foi selecionado
+            if (!monitorIdInput.value) {
+                e.preventDefault();
+                alert('Por favor, selecione um monitor para a monitoria.');
+                return false;
+            }
+            
+            return true;
         });
     }
+});
+
+// Função para configurar custom select
+function setupCustomSelect(selectId, inputId) {
+    const customSelect = document.getElementById(selectId);
+    if (!customSelect) return;
     
-    // Fechar dropdowns ao clicar fora
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.custom-select.open').forEach(select => {
-            select.classList.remove('open');
+    const selectSelected = customSelect.querySelector('.select-selected');
+    const selectItems = customSelect.querySelector('.select-items');
+    const hiddenInput = document.getElementById(inputId);
+    
+    if (!selectSelected || !selectItems || !hiddenInput) return;
+    
+    // Toggle dropdown
+    selectSelected.addEventListener('click', function(e) {
+        e.stopPropagation();
+        selectItems.classList.toggle('active');
+    });
+    
+    // Selecionar item
+    const items = selectItems.querySelectorAll('div');
+    items.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            selectSelected.textContent = text;
+            hiddenInput.value = value;
+            selectItems.classList.remove('active');
         });
     });
-});
+    
+    // Fechar ao clicar fora
+    document.addEventListener('click', function() {
+        selectItems.classList.remove('active');
+    });
+}

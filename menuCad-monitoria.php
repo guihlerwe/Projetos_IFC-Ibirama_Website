@@ -2,6 +2,13 @@
 session_start();
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
+$email = $_SESSION['email'] ?? '';
+
+// Verificar se é coordenador e tem o e-mail autorizado
+if ($tipo !== 'coordenador' || $email !== 'cge@ifc.edu.br') {
+    header('Location: principal.php');
+    exit;
+}
 
 $host = 'localhost';
 $usuario = 'root';
@@ -161,7 +168,7 @@ if ($modoEdicao && $monitoriaSelecionada) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/tema-global.css">
     <link rel="stylesheet" href="../assets/css/cad-monitoria.css">
-    <title>Criar/Editar Monitoria</title>
+    <title><?php echo $modoEdicao ? 'Editar Monitoria' : 'Criar Monitoria'; ?></title>
 </head>
 <body>
 <script>
@@ -189,89 +196,126 @@ if ($modoEdicao && $monitoriaSelecionada) {
         </div>
     </header>
 
-    <form id="formulario" action="cad-monitoriaBD.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="id-monitoria" id="id-monitoria"
-            value="<?php echo $modoEdicao ? (int) $idMonitoriaEditar : ''; ?>">
+    <div class="monitoria-container">
+        <h1 class="page-title"><?php echo $modoEdicao ? 'Editar Monitoria' : 'Criar Nova Monitoria'; ?></h1>
+        
+        <form id="formulario" action="cad-monitoriaBD.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id-monitoria" id="id-monitoria"
+                value="<?php echo $modoEdicao ? (int) $idMonitoriaEditar : ''; ?>">
 
-        <div id="info-monitoria">
-            <div id="div-capa">
-                <label id="upload-capa">
-                    <input type="file" id="foto-capa" name="capa" accept="image/*" hidden <?php echo !$modoEdicao ? 'required' : ''; ?>>
-                    <span id="capa-icon"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>📷</span>
-                    <img id="capa-preview" <?php if ($modoEdicao && $capaAtual) { echo 'src="' . htmlspecialchars($capaAtual) . '" style="display:block; width:100%; height:100%; object-fit:cover;"'; } else { echo 'style="display: none;"'; } ?>>
-                </label>
+            <!-- Cabeçalho: Capa + Tipo e Nome -->
+            <div class="monitoria-header-form">
+                <div class="form-group-capa">
+                    <label class="form-label">Capa da Monitoria *</label>
+                    <div id="div-capa">
+                        <label id="upload-capa">
+                            <input type="file" id="foto-capa" name="capa" accept="image/*" hidden <?php echo !$modoEdicao ? 'required' : ''; ?>>
+                            <span id="capa-icon"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>📷</span>
+                            <img id="capa-preview" <?php if ($modoEdicao && $capaAtual) { echo 'src="' . htmlspecialchars($capaAtual) . '" style="display:block; width:100%; height:100%; object-fit:cover;"'; } else { echo 'style="display: none;"'; } ?>>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="monitoria-info-form">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Monitoria *</label>
+                        <div class="custom-select" id="tipo-select">
+                            <div class="select-selected"><?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['tipoLabel']) : 'Selecione o tipo'; ?></div>
+                            <div class="select-items">
+                                <div data-value="tecnica-integrada">Área Técnica Integrada</div>
+                                <div data-value="ensino-medio">Ensino Médio</div>
+                                <div data-value="ensino-superior">Ensino Superior</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="tipo-monitoria" name="tipo-monitoria" value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['tipoMonitoria']) : ''; ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nome da Monitoria *</label>
+                        <input type="text" id="nome-monitoria" name="nome-monitoria" placeholder="Ex: Ciências da Natureza" value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['nome']) : ''; ?>" required>
+                    </div>
+                </div>
             </div>
-            <div id="dados-monitoria">
-                <div class="div-tipo">
-                    <div class="custom-select" id="tipo-select">
-                        <div class="select-selected"><?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['tipoLabel']) : 'Tipo de Monitoria'; ?></div>
-                        <div class="select-items">
-                            <div data-value="tecnica-integrada">Área Técnica Integrada</div>
-                            <div data-value="ensino-medio">Ensino Médio</div>
-                            <div data-value="ensino-superior">Ensino Superior</div>
+
+            <!-- Sobre a Monitoria -->
+            <div class="form-section">
+                <h2 class="section-title">Sobre a Monitoria</h2>
+                <div class="form-group">
+                    <label class="form-label">Descrição (máx. 1000 caracteres)</label>
+                    <textarea id="descricao" name="descricao" maxlength="1000" placeholder="Descreva os objetivos, conteúdos abordados e como a monitoria pode ajudar os alunos..." rows="6"><?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['descricao']) : ''; ?></textarea>
+                    <span class="char-counter"><span id="char-count">0</span>/1000</span>
+                </div>
+            </div>
+
+            <!-- Monitor -->
+            <div class="form-section">
+                <h2 class="section-title">Monitor(a)</h2>
+                <div class="form-group">
+                    <div id="monitor-info-container">
+                        <div class="selecionar-monitor" id="selecionar-monitor">
+                            <button type="button" class="btn-selecionar">+ Selecionar Monitor(a)</button>
                         </div>
                     </div>
-                    <input type="hidden" id="tipo-monitoria" name="tipo-monitoria" value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['tipoMonitoria']) : ''; ?>" required>
+                    <input type="hidden" name="monitor_id" id="monitor_id" required>
                 </div>
-                <input type="text" id="nome-monitoria" name="nome-monitoria" placeholder="Nome da Monitoria" value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['nome']) : ''; ?>" required>
             </div>
-            
-            <div id="dias-horarios">
-                <div class="dias-semana">
-                    <label>Dias de atendimento:</label>
-                    <div class="checkbox-group">
-                        <?php
-                        $dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-                        $diasLabel = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-                        $diasSelecionados = ($modoEdicao && $monitoriaEditData) ? $monitoriaEditData['diasSemana'] : [];
-                        
-                        for ($i = 0; $i < count($dias); $i++) {
-                            $checked = in_array($dias[$i], $diasSelecionados) ? 'checked' : '';
-                            echo '<label class="checkbox-label">';
-                            echo '<input type="checkbox" name="dias-semana[]" value="' . $dias[$i] . '" ' . $checked . '>';
-                            echo '<span>' . $diasLabel[$i] . '</span>';
-                            echo '</label>';
-                        }
-                        ?>
+
+            <!-- Horários e Contato lado a lado -->
+            <div class="form-section-dupla">
+                <!-- Horários -->
+                <div class="form-section-metade">
+                    <h2 class="section-title">Horários de Atendimento</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Dias de Atendimento *</label>
+                        <div class="checkbox-group">
+                            <?php
+                            $dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+                            $diasLabel = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+                            $diasSelecionados = ($modoEdicao && $monitoriaEditData) ? $monitoriaEditData['diasSemana'] : [];
+                            
+                            for ($i = 0; $i < count($dias); $i++) {
+                                $checked = in_array($dias[$i], $diasSelecionados) ? 'checked' : '';
+                                echo '<label class="checkbox-label">';
+                                echo '<input type="checkbox" name="dias-semana[]" class="dia-checkbox" value="' . $dias[$i] . '" ' . $checked . '>';
+                                echo '<span>' . $diasLabel[$i] . '</span>';
+                                echo '</label>';
+                            }
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Horário de Atendimento *</label>
+                        <div class="horario-inputs">
+                            <input type="time" name="horario-inicio" id="horario-inicio" 
+                                   value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['horarioInicio']) : ''; ?>" required>
+                            <span class="horario-separator">às</span>
+                            <input type="time" name="horario-fim" id="horario-fim"
+                                   value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['horarioFim']) : ''; ?>" required>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="horarios">
-                    <label>Horário de atendimento:</label>
-                    <div class="horario-group">
-                        <input type="time" name="horario-inicio" id="horario-inicio" 
-                               value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['horarioInicio']) : ''; ?>" required>
-                        <span>às</span>
-                        <input type="time" name="horario-fim" id="horario-fim"
-                               value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['horarioFim']) : ''; ?>" required>
+
+                <!-- Contato -->
+                <div class="form-section-metade">
+                    <h2 class="section-title">Agendar Horário</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">E-mail para Agendamento *</label>
+                        <input type="email" id="email" name="email" placeholder="email@ifc.edu.br" value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['email']) : ''; ?>" required>
+                        <p class="form-hint">Os alunos usarão este e-mail para agendar horários de monitoria.</p>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="conteudo">
-            <h2 class="subtitulo">Sobre (1000 max.)</h2>
-            <textarea id="descricao" name="descricao" maxlength="1000" placeholder="Descreva a monitoria..."><?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['descricao']) : ''; ?></textarea>
-
-            <div class="equipe">
-                <h2 class="subtitulo">Monitor(a)</h2>
-                <div id="monitor-info-container">
-                    <!-- Monitor será adicionado aqui -->
-                    <div class="selecionar-monitor" id="selecionar-monitor">
-                        <button type="button" class="btn-selecionar">Selecionar Monitor(a)</button>
-                    </div>
-                </div>
-                <input type="hidden" name="monitor_id" id="monitor_id">
+            <!-- Botões de ação -->
+            <div class="form-actions">
+                <button type="button" class="btn-cancelar" onclick="window.location.href='principal.php'">Cancelar</button>
+                <button type="submit" class="btn-salvar"><?php echo $modoEdicao ? 'Salvar Alterações' : 'Criar Monitoria'; ?></button>
             </div>
-
-            <div id="contato">
-                <h2 class="subtitulo">Contato</h2>
-                <input type="email" id="email" name="email" placeholder="E-mail para contato" value="<?php echo ($modoEdicao && $monitoriaEditData) ? htmlspecialchars($monitoriaEditData['email']) : ''; ?>">
-            </div>
-
-            <button type="submit" id="bt-criar-monitoria"><?php echo $modoEdicao ? 'Salvar alterações' : 'Criar Monitoria'; ?></button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <script src="../assets/js/global.js"></script>

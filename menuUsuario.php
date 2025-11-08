@@ -9,6 +9,11 @@ if (!isset($_SESSION["tipo"])) {
 }
 
 $tipo = $_SESSION["tipo"];
+$email = $_SESSION["email"] ?? '';
+
+// DEBUG temporário - remover depois
+echo '<script>console.log("Email da sessão: ' . $email . '");</script>';
+echo '<script>console.log("Tipo: ' . $tipo . '");</script>';
 
 echo '
 <div class="menu-dropdown">
@@ -26,8 +31,20 @@ if ($tipo === "coordenador") {
     echo '
         <a href="menuCad-projeto.php">Criar projeto</a>
         <a href="menuEditProjetos.php">Seus projetos</a>
+    ';
+    
+    // Mostrar opções de monitoria apenas para cge@ifc.edu.br
+    // Removendo espaços em branco e convertendo para minúsculas
+    $emailLimpo = strtolower(trim($email));
+    
+    if ($emailLimpo === 'cge@ifc.edu.br') {
+        echo '
         <a href="menuCad-monitoria.php">Criar monitoria</a>
         <a href="menuEditMonitorias.php">Editar monitorias</a>
+        ';
+    }
+    
+    echo '
         <a href="menuConta.php">Dados da conta</a>
         <a href="logout.php" class="sair">Sair</a>
     ';
