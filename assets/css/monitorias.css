@@ -64,7 +64,8 @@ body {
     color: var(--text-color);
 }
 
-.btn-filtrar {
+.btn-filtrar,
+#limpar-filtros {
     padding: 8px 16px;
     border: 1px solid var(--border-color);
     border-radius: 20px;
@@ -75,28 +76,55 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Botão limpar filtros - começa oculto */
+#limpar-filtros {
+    display: none;
+    position: relative;
+}
+
+#limpar-filtros:hover {
+    text-decoration: none;
+    background-color: var(--nav-hover);
+    border-color: #999;
+}
+
 /* Hover e Estado ativo para cada categoria */
-.btn-filtrar.tecnico:hover,
-.btn-filtrar.tecnico.ativo {
+.btn-filtrar.tecnico:hover {
+    background-color: #2e7d32;
+    color: white;
+    text-shadow: none;
+    border-color: #2e7d32;
+}
+
+.btn-filtrar.tecnico.active {
     background-color: #2e7d32 !important;
     color: white !important;
-    text-shadow: none;
     border-color: #2e7d32 !important;
 }
 
-.btn-filtrar.superior:hover,
-.btn-filtrar.superior.ativo {
-    background-color: #8F4CA0 !important;
-    color: white !important;
+.btn-filtrar.superior:hover {
+    background-color: #1976d2;
+    color: white;
     text-shadow: none;
-    border-color: #8F4CA0 !important;
+    border-color: #1976d2;
 }
 
-.btn-filtrar.geral:hover,
-.btn-filtrar.geral.ativo {
+.btn-filtrar.superior.active {
+    background-color: #1976d2 !important;
+    color: white !important;
+    border-color: #1976d2 !important;
+}
+
+.btn-filtrar.geral:hover {
+    background-color: #d32f2f;
+    color: white;
+    text-shadow: none;
+    border-color: #d32f2f;
+}
+
+.btn-filtrar.geral.active {
     background-color: #d32f2f !important;
     color: white !important;
-    text-shadow: none;
     border-color: #d32f2f !important;
 }
 
@@ -156,23 +184,12 @@ body {
     text-align: center;
 }
 
-
 .project-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     position: absolute;
 }
-
-.project-card {
-    position: relative;
-    border-radius: 2vh;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    aspect-ratio: 16/9;
-    /* Mantém proporção consistente para todos os cartões */
-}
-
 
 .project-card {
     position: relative;
@@ -197,7 +214,30 @@ body {
 }
 
 .project-card:hover .project-image {
-    transform: scale(1.05); /* Aumenta ligeiramente a imagem */
+    transform: scale(1.05);
+}
+
+/* Mensagem quando não há resultados */
+.no-projects {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.no-projects p {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.no-projects a {
+    color: #adadad;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.no-projects a:hover {
+    text-decoration: underline;
 }
 
 @media (max-width: 600px) {

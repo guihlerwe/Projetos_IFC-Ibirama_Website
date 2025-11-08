@@ -1,0 +1,657 @@
+/* Estilos específicos para cadastro de monitoria */
+/* Herda os estilos base do tema-global.css */
+
+#formulario {
+    flex: 1;
+}
+
+/* Info da Monitoria - Similar ao info-projeto */
+#info-monitoria {
+    padding: 0 20px;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+/* Capa da Monitoria - Mantém circular */
+#div-capa {
+    width: 150px;
+    height: 150px;
+    background-color: var(--card-bg);
+    border: 2px dashed var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+#div-capa:hover {
+    border-color: #006620;
+    background-color: var(--banner-bg);
+}
+
+#upload-capa {
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#capa-icon {
+    position: absolute;
+    font-size: 48px;
+    color: #006620;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#capa-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+/* Dados da Monitoria */
+#dados-monitoria {
+    flex: 1;
+}
+
+.div-tipo {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+/* Custom Select para Tipo - Similar ao eixo/categoria */
+.div-tipo .custom-select {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 6px 12px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    user-select: none;
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.div-tipo .custom-select:hover {
+    border-color: #006620;
+}
+
+.div-tipo .select-selected {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.div-tipo .select-items {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 99;
+    display: none;
+    overflow: hidden;
+    animation: expandDown 0.2s ease forwards;
+}
+
+.div-tipo .select-items div {
+    padding: 8px 12px;
+    transition: background-color 0.2s;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.div-tipo .select-items div:hover {
+    background-color: var(--banner-bg);
+}
+
+.div-tipo .custom-select.open .select-items {
+    display: block;
+}
+
+@keyframes expandDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Nome da Monitoria - Similar ao nome-projeto */
+#nome-monitoria {
+    padding: 15px;
+    margin-top: 10px;
+    font-size: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 2vh;
+    width: 100%;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+/* Dias e Horários */
+#dias-horarios {
+    padding: 0 20px;
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.dias-semana,
+.horarios {
+    flex: 1;
+}
+
+.dias-semana > label:first-child,
+.horarios > label:first-child {
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 2vh;
+    transition: background-color 0.2s;
+    border: 1px solid transparent;
+}
+
+.checkbox-label:hover {
+    background-color: var(--banner-bg);
+    border-color: var(--border-color);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #006620;
+}
+
+.checkbox-label span {
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.horario-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.horario-group input[type="time"] {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 2vh;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.horario-group input[type="time"]:focus {
+    outline: none;
+    border-color: #006620;
+}
+
+.horario-group span {
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* Conteúdo - Reutiliza estilos do cad-projeto */
+#conteudo {
+    padding: 0 20px 20px 20px;
+}
+
+.subtitulo {
+    font-size: 18px;
+    margin: 20px 0 10px;
+    color: var(--text-color);
+}
+
+#descricao {
+    width: 100%;
+    min-height: 150px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 2vh;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    resize: none;
+    overflow: hidden;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Seção da Equipe */
+.equipe {
+    margin-top: 20px;
+}
+
+/* Monitor Card - Expandido */
+#monitor-info-container {
+    margin-top: 10px;
+}
+
+.monitor-card {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 2vh;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.monitor-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.monitor-card-foto {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid var(--border-color);
+}
+
+.monitor-card-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.monitor-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+}
+
+.monitor-card-nome {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.monitor-card-email,
+.monitor-card-curso {
+    font-size: 14px;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.monitor-card-curso {
+    font-style: italic;
+}
+
+.btn-remover-monitor {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+    background-color: #ff4444;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    border: none;
+    color: white;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.btn-remover-monitor:hover {
+    background-color: #cc0000;
+    transform: scale(1.1);
+}
+
+.selecionar-monitor {
+    padding: 20px;
+    border: 2px dashed var(--border-color);
+    border-radius: 2vh;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.selecionar-monitor:hover {
+    border-color: #006620;
+    background-color: var(--banner-bg);
+}
+
+.btn-selecionar {
+    padding: 10px 24px;
+    background-color: #006620;
+    color: white;
+    border: none;
+    border-radius: 2vh;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.btn-selecionar:hover {
+    background-color: #004d18;
+    transform: scale(1.02);
+}
+
+/* Contato */
+#contato {
+    margin-top: 20px;
+}
+
+#email {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 2vh;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+/* Botão de Criar/Salvar */
+#bt-criar-monitoria {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    background-color: #006620;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 2vh;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#bt-criar-monitoria:hover {
+    background-color: #004d18;
+    transform: scale(1.01);
+}
+
+/* Modal de Seleção - Reutiliza estilos do cad-projeto */
+.modal-selecao {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 20px;
+}
+
+.modal-close {
+    font-size: 30px;
+    cursor: pointer;
+    color: var(--text-color);
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #ff4444;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-search {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.modal-search:focus {
+    outline: none;
+    border-color: #006620;
+}
+
+.modal-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modal-lista::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-lista::-webkit-scrollbar-track,
+.modal-body::-webkit-scrollbar-track {
+    background: var(--card-bg);
+    border-radius: 4px;
+}
+
+.modal-lista::-webkit-scrollbar-thumb,
+.modal-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-lista::-webkit-scrollbar-thumb:hover,
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+.modal-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: var(--card-bg);
+}
+
+.modal-item:hover {
+    background-color: var(--banner-bg);
+    border-color: #006620;
+    transform: scale(0.97);
+}
+
+.modal-item-foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.modal-item-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-item-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.modal-item-nome {
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal-item-email {
+    font-size: 12px;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal-item-curso {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.sem-resultados {
+    text-align: center;
+    padding: 40px 20px;
+    color: #888;
+    font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #info-monitoria {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    #div-capa {
+        width: 120px;
+        height: 120px;
+    }
+    
+    #nome-monitoria {
+        font-size: 18px;
+    }
+    
+    #dias-horarios {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .monitor-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 15px;
+    }
+    
+    .monitor-card-foto {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .btn-remover-monitor {
+        top: 5px;
+        right: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    #info-monitoria,
+    #conteudo,
+    #dias-horarios {
+        padding: 0 10px;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+}

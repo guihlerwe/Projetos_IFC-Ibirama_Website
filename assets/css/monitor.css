@@ -1,151 +1,409 @@
-/* Contêiner principal */
+/* Estilos para a página de exibição da monitoria */
+
+/* Contêiner principal - segue padrão do projeto.css */
 .monitoria-container {
-  max-width: 900px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
-  color: #333;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Capa (banner superior) */
+/* Animações de entrada */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Cabeçalho da monitoria */
+.monitoria-header {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    align-items: center;
+    animation: fadeInScale 0.6s ease-out;
+}
+
 .monitoria-capa {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--border-color);
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    animation: fadeInScale 0.6s ease-out 0.2s backwards;
 }
 
 .monitoria-capa img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Gradiente na transição capa -> conteúdo */
-.monitoria-capa::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 100px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #fff 100%);
+.monitoria-info-principal {
+    flex: 1;
 }
 
-/* Foto do monitor sobreposta */
-.foto-monitor {
-  position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid #fff;
-  width: 120px;
-  height: 120px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+.tipo-monitoria {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: #006620;
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    animation: fadeInScale 0.5s ease-out 0.3s backwards;
 }
 
-.foto-monitor img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.monitoria-titulo {
+    font-size: 32px;
+    color: var(--text-color);
+    margin: 10px 0;
+    font-weight: bold;
+    animation: fadeInLeft 0.6s ease-out 0.4s backwards;
+}
+
+.acoes-monitoria {
+    margin-top: 15px;
+    animation: fadeInScale 0.6s ease-out 0.5s backwards;
+}
+
+.btn-editar {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #006620;
+    color: white;
+    text-decoration: none;
+    border-radius: 2vh;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-editar:hover {
+    background-color: #004d18;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 102, 32, 0.3);
 }
 
 /* Conteúdo */
 .monitoria-conteudo {
-  padding: 70px 20px 30px; /* espaço maior em cima por causa da foto */
-  text-align: center;
+    padding: 0;
+    padding-bottom: 40px;
+    animation: fadeIn 0.8s ease-out 0.6s backwards;
 }
 
-.monitoria-conteudo h1 {
-  font-size: 24px;
-  margin-bottom: 5px;
+.secao {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.monitoria-conteudo h3 {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 20px;
+.secao:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
-.monitoria-conteudo section {
-  margin-bottom: 25px;
-  text-align: left;
+.secao h2 {
+    font-size: 22px;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
 }
 
-.monitoria-conteudo h2 {
-  font-size: 18px;
-  margin-bottom: 8px;
-  color: #2e7d32; /* cor temática */
+.secao p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 16px;
+    text-align: justify;
 }
 
-.monitoria-conteudo p,
-.monitoria-conteudo a {
-  font-size: 15px;
-  line-height: 1.5;
-  color: #333;
-  text-decoration: none;
+/* Sobre a Monitoria */
+.sobre-monitoria p {
+    color: var(--text-secondary);
+    line-height: 1.7;
 }
 
-footer {
-    background-color: #e0e0e0;
-    padding: 5px 20px;
-    color: rgb(0, 0, 0);
+/* Horários */
+.horarios-atendimento {
+    animation: fadeInRight 0.6s ease-out 0.7s backwards;
+}
+
+.horario-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    border: 1px solid var(--border-color);
+    font-size: 16px;
+}
+
+.info-item:hover {
+    background-color: var(--card-hover);
+}
+
+.info-item strong {
+    color: var(--text-color);
+    min-width: 80px;
+}
+
+.info-item span {
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* Monitor Card */
+.monitor-secao {
+    animation: fadeInLeft 0.6s ease-out 0.8s backwards;
+}
+
+.monitor-card-display {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.monitor-card-display:hover {
+    background-color: var(--card-hover);
+}
+
+.monitor-foto {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--border-color);
+    flex-shrink: 0;
+    background-color: var(--card-bg);
+}
+
+.monitor-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.monitor-info {
+    flex: 1;
+}
+
+.monitor-nome {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.monitor-curso {
     font-size: 14px;
-    margin-top: 38vh;
-    padding-bottom: 5vh;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 8px;
 }
 
-footer h2 {
-    margin-bottom: 3px;
-    margin-top: 3vh;
-    color: rgb(0, 0, 0);
+.monitor-email {
+    font-size: 14px;
 }
 
-footer p, footer span, footer li {
-    color: rgb(0, 0, 0);
-    margin: 0;
-    line-height: 1.3;
-}
-
-footer ul {
-    margin: 0;
-    padding-left: 20px;
-}
-
-footer li {
-    margin-bottom: 2px;
-}
-
-footer a {
-    color: rgb(0, 0, 0);
+.monitor-email a {
+    color: #4caf50;
     text-decoration: none;
     transition: color 0.3s ease;
-    margin-bottom: 10vh;
 }
 
-footer a:hover {
-    color: red;
+.monitor-email a:hover {
+    color: #006620;
+    text-decoration: underline;
 }
 
-footer .footer-container {
-    max-width: 1350px; 
-    margin: 0 auto;     
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
+/* Contato */
+.contato-monitoria {
+    animation: fadeInRight 0.6s ease-out 0.9s backwards;
 }
 
-footer .Aluno {
-    flex: 1;
-    min-width: 200px;
+.contato-monitoria p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    padding: 12px 15px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
 }
 
-footer .Sobre {
-    flex: 2;
-    min-width: 300px;
+.contato-monitoria a {
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.contato-monitoria a:hover {
+    color: #006620;
+    text-decoration: underline;
+}
+
+/* Responsividade para tablets e mobile */
+@media (max-width: 768px) {
+    .monitoria-container {
+        margin-top: 60px;
+        padding: 0 15px;
+    }
+    
+    .monitoria-header {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+    
+    .monitoria-capa {
+        width: 150px;
+        height: 150px;
+        border-width: 2px;
+    }
+    
+    .monitoria-titulo {
+        font-size: 24px;
+    }
+    
+    .tipo-monitoria {
+        font-size: 12px;
+        padding: 5px 12px;
+    }
+    
+    .secao h2 {
+        font-size: 18px;
+    }
+    
+    .monitor-card-display {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+    
+    .monitor-foto {
+        width: 80px;
+        height: 80px;
+        border-width: 2px;
+    }
+    
+    .monitor-nome {
+        font-size: 18px;
+    }
+    
+    .monitor-curso,
+    .monitor-email {
+        font-size: 13px;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+        padding: 10px 12px;
+    }
+    
+    .info-item strong {
+        min-width: auto;
+    }
+    
+    .btn-editar {
+        font-size: 13px;
+        padding: 8px 16px;
+    }
+    
+    /* Remove transform em hover para mobile */
+    .btn-editar:hover {
+        transform: none;
+    }
+}
+
+/* Mobile muito pequeno */
+@media (max-width: 480px) {
+    .monitoria-container {
+        padding: 0 10px;
+    }
+    
+    .monitoria-capa {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .monitoria-titulo {
+        font-size: 20px;
+    }
+    
+    .secao {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+    }
+    
+    .secao h2 {
+        font-size: 16px;
+    }
+    
+    .secao p {
+        font-size: 14px;
+    }
+    
+    .monitor-foto {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .contato-monitoria p {
+        padding: 10px 12px;
+    }
 }

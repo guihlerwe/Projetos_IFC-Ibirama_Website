@@ -2,6 +2,7 @@
 session_start();
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
+$idPessoaLogado = $_SESSION['idPessoa'] ?? null;
 
 // Conexão com o banco de dados
 $host = 'localhost';
@@ -19,24 +20,135 @@ $conn->set_charset("utf8");
 
 $id = $_GET['id'] ?? null;
 $monitoria = null;
+$monitor = null;
+$podeEditar = false;
+
 if ($id) {
-    $stmt = $conn->prepare("SELECT m.*, p.nome as monitor_nome, p.email as monitor_email FROM monitoria m LEFT JOIN pessoa p ON m.idPessoa = p.idPessoa WHERE m.idMonitoria = ?");
+    // Buscar dados da monitoria
+    $stmt = $conn->prepare("SELECT * FROM monitoria WHERE idMonitoria = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
     $monitoria = $result->fetch_assoc();
     $stmt->close();
+    
+    // Buscar dados do monitor vinculado
+    if ($monitoria) {
+        $stmtMonitor = $conn->prepare("
+            SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.curso, p.foto_perfil 
+            FROM monitoria_pessoa mp 
+            INNER JOIN pessoa p ON p.idPessoa = mp.idPessoa 
+            WHERE mp.idMonitoria = ? AND mp.tipoPessoa = 'monitor'
+        ");
+        $stmtMonitor->bind_param("i", $id);
+        $stmtMonitor->execute();
+        $resultMonitor = $stmtMonitor->get_result();
+        $monitor = $resultMonitor->fetch_assoc();
+        $stmtMonitor->close();
+        
+        // Verificar se o usuário logado é coordenador e pode editar
+        if ($tipo === 'coordenador' && $idPessoaLogado) {
+            $podeEditar = true; // Qualquer coordenador pode editar
+        }
+    }
 }
 
-$monitor = null;
-if ($id) {
-    $stmt = $conn->prepare("SELECT * FROM monitores WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $monitor = $result->fetch_assoc();
-    $stmt->close();
+// Função para gerar src da foto de perfil
+$placeholderPerfil = 'assets/photos/fotos_perfil/sem_foto_perfil.jpg';
+
+function gerarSrcPerfil(?string $foto, string $placeholder) {
+    if ($foto === null || trim($foto) === '') {
+        return $placeholder;
+    }
+    
+    if (stripos($foto, 'data:image/') === 0 || stripos($foto, 'http://') === 0 || stripos($foto, 'https://') === 0) {
+        return $foto;
+    }
+    
+    if (strpos($foto, '../') === 0 || strpos($foto, '/assets') === 0 || strpos($foto, 'assets/') === 0) {
+        return $foto;
+    }
+    
+    if (!ctype_print($foto)) {
+        static $finfo = null;
+        if ($finfo === null && class_exists('finfo')) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+        }
+        $mimeType = ($finfo instanceof finfo) ? $finfo->buffer($foto) : null;
+        if (!$mimeType || strpos($mimeType, 'image/') !== 0) {
+            $mimeType = 'image/jpeg';
+        }
+        return 'data:' . $mimeType . ';base64,' . base64_encode($foto);
+    }
+    
+    return 'assets/photos/fotos_perfil/' . ltrim($foto, '/');
 }
+
+// Função para formatar dias da semana
+function formatarDiasSemana($diasString) {
+    if (empty($diasString)) return 'Não informado';
+    
+    $diasMap = [
+        'segunda' => 'Segunda-feira',
+        'terca' => 'Terça-feira',
+        'quarta' => 'Quarta-feira',
+        'quinta' => 'Quinta-feira',
+        'sexta' => 'Sexta-feira',
+        'sabado' => 'Sábado'
+    ];
+    
+    $dias = explode(',', $diasString);
+    $diasFormatados = array_map(function($dia) use ($diasMap) {
+        return $diasMap[trim($dia)] ?? trim($dia);
+    }, $dias);
+    
+    return implode(', ', $diasFormatados);
+}
+
+// Função para formatar horário
+function formatarHorario($inicio, $fim) {
+    if (empty($inicio) || empty($fim)) return 'Não informado';
+    
+    $inicioFormatado = date('H:i', strtotime($inicio));
+    $fimFormatado = date('H:i', strtotime($fim));
+    
+    return "{$inicioFormatado} às {$fimFormatado}";
+}
+
+// Função para formatar tipo de monitoria
+function formatarTipoMonitoria($tipo) {
+    $tipoMap = [
+        'tecnica-integrada' => 'Área Técnica Integrada',
+        'ensino-medio' => 'Ensino Médio',
+        'ensino-superior' => 'Ensino Superior'
+    ];
+    
+    return $tipoMap[$tipo] ?? ucfirst($tipo);
+}
+
+// Função para formatar curso
+function formatarCurso($curso) {
+    $cursoMap = [
+        'administracao' => 'Administração',
+        'informatica' => 'Informática',
+        'vestuario' => 'Vestuário',
+        'moda' => 'Moda'
+    ];
+    
+    return $cursoMap[strtolower($curso)] ?? ucfirst($curso);
+}
+
+if (!$monitoria) {
+    echo "Monitoria não encontrada.";
+    exit;
+}
+
+// Preparar dados para exibição
+$capaPath = !empty($monitoria['capa']) ? 'assets/photos/monitorias/' . $monitoria['capa'] : 'assets/photos/default-capa.jpg';
+$fotoMonitor = $monitor ? gerarSrcPerfil($monitor['foto_perfil'] ?? null, $placeholderPerfil) : $placeholderPerfil;
+$nomeMonitor = $monitor ? $monitor['nome'] . ' ' . $monitor['sobrenome'] : 'Monitor não informado';
+$emailMonitor = $monitor['email'] ?? $monitoria['email'] ?? 'Não informado';
+$cursoMonitor = $monitor && !empty($monitor['curso']) ? formatarCurso($monitor['curso']) : '';
 ?>
 
 <!DOCTYPE html>
@@ -45,9 +157,9 @@ if ($id) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assets/css/tema-global.css">
-    <link rel="stylesheet" href="../assets/css/monitor.css">
-    <title>Monitorias</title>
+    <link rel="stylesheet" href="assets/css/tema-global.css">
+    <link rel="stylesheet" href="assets/css/monitor.css">
+    <title><?php echo htmlspecialchars($monitoria['nome']); ?> - Monitorias IFC</title>
 </head>
 
 <body>
@@ -58,11 +170,10 @@ if ($id) {
     <div class="container">
         <header>
             <div class="logo">
-                <div class="grid-icon">
-                    <img src="/assets/photos/ifc-logo-preto.png" id="icone-ifc">
-                    
+                <div class="icone-nav">
+                    <img src="assets/photos/ifc-logo-preto.png" id="icone-ifc">
                 </div>
-                Monitores do Campus Ibirama
+                Monitorias do Campus Ibirama
             </div>
             <div class="navegador">
                 <div class="projetos-nav">Projetos</div>
@@ -70,98 +181,157 @@ if ($id) {
                 <div class="login-nav"> <?php include 'menuUsuario.php'; ?> </div>
             </div>
         </header>
-        
-<div class="monitoria-container">
-  <div class="monitoria-capa">
-    <img src="<?php echo $monitor['capa_img']; ?>" alt="<?php echo $monitor['area']; ?>">
-    <div class="foto-monitor">
-      <img src="<?php echo $monitor['foto']; ?>" alt="Monitor <?php echo $monitor['nome']; ?>">
-    </div>
-  </div>
-  <div class="monitoria-conteudo">
-    <h1>Monitor <?php echo $pessoa['nome']; ?></h1>
-    <h3><?php echo $monitor['area']; ?></h3>
-    <section class="sobre">
-      <h2>Sobre</h2>
-      <p><?php echo $monitor['sobre']; ?></p>
-    </section>
-    <section class="horarios">
-      <h2>Horários</h2>
-      <p><?php echo $monitor['horarios']; ?></p>
-    </section>
-    <section class="contato">
-      <h2>Contato</h2>
-      <a href="mailto:<?php echo $monitor['email']; ?>"><?php echo $monitor['email']; ?></a>
-    </section>
-  </div>
-</div>
 
-    <footer>
-    <div class="linha">
-        <div class="footer-container">
-            <div class="Recursos">
-                <h2>Recursos</h2>
-                <ul>
-                    <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
-                    <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
-                    <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
-                    <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
-                    <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
-                    <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
-                </ul>
+        <div class="monitoria-container">
+            <div class="monitoria-header">
+                <div class="monitoria-capa">
+                    <img src="<?php echo htmlspecialchars($capaPath); ?>" alt="Capa da monitoria">
+                </div>
+                <div class="monitoria-info-principal">
+                    <div class="tipo-monitoria">
+                        <?php echo htmlspecialchars(formatarTipoMonitoria($monitoria['tipoMonitoria'])); ?>
+                    </div>
+                    <h1 class="monitoria-titulo"><?php echo htmlspecialchars($monitoria['nome']); ?></h1>
+                    
+                    <?php if ($podeEditar): ?>
+                    <div class="acoes-monitoria">
+                        <a href="menuCad-monitoria.php?idMonitoria=<?php echo $id; ?>" class="btn-editar">
+                            ✏️ Editar Monitoria
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
-            <div class="Comunidade">
-                <h2>Comunidade</h2>
-                <ul>
-                    <li><a href="http://acessoainformacao.ifc.edu.br/">Acesso à Informação</a></li>
-                    <li><a href="https://ifc.edu.br/comite-de-crise/">Calendários Acadêmicos</a></li>
-                    <li><a href="https://cepsh.ifc.edu.br/">CEPSH</a></li>
-                    <li><a href="https://consuper.ifc.edu.br/">Conselho Superior</a></li>
-                    <li><a href="https://sig.ifc.edu.br/public/jsp/portal.jsf">Portal Público</a></li>
-                    <li><a href="https://editais.ifc.edu.br/">Editais IFC</a></li>
-                    <li><a href="http://www.camboriu.ifc.edu.br/pos-graduacao/treinador-e-instrutor-de-caes-guia/">Projetos Cães-guia</a></li>
-                    <li><a href="https://trabalheconosco.ifc.edu.br/">Trabalhe no IFC</a></li>
-                </ul>
-            </div>
-            <div class="Servidor">
-                <h2>Servidor</h2>
-                <ul>
-                    <li><a href="https://ifc.edu.br/desenvolvimento-do-servidor/">Desenvolvimento do Servidor</a></li>
-                    <li><a href="https://manualdoservidor.ifc.edu.br/">Manual do Servidor</a></li>
-                    <li><a href="https://www.siapenet.gov.br/Portal/Servico/Apresentacao.asp">Portal SIAPENET</a></li>
-                    <li><a href="http://suporte.ifc.edu.br/">Suporte TI</a></li>
-                    <li><a href="https://sig.ifc.edu.br/sigrh/public/home.jsf">Sistema Integrado de Gestão (SIG)</a></li>
-                    <li><a href="https://mail.google.com/mail/u/0/#inbox">Webmail</a></li>
-                </ul>
-            </div>
-            <div class="Sites-Relacionados">
-                <h2>Sites Relacionados</h2>
-                <ul>
-                    <li><a href="https://www.gov.br/pt-br">Brasil - GOV</a></li>
-                    <li><a href="https://www.gov.br/capes/pt-br">CAPES - Chamadas Públicas</a></li>
-                    <li><a href="https://www-periodicos-capes-gov-br.ez317.periodicos.capes.gov.br/index.php?">Capes - Portal de Periódicos</a></li>
-                    <li><a href="https://www.gov.br/cnpq/pt-br">CNPq - Chamadas Públicas</a></li>
-                    <li><a href="http://informativo.ifc.edu.br/">Informativo IFC</a></li>
-                    <li><a href="https://www.gov.br/mec/pt-br">MEC - Ministério da Educação</a></li>
-                    <li><a href="https://www.transparencia.gov.br/">Transparência Pública</a></li>
-                </ul>
+
+            <div class="monitoria-conteudo">
+                <!-- Sobre a Monitoria -->
+                <?php if (!empty($monitoria['textoSobre'])): ?>
+                <section class="secao sobre-monitoria">
+                    <h2>Sobre a Monitoria</h2>
+                    <p><?php echo nl2br(htmlspecialchars($monitoria['textoSobre'])); ?></p>
+                </section>
+                <?php endif; ?>
+
+                <!-- Horários e Dias -->
+                <section class="secao horarios-atendimento">
+                    <h2>Horários de Atendimento</h2>
+                    <div class="horario-info">
+                        <div class="info-item">
+                            <strong>Dias:</strong>
+                            <span><?php echo formatarDiasSemana($monitoria['diasSemana']); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Horário:</strong>
+                            <span><?php echo formatarHorario($monitoria['horarioInicio'], $monitoria['horarioFim']); ?></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Monitor -->
+                <section class="secao monitor-secao">
+                    <h2>Monitor(a)</h2>
+                    <div class="monitor-card-display">
+                        <div class="monitor-foto">
+                            <img src="<?php echo htmlspecialchars($fotoMonitor); ?>" 
+                                 alt="<?php echo htmlspecialchars($nomeMonitor); ?>"
+                                 onerror="this.onerror=null; this.src='<?php echo $placeholderPerfil; ?>';">
+                        </div>
+                        <div class="monitor-info">
+                            <div class="monitor-nome"><?php echo htmlspecialchars($nomeMonitor); ?></div>
+                            <?php if ($cursoMonitor): ?>
+                            <div class="monitor-curso"><?php echo htmlspecialchars($cursoMonitor); ?></div>
+                            <?php endif; ?>
+                            <div class="monitor-email">
+                                <a href="mailto:<?php echo htmlspecialchars($emailMonitor); ?>">
+                                    <?php echo htmlspecialchars($emailMonitor); ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contato -->
+                <?php if (!empty($monitoria['email'])): ?>
+                <section class="secao contato-monitoria">
+                    <h2>Contato</h2>
+                    <p>
+                        Para mais informações, entre em contato através do e-mail: 
+                        <a href="mailto:<?php echo htmlspecialchars($monitoria['email']); ?>">
+                            <?php echo htmlspecialchars($monitoria['email']); ?>
+                        </a>
+                    </p>
+                </section>
+                <?php endif; ?>
             </div>
         </div>
     </div>
-    <div class="Sobre">
-        <h2>Sobre este site</h2>
-        <span id="License"><i>Licença M.I.T.2025</i></span>
-    </div>
-    <div class="acesso-info">
-        <a href="https://www.gov.br/acessoainformacao/pt-br">
-            <img src="../assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
-        </a>
-    </div>
-</footer>
-    <script src="../assets/js/global.js"></script>
+    <footer>
+            <div class="linha">
+                <div class="footer-container">
+                    <div class="Recursos">
+                        <h2>Recursos</h2>
+                        <ul>
+                            <li><a href="https://ibirama.ifc.edu.br/">Site IF Ibirama</a></li>
+                            <li><a href="https://ensino.ifc.edu.br/calendarios-academicos/">Calendários Acadêmicos</a></li>
+                            <li><a href="https://ifc.edu.br/portal-do-estudante/">Políticas e Programas Estudantis</a></li>
+                            <li><a href="https://ingresso.ifc.edu.br/">Portal de Ingresso IFC</a></li>
+                            <li><a href="https://estudante.ifc.edu.br/2017/03/21/regulamento-de-conduta-discente/">Regulamento da Conduta Discente</a></li>
+                            <li><a href="http://sig.ifc.edu.br/sigaa">SIGAA</a></li>
+                        </ul>
+                    </div>
+                    <div class="Comunidade">
+                        <h2>Comunidade</h2>
+                        <ul>
+                            <li><a href="http://acessoainformacao.ifc.edu.br/">Acesso à Informação</a></li>
+                            <li><a href="https://ifc.edu.br/comite-de-crise/">Calendários Acadêmicos</a></li>
+                            <li><a href="https://cepsh.ifc.edu.br/">CEPSH</a></li>
+                            <li><a href="https://consuper.ifc.edu.br/">Conselho Superior</a></li>
+                            <li><a href="https://sig.ifc.edu.br/public/jsp/portal.jsf">Portal Público</a></li>
+                            <li><a href="https://editais.ifc.edu.br/">Editais IFC</a></li>
+                            <li><a href="http://www.camboriu.ifc.edu.br/pos-graduacao/treinador-e-instrutor-de-caes-guia/">Projetos Cães-guia</a></li>
+                            <li><a href="https://trabalheconosco.ifc.edu.br/">Trabalhe no IFC</a></li>
+                        </ul>
+                    </div>
+                    <div class="Servidor">
+                        <h2>Servidor</h2>
+                        <ul>
+                            <li><a href="https://ifc.edu.br/desenvolvimento-do-servidor/">Desenvolvimento do Servidor</a></li>
+                            <li><a href="https://manualdoservidor.ifc.edu.br/">Manual do Servidor</a></li>
+                            <li><a href="https://www.siapenet.gov.br/Portal/Servico/Apresentacao.asp">Portal SIAPENET</a></li>
+                            <li><a href="http://suporte.ifc.edu.br/">Suporte TI</a></li>
+                            <li><a href="https://sig.ifc.edu.br/sigrh/public/home.jsf">Sistema Integrado de Gestão (SIG)</a></li>
+                            <li><a href="https://mail.google.com/mail/u/0/#inbox">Webmail</a></li>
+                        </ul>
+                    </div>
+                    <div class="Sites-Relacionados">
+                        <h2>Sites Relacionados</h2>
+                        <ul>
+                            <li><a href="https://www.gov.br/pt-br">Brasil - GOV</a></li>
+                            <li><a href="https://www.gov.br/capes/pt-br">CAPES - Chamadas Públicas</a></li>
+                            <li><a href="https://www-periodicos-capes-gov-br.ez317.periodicos.capes.gov.br/index.php?">Capes - Portal de Periódicos</a></li>
+                            <li><a href="https://www.gov.br/cnpq/pt-br">CNPq - Chamadas Públicas</a></li>
+                            <li><a href="http://informativo.ifc.edu.br/">Informativo IFC</a></li>
+                            <li><a href="https://www.gov.br/mec/pt-br">MEC - Ministério da Educação</a></li>
+                            <li><a href="https://www.transparencia.gov.br/">Transparência Pública</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="Sobre">
+                <h2>Sobre este site</h2>
+                <span id="License"><i>Licença M.I.T.2025</i></span>
+            </div>
+            <div class="acesso-info">
+                <a href="https://www.gov.br/acessoainformacao/pt-br">
+                    <img src="assets/photos/icones/logo-acesso-informacao.png" alt="Logo Acesso à Informação">
+                </a>
+            </div>
+        </footer>
+    <script src="assets/js/global.js"></script>
 </body>
+
 </html>
 
 <?php
-    $conn->close();
+$conn->close();
 ?>

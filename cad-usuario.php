@@ -193,6 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div data-value="administracao">Administração</div>
                             <div data-value="informatica">Informática</div>
                             <div data-value="vestuario">Vestuário</div>
+                            <div data-value="coordenacao">Coordenação</div>
                             <div data-value="tecnico-administrativo">Técnico Administrativo</div>
                         </div>
                     </div>

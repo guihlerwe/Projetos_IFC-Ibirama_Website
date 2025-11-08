@@ -170,6 +170,7 @@ if ($usuario) {
                                 <div data-value="administração">Administração</div>
                                 <div data-value="informática">Informática</div>
                                 <div data-value="vestuário">Vestuário</div>
+                                <div data-value="coordenação">Coordenação</div>
                                 <div data-value="técnico administrativo">Técnico Administrativo</div>
                             </div>
                         </div>

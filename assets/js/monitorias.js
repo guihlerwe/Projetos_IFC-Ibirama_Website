@@ -58,97 +58,121 @@ function atualizarBotoesFiltro(categoriaAtiva) {
 
 // Event listeners para os botões de filtro
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM carregado, configurando filtros...');
+    const projectCards = document.querySelectorAll('.project-card');
+    const inputPesquisa = document.getElementById('input-pesquisa');
+    const btnsFiltrar = document.querySelectorAll('.btn-filtrar');
+    const btnLimparFiltros = document.getElementById('limpar-filtros');
     
-    // Filtro Área Técnica Integrada
-    const btnTecnico = document.querySelector('.btn-filtrar.tecnico');
-    if (btnTecnico) {
-        console.log('Botão técnico encontrado');
-        btnTecnico.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Clique no botão técnico, filtroAtivo atual:', filtroAtivo);
-            if (filtroAtivo === 'tecnico') {
-                aplicarFiltro('todos');
+    let filtroTipoAtivo = null;
+    
+    // Inicialmente esconde o botão limpar filtros
+    if (btnLimparFiltros) {
+        btnLimparFiltros.style.display = 'none';
+    }
+    
+    // Adicionar clique aos cards para abrir a monitoria
+    projectCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const viewUrl = this.getAttribute('data-view-url');
+            if (viewUrl) {
+                window.location.href = viewUrl;
+            }
+        });
+        
+        // Adicionar efeito hover
+        card.style.cursor = 'pointer';
+    });
+    
+    // Função para atualizar visibilidade do botão limpar
+    function atualizarBotaoLimpar() {
+        if (btnLimparFiltros) {
+            const temFiltroAtivo = filtroTipoAtivo !== null;
+            const temPesquisa = inputPesquisa && inputPesquisa.value.trim() !== '';
+            
+            if (temFiltroAtivo || temPesquisa) {
+                btnLimparFiltros.style.display = 'inline-block';
             } else {
-                aplicarFiltro('tecnico');
+                btnLimparFiltros.style.display = 'none';
             }
+        }
+    }
+    
+    // Função para filtrar monitorias
+    function filtrarMonitorias() {
+        const termoPesquisa = inputPesquisa ? inputPesquisa.value.toLowerCase() : '';
+        
+        projectCards.forEach(card => {
+            const nomeMonitoria = card.querySelector('.project-label').textContent.toLowerCase();
+            const tipoMonitoria = card.getAttribute('data-tipo');
+            
+            let mostrar = true;
+            
+            // Filtro de pesquisa por texto
+            if (termoPesquisa && !nomeMonitoria.includes(termoPesquisa)) {
+                mostrar = false;
+            }
+            
+            // Filtro por tipo
+            if (filtroTipoAtivo && tipoMonitoria !== filtroTipoAtivo) {
+                mostrar = false;
+            }
+            
+            card.style.display = mostrar ? 'block' : 'none';
+        });
+        
+        // Atualiza visibilidade do botão limpar
+        atualizarBotaoLimpar();
+    }
+    
+    // Event listener para pesquisa
+    if (inputPesquisa) {
+        inputPesquisa.addEventListener('input', function() {
+            filtrarMonitorias();
         });
     }
     
-    // Filtro Ensino Médio
-    const btnGeral = document.querySelector('.btn-filtrar.geral');
-    if (btnGeral) {
-        console.log('Botão geral encontrado');
-        btnGeral.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Clique no botão geral, filtroAtivo atual:', filtroAtivo);
-            if (filtroAtivo === 'geral') {
-                aplicarFiltro('todos');
+    // Event listeners para botões de filtro
+    btnsFiltrar.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filtro = this.getAttribute('data-filtro');
+            
+            // Toggle do filtro
+            if (filtroTipoAtivo === filtro) {
+                filtroTipoAtivo = null;
+                this.classList.remove('active');
             } else {
-                aplicarFiltro('geral');
+                // Remove active de todos os botões
+                btnsFiltrar.forEach(b => b.classList.remove('active'));
+                
+                filtroTipoAtivo = filtro;
+                this.classList.add('active');
             }
-        });
-    }
-    
-    // Filtro Superior
-    const btnSuperior = document.querySelector('.btn-filtrar.superior');
-    if (btnSuperior) {
-        console.log('Botão superior encontrado');
-        btnSuperior.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Clique no botão superior, filtroAtivo atual:', filtroAtivo);
-            if (filtroAtivo === 'superior') {
-                aplicarFiltro('todos');
-            } else {
-                aplicarFiltro('superior');
-            }
-        });
-    }
-    
-    // Event listener para a barra de pesquisa
-    const inputPesquisar = document.querySelector('.input-pesquisar');
-    if (inputPesquisar) {
-        inputPesquisar.addEventListener('input', function() {
-            aplicarFiltro(filtroAtivo);
-        });
-    }
-    
-    // Seleciona todos os cards para navegação
-    document.querySelectorAll(".project-card").forEach(card => {
-        card.addEventListener("click", () => {
-            const label = card.querySelector(".project-label").innerText.trim();
-
-            switch (label) {
-                case "Administração":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Informática":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Vestuário":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Moda":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Gestão Comercial":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Ciências Humanas":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Ciências da Natureza":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Linguagens e suas Tecnologias":
-                    window.location.href = "monitor.php";
-                    break;
-                case "Matemática e suas Tecnologias":
-                    window.location.href = "monitor.php";
-                    break;
-                default:
-                    alert("Monitoria ainda não cadastrada!");
-            }
+            
+            filtrarMonitorias();
         });
     });
+    
+    // Event listener para limpar filtros
+    if (btnLimparFiltros) {
+        btnLimparFiltros.addEventListener('click', function() {
+            // Limpar input de pesquisa
+            if (inputPesquisa) {
+                inputPesquisa.value = '';
+            }
+            
+            // Limpar filtro de tipo
+            filtroTipoAtivo = null;
+            
+            // Remover classe active de todos os botões
+            btnsFiltrar.forEach(btn => btn.classList.remove('active'));
+            
+            // Mostrar todos os cards
+            projectCards.forEach(card => {
+                card.style.display = 'block';
+            });
+            
+            // Esconder o botão limpar
+            this.style.display = 'none';
+        });
+    }
 });
