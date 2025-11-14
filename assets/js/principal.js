@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setupPesquisa();
     setupCategorias();
     setupBotaoLimpar();
+    setupDeleteModal();
 });
 
 function normalizeString(str) {
@@ -165,4 +166,78 @@ function aplicarFiltros() {
             btnLimpar.style.display = "none";
         }
     }
+}
+
+function setupDeleteModal() {
+    const modal = document.getElementById('delete-modal');
+    const deleteButtons = document.querySelectorAll('.project-delete-btn');
+    if (!modal || deleteButtons.length === 0) {
+        return;
+    }
+
+    const projectIdInput = document.getElementById('delete-project-id');
+    const confirmInput = document.getElementById('delete-confirm-input');
+    const errorBox = document.getElementById('delete-error');
+    const modalTitle = document.getElementById('delete-modal-title');
+    const closeBtn = document.getElementById('delete-modal-close');
+    const cancelBtn = document.getElementById('delete-modal-cancel');
+    const form = document.getElementById('delete-form');
+
+    if (!projectIdInput || !confirmInput || !errorBox || !form) {
+        return;
+    }
+
+    const openModal = (projectId, projectName) => {
+        projectIdInput.value = projectId;
+        confirmInput.value = '';
+        errorBox.textContent = '';
+        if (modalTitle) {
+            modalTitle.textContent = `Excluir "${projectName}"`;
+        }
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        confirmInput.focus();
+    };
+
+    const closeModal = () => {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+    };
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const projectId = button.getAttribute('data-project-id');
+            const projectName = button.getAttribute('data-project-name') || '';
+            openModal(projectId, projectName);
+        });
+    });
+
+    closeBtn?.addEventListener('click', closeModal);
+    cancelBtn?.addEventListener('click', (event) => {
+        event.preventDefault();
+        closeModal();
+    });
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('open')) {
+            closeModal();
+        }
+    });
+
+    form?.addEventListener('submit', (event) => {
+        if (confirmInput.value.trim().toLowerCase() !== 'confirmar') {
+            event.preventDefault();
+            errorBox.textContent = 'Digite "confirmar" para excluir o projeto.';
+            confirmInput.focus();
+        }
+    });
 }

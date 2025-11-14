@@ -5,8 +5,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -64,6 +64,29 @@ if ($stmt->execute()) {
 }
 $stmt->close();
 
+// Buscar voluntários elegíveis (alunos, voluntários ou bolsistas) para o projeto
+$voluntarios = [];
+$sqlv = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil 
+         FROM pessoa p 
+         WHERE p.tipo IN ('voluntario', 'aluno', 'bolsista')
+         AND (? = 0 OR p.idPessoa NOT IN (
+             SELECT pp.idPessoa 
+             FROM pessoa_projeto pp 
+             WHERE pp.idProjeto = ? 
+             AND pp.tipoPessoa = 'voluntario'
+         ))
+         ORDER BY p.nome, p.sobrenome";
+
+$stmt = $conn->prepare($sqlv);
+$stmt->bind_param("ii", $idProjetoEditar, $idProjetoEditar);
+if ($stmt->execute()) {
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $voluntarios[] = $row;
+    }
+}
+$stmt->close();
+
 $placeholderPerfil = '../assets/photos/fotos_perfil/sem_foto_perfil.jpg';
 
 function gerarSrcPerfil(?string $foto, string $placeholder)
@@ -117,6 +140,14 @@ foreach ($bolsistas as &$bol) {
 }
 unset($bol);
 
+foreach ($voluntarios as &$vol) {
+    $vol['foto_src'] = gerarSrcPerfil($vol['foto_perfil'] ?? null, $placeholderPerfil);
+    if (isset($vol['foto_perfil']) && !mb_check_encoding($vol['foto_perfil'], 'UTF-8')) {
+        unset($vol['foto_perfil']);
+    }
+}
+unset($vol);
+
 $idPessoaLogado = $_SESSION['idPessoa'] ?? null;
 $modoEdicao = false;
 $projetoSelecionado = null;
@@ -124,6 +155,7 @@ $bannerAtual = null;
 $capaAtual = null;
 $coordenadoresProjeto = [];
 $bolsistasProjeto = [];
+$voluntariosProjeto = [];
 
 $categoriaLabelMap = [
     'ciencias-naturais' => 'Ciências Naturais',
@@ -182,6 +214,8 @@ if ($idProjetoEditar > 0 && $idPessoaLogado && $tipo === 'coordenador') {
                                 $coordenadoresProjeto[] = $linha;
                             } elseif ($linha['tipoPessoa'] === 'bolsista') {
                                 $bolsistasProjeto[] = $linha;
+                            } elseif ($linha['tipoPessoa'] === 'voluntario') {
+                                $voluntariosProjeto[] = $linha;
                             }
                         }
                     }
@@ -231,12 +265,23 @@ if ($modoEdicao && $projetoSelecionado) {
     sessionStorage.setItem('usuarioLogado', '<?php echo $nome; ?>');
     sessionStorage.setItem('tipoUsuario', '<?php echo $tipo; ?>');
     
-    // Dados dos coordenadores e bolsistas para JavaScript
+    // Dados dos coordenadores, bolsistas e voluntários para JavaScript
     const coordenadoresData = <?php echo json_encode($coordenadores); ?>;
     const bolsistasData = <?php echo json_encode($bolsistas); ?>;
+    const voluntariosData = <?php echo json_encode($voluntarios); ?>;
     const projetoSelecionado = <?php echo $projetoEditData ? json_encode($projetoEditData, JSON_UNESCAPED_UNICODE) : 'null'; ?>;
     const coordenadoresProjetoSelecionados = <?php echo $modoEdicao ? json_encode(array_values($coordenadoresProjeto), JSON_UNESCAPED_UNICODE) : '[]'; ?>;
     const bolsistasProjetoSelecionados = <?php echo $modoEdicao ? json_encode(array_values($bolsistasProjeto), JSON_UNESCAPED_UNICODE) : '[]'; ?>;
+    const voluntariosProjetoSelecionados = <?php echo $modoEdicao ? json_encode(array_values($voluntariosProjeto), JSON_UNESCAPED_UNICODE) : '[]'; ?>;
+
+    // Expõe os dados para scripts externos (ex.: cad-projeto.js)
+    window.coordenadoresData = coordenadoresData;
+    window.bolsistasData = bolsistasData;
+    window.voluntariosData = voluntariosData;
+    window.projetoSelecionado = projetoSelecionado;
+    window.coordenadoresProjetoSelecionados = coordenadoresProjetoSelecionados;
+    window.bolsistasProjetoSelecionados = bolsistasProjetoSelecionados;
+    window.voluntariosProjetoSelecionados = voluntariosProjetoSelecionados;
 </script>
 
 <div class="container">
@@ -343,6 +388,20 @@ if ($modoEdicao && $projetoSelecionado) {
                 <input type="hidden" name="bolsistas_ids" id="bolsistas_ids">
             </div>
 
+            <div class="equipe">
+                <h2 class="subtitulo">Voluntários</h2>
+                <div class="membros" id="voluntarios-container">
+                    <!-- Voluntários serão adicionados aqui dinamicamente -->
+                    <div class="membro add-membro" id="add-voluntario">
+                        <div class="foto-membro foto-add">
+                            <span>➕</span>
+                        </div>
+                        <div class="nome-membro">Adicionar</div>
+                    </div>
+                </div>
+                <input type="hidden" name="voluntarios_ids" id="voluntarios_ids">
+            </div>
+
                 <input type="text" id="link-bolsista" name="link-bolsista" placeholder="Se há vagas para bolsistas, cole o link para inscrição aqui" value="<?php echo ($modoEdicao && $projetoEditData) ? htmlspecialchars($projetoEditData['linkBolsista']) : ''; ?>">
 
             <div id="contato">
@@ -363,6 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Arrays para armazenar os IDs selecionados
     let coordenadoresSelecionados = [];
     let bolsistasSelecionados = [];
+    let voluntariosSelecionados = [];
     const FOTO_PLACEHOLDER = '../assets/photos/fotos_perfil/sem_foto_perfil.jpg';
     
     // Função para criar um membro na interface
@@ -401,8 +461,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Função para abrir modal de seleção
     function abrirModalSelecao(tipo) {
-        const dados = tipo === 'coordenador' ? coordenadoresData : bolsistasData;
-        const jaSelecionados = tipo === 'coordenador' ? coordenadoresSelecionados : bolsistasSelecionados;
+        let dados;
+        let jaSelecionados;
+
+        if (tipo === 'coordenador') {
+            dados = coordenadoresData;
+            jaSelecionados = coordenadoresSelecionados;
+        } else if (tipo === 'bolsista') {
+            dados = bolsistasData;
+            jaSelecionados = bolsistasSelecionados;
+        } else {
+            dados = voluntariosData;
+            jaSelecionados = voluntariosSelecionados;
+        }
         
         // Criar modal
         const modal = document.createElement('div');
@@ -410,7 +481,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Selecione ${tipo === 'coordenador' ? 'um Coordenador' : 'um Bolsista'}</h3>
+                    <h3>Selecione ${tipo === 'coordenador' ? 'um Coordenador' : tipo === 'bolsista' ? 'um Bolsista' : 'um Voluntário'}</h3>
                     <span class="modal-close">&times;</span>
                 </div>
                 <div class="modal-body">
@@ -499,11 +570,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('coordenadores-container');
             const addBtn = document.getElementById('add-coordenador');
             container.insertBefore(criarMembroHTML(pessoa, 'coordenador'), addBtn);
-        } else {
+        } else if (tipo === 'bolsista') {
             bolsistasSelecionados.push(pessoa.idPessoa);
             const container = document.getElementById('bolsistas-container');
             const addBtn = document.getElementById('add-bolsista');
             container.insertBefore(criarMembroHTML(pessoa, 'bolsista'), addBtn);
+        } else {
+            voluntariosSelecionados.push(pessoa.idPessoa);
+            const container = document.getElementById('voluntarios-container');
+            const addBtn = document.getElementById('add-voluntario');
+            container.insertBefore(criarMembroHTML(pessoa, 'voluntario'), addBtn);
         }
         
         atualizarInputsHidden();
@@ -515,9 +591,13 @@ document.addEventListener('DOMContentLoaded', function() {
             coordenadoresSelecionados = coordenadoresSelecionados.filter(item => item != id);
             const membro = document.querySelector(`#coordenadores-container .membro[data-id="${id}"]`);
             if (membro) membro.remove();
-        } else {
+        } else if (tipo === 'bolsista') {
             bolsistasSelecionados = bolsistasSelecionados.filter(item => item != id);
             const membro = document.querySelector(`#bolsistas-container .membro[data-id="${id}"]`);
+            if (membro) membro.remove();
+        } else {
+            voluntariosSelecionados = voluntariosSelecionados.filter(item => item != id);
+            const membro = document.querySelector(`#voluntarios-container .membro[data-id="${id}"]`);
             if (membro) membro.remove();
         }
         
@@ -528,6 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function atualizarInputsHidden() {
         document.getElementById('coordenadores_ids').value = coordenadoresSelecionados.join(',');
         document.getElementById('bolsistas_ids').value = bolsistasSelecionados.join(',');
+        document.getElementById('voluntarios_ids').value = voluntariosSelecionados.join(',');
     }
 
     if (Array.isArray(coordenadoresProjetoSelecionados) && coordenadoresProjetoSelecionados.length > 0) {
@@ -545,6 +626,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    if (Array.isArray(voluntariosProjetoSelecionados) && voluntariosProjetoSelecionados.length > 0) {
+        voluntariosProjetoSelecionados.forEach((pessoa) => {
+            if (!voluntariosSelecionados.includes(pessoa.idPessoa)) {
+                adicionarMembro(pessoa, 'voluntario');
+            }
+        });
+    }
     
     // Eventos dos botões adicionar
     document.getElementById('add-coordenador').addEventListener('click', function() {
@@ -553,6 +642,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('add-bolsista').addEventListener('click', function() {
         abrirModalSelecao('bolsista');
+    });
+
+    document.getElementById('add-voluntario').addEventListener('click', function() {
+        abrirModalSelecao('voluntario');
     });
 
     // Validação para garantir que pelo menos um coordenador foi selecionado

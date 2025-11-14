@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const hiddenTipo = document.getElementById("inputTipo");
     const camposAluno = document.getElementById("camposAluno");
     const camposCoordenador = document.getElementById("camposCoordenador");
+    const matriculaInput = document.querySelector('input[name="matricula"]');
 
     function atualizarCampos(value) {
         hiddenTipo.value = value;
@@ -47,9 +48,27 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    if (matriculaInput) {
+        matriculaInput.addEventListener("input", () => {
+            const apenasNumeros = matriculaInput.value.replace(/\D/g, "");
+            matriculaInput.value = apenasNumeros.slice(0, 10);
+        });
+    }
+
     // Inicializa selects customizados restantes
     setupCustomSelect("curso-aluno", "inputCurso");
     setupCustomSelect("area-coordenador", "inputArea");
+
+    const senhaInput = document.getElementById("senha");
+    const toggleSenha = document.querySelector(".campo-senha .toggle-senha");
+
+    if (senhaInput && toggleSenha) {
+        toggleSenha.addEventListener("click", () => {
+            const mostrando = senhaInput.type === "text";
+            senhaInput.type = mostrando ? "password" : "text";
+            toggleSenha.classList.toggle("mostrando", !mostrando);
+        });
+    }
 });
 
 function mostrarToast(mensagem, tipo = "sucesso") {

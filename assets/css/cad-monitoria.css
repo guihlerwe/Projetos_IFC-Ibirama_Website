@@ -14,51 +14,64 @@
     align-items: flex-start;
 }
 
-/* Capa da Monitoria - Mantém circular */
+/* Capa da Monitoria - agora em proporção 16:9 */
 #div-capa {
-    width: 150px;
-    height: 150px;
-    background-color: var(--card-bg);
+    width: min(420px, 100%);
+    aspect-ratio: 16 / 9;
+    background-color: var(--bg-color);
     border: 2px dashed var(--border-color);
+    border-radius: 24px;
+    overflow: hidden;
+    flex-shrink: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-    transition: all 0.3s ease;
+    position: relative;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 #div-capa:hover {
-    border-color: #006620;
-    background-color: var(--banner-bg);
+    border-color: #4caf50;
+    background-color: var(--card-hover);
 }
 
 #upload-capa {
     cursor: pointer;
-    text-align: center;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    border-radius: inherit;
+}
+
+#capa-icon,
+.capa-placeholder {
+    position: absolute;
+    color: #4caf50;
+    z-index: 1;
+    pointer-events: none;
+    text-align: center;
 }
 
 #capa-icon {
-    position: absolute;
-    font-size: 48px;
-    color: #006620;
-    z-index: 1;
-    pointer-events: none;
+    font-size: 42px;
+    line-height: 1;
+}
+
+.capa-placeholder {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    line-height: 1.4;
 }
 
 #capa-preview {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: inherit;
     position: absolute;
     top: 0;
     left: 0;
@@ -78,53 +91,78 @@
 }
 
 /* Custom Select para Tipo - Similar ao eixo/categoria */
+
 .div-tipo .custom-select {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     cursor: pointer;
     border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 6px 12px;
-    background-color: var(--card-bg);
+    border-radius: 999px;
+    padding: 10px 24px;
+    background: linear-gradient(145deg, var(--card-bg), var(--bg-color));
     color: var(--text-color);
     user-select: none;
-    transition: all 0.3s ease;
-    min-width: 200px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-width: 220px;
 }
 
 .div-tipo .custom-select:hover {
-    border-color: #006620;
+    border-color: #4caf50;
 }
 
 .div-tipo .select-selected {
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     color: var(--text-color);
+    width: 100%;
+    position: relative;
+    padding-right: 24px;
+}
+
+.div-tipo .select-selected::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--text-color);
+    border-bottom: 2px solid var(--text-color);
+    transform-origin: center;
+    transform: translateY(-65%) rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+.div-tipo .custom-select.open .select-selected::after {
+    transform: translateY(-35%) rotate(-135deg);
 }
 
 .div-tipo .select-items {
     position: absolute;
-    top: calc(100% + 5px);
+    top: calc(100% + 8px);
     left: 0;
     right: 0;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
     z-index: 99;
     display: none;
-    overflow: hidden;
-    animation: expandDown 0.2s ease forwards;
+    padding: 8px;
 }
 
 .div-tipo .select-items div {
-    padding: 8px 12px;
-    transition: background-color 0.2s;
+    padding: 10px 14px;
+    border-radius: 12px;
+    transition: background-color 0.2s, transform 0.2s;
     color: var(--text-color);
     cursor: pointer;
 }
 
 .div-tipo .select-items div:hover {
     background-color: var(--banner-bg);
+    transform: translateX(4px);
 }
 
 .div-tipo .custom-select.open .select-items {
@@ -204,30 +242,51 @@
     font-size: 14px;
 }
 
-.horario-group {
+.horario-group,
+.horario-inputs {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.horario-group input[type="time"] {
-    padding: 8px 12px;
+    gap: 14px;
+    padding: 14px 18px;
+    background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 2vh;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    font-size: 14px;
-    transition: all 0.3s ease;
+    border-radius: 20px;
 }
 
-.horario-group input[type="time"]:focus {
+.horario-group input[type="time"],
+.horario-inputs input[type="time"] {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 500;
+    padding: 6px 0;
+    min-width: 0;
+}
+
+.horario-group input[type="time"]:focus,
+.horario-inputs input[type="time"]:focus {
     outline: none;
-    border-color: #006620;
+    box-shadow: inset 0 -2px 0 #4caf50;
 }
 
-.horario-group span {
-    color: var(--text-color);
-    font-size: 14px;
+.horario-group span,
+.horario-inputs .horario-separator {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.horario-inputs::before {
+    content: '⏱';
+    font-size: 18px;
+    color: #4caf50;
+}
+
+.horario-inputs input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(50%);
+    cursor: pointer;
 }
 
 /* Conteúdo - Reutiliza estilos do cad-projeto */
@@ -261,118 +320,112 @@
     margin-top: 20px;
 }
 
-/* Monitor Card - Expandido */
-#monitor-info-container {
-    margin-top: 10px;
-}
-
-.monitor-card {
+.monitor-picker {
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.monitor-membros {
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
-    padding: 20px;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 2vh;
+}
+
+.monitor-membros .membro {
+    width: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
     position: relative;
-    transition: all 0.3s ease;
 }
 
-.monitor-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.monitor-membros .foto-membro-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
 }
 
-.monitor-card-foto {
+.monitor-membros .foto-membro {
     width: 80px;
     height: 80px;
     border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    flex-shrink: 0;
-    border: 2px solid var(--border-color);
+    position: relative;
 }
 
-.monitor-card-foto img {
+.monitor-membros .foto-membro img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.monitor-card-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    justify-content: center;
-}
-
-.monitor-card-nome {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--text-color);
-}
-
-.monitor-card-email,
-.monitor-card-curso {
-    font-size: 14px;
-    color: var(--text-color);
-    opacity: 0.7;
-}
-
-.monitor-card-curso {
-    font-style: italic;
-}
-
-.btn-remover-monitor {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 25px;
-    height: 25px;
-    background-color: #ff4444;
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    border: none;
-    color: white;
-    font-size: 18px;
-    line-height: 1;
 }
 
-.btn-remover-monitor:hover {
-    background-color: #cc0000;
-    transform: scale(1.1);
-}
-
-.selecionar-monitor {
-    padding: 20px;
+.monitor-membros .foto-add {
     border: 2px dashed var(--border-color);
-    border-radius: 2vh;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.selecionar-monitor:hover {
-    border-color: #006620;
-    background-color: var(--banner-bg);
-}
-
-.btn-selecionar {
-    padding: 10px 24px;
-    background-color: #006620;
-    color: white;
-    border: none;
-    border-radius: 2vh;
     cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.btn-selecionar:hover {
-    background-color: #004d18;
-    transform: scale(1.02);
+.monitor-membros .foto-add span {
+    font-size: 28px;
+    color: #4caf50;
+}
+
+.monitor-membros .foto-add:hover {
+    border-color: #4caf50;
+    transform: scale(1.03);
+}
+
+.monitor-membros .nome-membro {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.monitor-mini-curso {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.monitor-membros .btn-remover {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #f44336;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.monitor-membros .btn-remover:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05);
+}
+
+.monitor-picker-hint {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Monitor Card - Expandido */
+#monitor-info-container {
+    margin-top: 10px;
 }
 
 /* Contato */
@@ -388,25 +441,6 @@
     border-radius: 2vh;
     background-color: var(--input-bg);
     color: var(--text-color);
-}
-
-/* Botão de Criar/Salvar */
-#bt-criar-monitoria {
-    margin-top: 20px;
-    padding: 10px;
-    width: 100%;
-    background-color: #006620;
-    color: white;
-    border: none;
-    font-size: 16px;
-    border-radius: 2vh;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#bt-criar-monitoria:hover {
-    background-color: #004d18;
-    transform: scale(1.01);
 }
 
 /* Modal de Seleção - Reutiliza estilos do cad-projeto */
@@ -644,43 +678,7 @@
     margin-bottom: 10px;
 }
 
-#div-capa {
-    width: 200px;
-    height: 200px;
-}
-
-#upload-capa {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    border: 2px dashed var(--border-color);
-    border-radius: 50%;
-    cursor: pointer;
-    background-color: var(--bg-color);
-    transition: all 0.3s ease;
-    overflow: hidden;
-    position: relative;
-}
-
-#upload-capa:hover {
-    border-color: #4caf50;
-    background-color: var(--card-hover);
-}
-
-#capa-icon {
-    font-size: 48px;
-}
-
-#capa-preview {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+/* estilos específicos do cabeçalho utilizam as regras globais de #div-capa */
 
 .monitoria-info-form {
     flex: 1;
@@ -718,6 +716,13 @@
     font-weight: 600;
     color: var(--text-color);
     margin-bottom: 8px;
+}
+
+.form-label .label-hint {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-left: 6px;
 }
 
 .form-hint {
@@ -768,16 +773,18 @@
 .custom-select {
     position: relative;
     width: 100%;
+    border-radius: 999px;
 }
 
 .select-selected {
     background-color: var(--bg-color);
     color: var(--text-color);
-    padding: 12px 15px;
+    padding: 14px 20px;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 999px;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
 }
 
 .select-selected:hover {
@@ -797,7 +804,7 @@
     position: absolute;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 18px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 99;
     width: 100%;
@@ -857,24 +864,6 @@
     color: #4caf50;
 }
 
-/* Horários */
-.horario-inputs {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.horario-inputs input[type="time"] {
-    flex: 1;
-}
-
-.horario-separator {
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 14px;
-}
-
-/* Seção dupla - Horários e Contato lado a lado */
 .form-section-dupla {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -886,90 +875,6 @@
     padding: 0;
 }
 
-/* Botão selecionar monitor */
-.btn-selecionar {
-    width: 100%;
-    padding: 15px 20px;
-    background-color: var(--bg-color);
-    border: 2px dashed var(--border-color);
-    border-radius: 8px;
-    color: var(--text-color);
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-selecionar:hover {
-    border-color: #4caf50;
-    background-color: var(--card-hover);
-    color: #4caf50;
-}
-
-/* Monitor selecionado */
-.monitor-selecionado-preview {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.monitor-selecionado-preview:hover {
-    background-color: var(--card-hover);
-}
-
-.monitor-foto-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 2px solid var(--border-color);
-}
-
-.monitor-foto-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.monitor-dados-preview {
-    flex: 1;
-}
-
-.monitor-nome-preview {
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--text-color);
-    margin-bottom: 4px;
-}
-
-.monitor-curso-preview {
-    font-size: 13px;
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-.btn-remover-monitor {
-    padding: 8px 16px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.btn-remover-monitor:hover {
-    background-color: #d32f2f;
-    transform: translateY(-2px);
-}
 
 /* Botões de ação */
 .form-actions {
@@ -981,11 +886,12 @@
 }
 
 .btn-cancelar,
+.btn-excluir,
 .btn-salvar {
     flex: 1;
     padding: 14px 28px;
     border: none;
-    border-radius: 8px;
+    border-radius: 999px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -1000,6 +906,19 @@
 
 .btn-cancelar:hover {
     background-color: var(--card-hover);
+}
+
+.btn-excluir {
+    background-color: rgba(198, 40, 40, 0.12);
+    color: #ff8a80;
+    border: 1px solid rgba(198, 40, 40, 0.4);
+}
+
+.btn-excluir:hover {
+    background-color: rgba(198, 40, 40, 0.25);
+    color: #ffe5e5;
+    border-color: rgba(198, 40, 40, 0.6);
+    transform: translateY(-2px);
 }
 
 .btn-salvar {
@@ -1166,7 +1085,7 @@
     background-color: #4caf50;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 999px;
     cursor: pointer;
     font-size: 13px;
     font-weight: 500;
@@ -1194,8 +1113,8 @@
     }
     
     #div-capa {
-        width: 120px;
-        height: 120px;
+        width: 100%;
+        max-width: 360px;
     }
     
     #nome-monitoria {
@@ -1219,10 +1138,6 @@
         height: 100px;
     }
     
-    .btn-remover-monitor {
-        top: 5px;
-        right: 5px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1253,8 +1168,8 @@
     }
     
     #div-capa {
-        width: 150px;
-        height: 150px;
+        width: 100%;
+        max-width: 360px;
     }
     
     .form-section-dupla {
@@ -1275,8 +1190,4 @@
         flex-direction: column;
     }
     
-    .monitor-selecionado-preview {
-        flex-direction: column;
-        text-align: center;
-    }
 }

@@ -5,12 +5,28 @@ $sobrenome = $_SESSION['sobrenome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
 $idPessoa = $_SESSION['idPessoa'] ?? null;
 
+if (!function_exists('redirectWithFeedback')) {
+    function redirectWithFeedback(string $type, string $message): void
+    {
+        $_SESSION['delete_feedback'] = [
+            'type' => $type,
+            'message' => $message
+        ];
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+}
+
+$deleteFeedback = $_SESSION['delete_feedback'] ?? null;
+if (isset($_SESSION['delete_feedback'])) {
+    unset($_SESSION['delete_feedback']);
+}
 
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -19,6 +35,54 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset("utf8");
+
+$deleteRequest = $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project_id']);
+if ($deleteRequest) {
+    if ($tipo !== 'coordenador' || !$idPessoa) {
+        redirectWithFeedback('error', 'Você não tem permissão para excluir projetos.');
+    }
+
+    $deleteId = filter_input(INPUT_POST, 'delete_project_id', FILTER_VALIDATE_INT);
+    $confirmText = trim($_POST['confirm_text'] ?? '');
+
+    if (!$deleteId) {
+        redirectWithFeedback('error', 'Projeto inválido.');
+    }
+
+    if (mb_strtolower($confirmText, 'UTF-8') !== 'confirmar') {
+        redirectWithFeedback('error', 'Para excluir, digite "confirmar" no campo solicitado.');
+    }
+
+    $ownershipStmt = $conn->prepare("SELECT 1 FROM pessoa_projeto WHERE idPessoa = ? AND idProjeto = ? AND tipoPessoa = 'coordenador' LIMIT 1");
+    if ($ownershipStmt) {
+        $ownershipStmt->bind_param('ii', $idPessoa, $deleteId);
+        if ($ownershipStmt->execute()) {
+            $ownershipStmt->store_result();
+            if ($ownershipStmt->num_rows === 0) {
+                $ownershipStmt->close();
+                redirectWithFeedback('error', 'Você só pode excluir projetos em que é coordenador.');
+            }
+        } else {
+            $ownershipStmt->close();
+            redirectWithFeedback('error', 'Falha ao validar suas permissões.');
+        }
+        $ownershipStmt->close();
+    } else {
+        redirectWithFeedback('error', 'Não foi possível validar as permissões para excluir este projeto.');
+    }
+
+    $deleteStmt = $conn->prepare('DELETE FROM projeto WHERE idProjeto = ?');
+    if ($deleteStmt) {
+        $deleteStmt->bind_param('i', $deleteId);
+        if ($deleteStmt->execute()) {
+            $deleteStmt->close();
+            redirectWithFeedback('success', 'Projeto excluído com sucesso.');
+        }
+        $deleteStmt->close();
+    }
+
+    redirectWithFeedback('error', 'Não foi possível excluir o projeto. Tente novamente.');
+}
 
 $projetos = [];
 
@@ -78,6 +142,12 @@ if ($idPessoa) {
         sessionStorage.setItem('tipoUsuario', '<?php echo $tipo; ?>');
     </script>
     <div class="container">
+
+        <?php if (!empty($deleteFeedback)) : ?>
+            <div class="delete-feedback <?php echo htmlspecialchars($deleteFeedback['type']); ?>">
+                <?php echo htmlspecialchars($deleteFeedback['message']); ?>
+            </div>
+        <?php endif; ?>
 
         <header>
             <div class="logo">
@@ -144,6 +214,7 @@ if ($idPessoa) {
 
                     $nomeCompleto = $projeto['nome'] ?? '';
                     $nomeExibido = (strlen($nomeCompleto) > 40) ? substr($nomeCompleto, 0, 40) . '...' : $nomeCompleto;
+                    $nomeCompletoSeguro = htmlspecialchars($nomeCompleto, ENT_QUOTES, 'UTF-8');
 
                     $idProjeto = (int) ($projeto['idProjeto'] ?? 0);
                     $viewUrl = 'projeto.php?id=' . $idProjeto;
@@ -162,6 +233,9 @@ if ($idPessoa) {
                     echo '<div class="' . $cardClasses . '" data-id="' . $idProjeto . '" data-tipo="' . $tipoProjeto . '" data-categoria="' . $categoriaProjeto . '" data-view-url="' . htmlspecialchars($viewUrl) . '">';
                     echo '<img src="' . htmlspecialchars($imagemCapa) . '" alt="' . htmlspecialchars($nomeCompleto) . '" class="project-image" onerror="this.onerror=null;this.src=\'' . $placeholderCapa . '\';">';
                     echo $badgeMarkup;
+                    if ($tipo === 'coordenador') {
+                        echo '<button type="button" class="project-delete-btn" data-project-id="' . $idProjeto . '" data-project-name="' . $nomeCompletoSeguro . '" aria-label="Excluir projeto ' . $nomeCompletoSeguro . '">Excluir</button>';
+                    }
                     echo '<div class="project-label ' . $corClass . '">' . htmlspecialchars($nomeExibido) . '</div>';
                     echo '</div>';
                 }
@@ -180,6 +254,26 @@ if ($idPessoa) {
             ?>
         </div> 
     </div>
+
+<?php if ($tipo === 'coordenador') : ?>
+    <div id="delete-modal" class="delete-modal" aria-hidden="true">
+        <div class="delete-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+            <button type="button" class="delete-modal__close" id="delete-modal-close" aria-label="Fechar">&times;</button>
+            <h3 id="delete-modal-title">Excluir projeto</h3>
+            <p class="delete-modal__text">Essa ação não pode ser desfeita. Digite <strong>confirmar</strong> para concluir a exclusão do projeto selecionado.</p>
+            <form method="POST" id="delete-form">
+                <input type="hidden" name="delete_project_id" id="delete-project-id">
+                <label for="delete-confirm-input">Confirmação</label>
+                <input type="text" name="confirm_text" id="delete-confirm-input" autocomplete="off" placeholder="Escreva confirmar" required>
+                <p class="delete-modal__error" id="delete-error" role="alert"></p>
+                <div class="delete-modal__actions">
+                    <button type="button" class="delete-modal__secondary" id="delete-modal-cancel">Cancelar</button>
+                    <button type="submit" class="delete-modal__cta">Excluir projeto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
 
 <footer>
     <div class="linha">

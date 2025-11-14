@@ -7,8 +7,8 @@
     // banco de dados
     $host = 'localhost';
     $usuario = 'root';
-    //$senha = 'Gui@15600';
-    $senha = 'root';
+    $senha = 'Gui@15600';
+    //$senha = 'root';
     $banco = 'website';
 
     // conexão com o banco
@@ -104,6 +104,18 @@
         die("Erro: Método de requisição inválido.");
     }
 
+    // Captura e sanitiza o nome do projeto ANTES de tudo
+    $nomeProjeto = trim($_POST['nome-projeto'] ?? '');
+    
+    if (empty($nomeProjeto)) {
+        die("Erro: Nome do projeto é obrigatório.");
+    }
+
+    // Sanitiza o nome do projeto para criar o nome da pasta
+    $nomeProjetoSanitizado = preg_replace('/[^a-zA-Z0-9_-]/', '_', $nomeProjeto);
+    $nomeProjetoSanitizado = preg_replace('/_+/', '_', $nomeProjetoSanitizado);
+    $nomeProjetoSanitizado = trim($nomeProjetoSanitizado, '_');
+
     $idProjeto = isset($_POST['id-projeto']) ? (int) $_POST['id-projeto'] : 0;
     $modoEdicao = $idProjeto > 0;
     $idPessoaLogado = $_SESSION['idPessoa'] ?? null;
@@ -113,7 +125,7 @@
     // Verifica se é modo de edição
     if ($modoEdicao) {
         // Buscar dados anteriores do projeto
-        $stmt = $conn->prepare("SELECT capa, banner FROM projetos WHERE idProjeto = ?");
+        $stmt = $conn->prepare("SELECT capa, banner FROM projeto WHERE idProjeto = ?");
         $stmt->bind_param("i", $idProjeto);
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -274,6 +286,7 @@
 
     $coordenadoresIdsRaw = $_POST['coordenadores_ids'] ?? '';
     $bolsistasIdsRaw = $_POST['bolsistas_ids'] ?? '';
+    $voluntariosIdsRaw = $_POST['voluntarios_ids'] ?? '';
 
     $coordenadoresArray = [];
     foreach (array_filter(array_map('trim', explode(',', $coordenadoresIdsRaw))) as $idCoordenador) {
@@ -295,9 +308,13 @@
     }
     $bolsistasArray = array_values(array_unique($bolsistasArray));
 
-    if (empty($nomeProjeto)) {
-        die("Erro: Nome do projeto é obrigatório.");
+    $voluntariosArray = [];
+    foreach (array_filter(array_map('trim', explode(',', $voluntariosIdsRaw))) as $idVoluntario) {
+        if ($idVoluntario !== '' && ctype_digit($idVoluntario)) {
+            $voluntariosArray[] = (int) $idVoluntario;
+        }
     }
+    $voluntariosArray = array_values(array_unique($voluntariosArray));
 
     if (empty($tipo)) {
         die("Erro: Tipo de projeto é obrigatório.");
@@ -428,9 +445,36 @@
             }
         }
 
+        foreach ($voluntariosArray as $voluntarioId) {
+            $stmtVerificaTipo = $conn->prepare("SELECT tipo FROM pessoa WHERE idPessoa = ?");
+            if ($stmtVerificaTipo) {
+                $stmtVerificaTipo->bind_param('i', $voluntarioId);
+                $stmtVerificaTipo->execute();
+                $resultado = $stmtVerificaTipo->get_result();
+                $usuarioAtual = $resultado->fetch_assoc();
+                $stmtVerificaTipo->close();
+
+                if ($usuarioAtual && $usuarioAtual['tipo'] === 'aluno') {
+                    $stmtAtualizaTipo = $conn->prepare("UPDATE pessoa SET tipo = 'voluntario' WHERE idPessoa = ?");
+                    if ($stmtAtualizaTipo) {
+                        $stmtAtualizaTipo->bind_param('i', $voluntarioId);
+                        $stmtAtualizaTipo->execute();
+                        $stmtAtualizaTipo->close();
+                    }
+                }
+            }
+
+            $stmtPessoa = $conn->prepare("INSERT INTO pessoa_projeto (idPessoa, idProjeto, tipoPessoa) VALUES (?, ?, 'voluntario')");
+            if ($stmtPessoa) {
+                $stmtPessoa->bind_param('ii', $voluntarioId, $idProjetoExecutado);
+                $stmtPessoa->execute();
+                $stmtPessoa->close();
+            }
+        }
+
         $mensagem = $modoEdicao ? 'Projeto atualizado com sucesso!' : 'Projeto cadastrado com sucesso!';
         echo "<div style='color: green; font-weight: bold;'>✅ {$mensagem}</div>";
-        echo "<script>alert('{$mensagem}'); window.location.href='menuEditarProjetos.php';</script>";
+        echo "<script>alert('{$mensagem}'); window.location.href='menuEditProjetos.php';</script>";
     } else {
         limparPastaTemp($pastaTempImagens);
         $acao = $modoEdicao ? 'atualizar' : 'cadastrar';

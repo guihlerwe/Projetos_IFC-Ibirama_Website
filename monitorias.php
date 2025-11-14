@@ -6,8 +6,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -16,6 +16,27 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset("utf8");
+
+function resolverCapaMonitoria(?string $pasta): string
+{
+    if (!$pasta) {
+        return 'assets/photos/default-monitoria.jpg';
+    }
+
+    $pastaLimpa = trim($pasta, '/');
+    $opcoes = [
+        'assets/photos/monitoria/' . $pastaLimpa . '/capa.jpg',
+        'assets/photos/monitorias/' . $pastaLimpa . '/capa.jpg'
+    ];
+
+    foreach ($opcoes as $opcao) {
+        if (file_exists(__DIR__ . '/' . $opcao)) {
+            return $opcao;
+        }
+    }
+
+    return $opcoes[0];
+}
 
 // Buscar todas as monitorias cadastradas
 $sql = "SELECT idMonitoria, nome, tipoMonitoria, capa FROM monitoria ORDER BY nome ASC";
@@ -81,7 +102,7 @@ $resultado = $conn->query($sql);
                     
                     // Caminho da imagem de capa
                     $nomePastaMonitoria = $monitoria['capa'];
-                    $imagemCapa = !empty($nomePastaMonitoria) ? 'assets/photos/monitorias/' . $nomePastaMonitoria . '/capa.jpg' : 'assets/photos/default-monitoria.jpg';
+                    $imagemCapa = !empty($nomePastaMonitoria) ? resolverCapaMonitoria($nomePastaMonitoria) : 'assets/photos/default-monitoria.jpg';
                     
                     // Limitar o texto do nome para não quebrar o layout
                     $nomeExibido = strlen($monitoria['nome']) > 40 ? substr($monitoria['nome'], 0, 40) . '...' : $monitoria['nome'];
@@ -98,7 +119,7 @@ $resultado = $conn->query($sql);
                 echo '<div class="no-projects">';
                 echo '<p>Nenhuma monitoria cadastrada ainda.</p>';
                 if ($tipo === 'coordenador') {
-                    echo '<p><a href="addmonitoria.php">Clique aqui para cadastrar a primeira monitoria</a></p>';
+                    echo '<p><a href="menuCad-monitoria.php">Clique aqui para cadastrar a primeira monitoria</a></p>';
                 }
                 echo '</div>';
             }

@@ -7,8 +7,8 @@ $idPessoa = $_SESSION['idPessoa'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -95,10 +95,13 @@ if ($usuario) {
                     <input type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome" value="<?php echo htmlspecialchars($usuario['sobrenome'] ?? ''); ?>" required>
                 </div>
 
-                <div class="linha">
+                <div class="linha linha-reset">
                     <input type="email" id="email" name="email" placeholder="E-mail" value="<?php echo htmlspecialchars($usuario['email'] ?? ''); ?>" required>
-                    <input type="password" id="senha" name="senha" placeholder="Nova senha (opcional)">
+                    <button type="button" class="btn-reset-senha" id="btnResetSenha">
+                        Enviar link de redefinição
+                    </button>
                 </div>
+                <div id="mensagemResetSenha" class="mensagem-reset" role="status" aria-live="polite"></div>
 
                 <div class="linha">
                     <?php if ($tipo === 'aluno' || $tipo === 'bolsista'): ?>
@@ -258,6 +261,18 @@ if ($usuario) {
     
     <script src="assets/js/conta.js"></script>
     <script src="assets/js/global.js"></script>
+    
+    <div id="modalConfirmarSenha" class="modal-senha" aria-hidden="true">
+        <div class="modal-senha__conteudo">
+            <h3>Confirme sua senha</h3>
+            <p>Por segurança, digite sua senha atual para salvar as alterações da conta.</p>
+            <input type="password" id="inputSenhaConfirmacao" placeholder="Senha" autocomplete="current-password">
+            <div class="modal-senha__acoes">
+                <button type="button" class="btn-secundario" id="btnCancelarSenha">Cancelar</button>
+                <button type="button" class="btn-primario" id="btnConfirmarSenha">Confirmar</button>
+            </div>
+        </div>
+    </div>
     <script>
         // Variável global para armazenar o arquivo da foto
         let arquivoFotoSelecionado = null;

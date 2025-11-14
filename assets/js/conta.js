@@ -7,10 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
   configurarBotoesConta();
 });
 
+let modalSenha;
+let inputSenhaConfirmacao;
+let btnConfirmarSenhaModal;
+let btnCancelarSenhaModal;
+
 // ================================
 // 1. Salvar alterações da conta
 // ================================
-function salvarAlteracoes() {
+function salvarAlteracoes(senhaConfirmada) {
   const form = document.getElementById("formConta");
   const descricao = document.getElementById("descricao");
   
@@ -35,6 +40,11 @@ function salvarAlteracoes() {
     return;
   }
 
+  if (!senhaConfirmada) {
+    alert("⚠️ É necessário informar sua senha para salvar as alterações.");
+    return;
+  }
+
   const formData = new FormData(form);
   
   // Adicionar descrição ao FormData
@@ -43,6 +53,7 @@ function salvarAlteracoes() {
   }
   
   formData.append("acao", "atualizar_perfil");
+  formData.append("senha_confirmacao", senhaConfirmada);
 
   // Se o input de foto estiver fora do <form> (como em menuConta.php),
   // o FormData(form) não o incluirá automaticamente. Tenta adicionar
@@ -139,9 +150,15 @@ function excluirConta() {
 function configurarBotoesConta() {
   const btnSalvar = document.getElementById("btnSalvar");
   const btnExcluir = document.getElementById("btnExcluir");
+  const btnResetSenha = document.getElementById("btnResetSenha");
+
+  modalSenha = document.getElementById("modalConfirmarSenha");
+  inputSenhaConfirmacao = document.getElementById("inputSenhaConfirmacao");
+  btnConfirmarSenhaModal = document.getElementById("btnConfirmarSenha");
+  btnCancelarSenhaModal = document.getElementById("btnCancelarSenha");
 
   if (btnSalvar) {
-    btnSalvar.addEventListener("click", salvarAlteracoes);
+    btnSalvar.addEventListener("click", abrirModalSenhaConfirmacao);
   } else {
     console.error("Botão 'Salvar' não encontrado!");
   }
@@ -151,6 +168,109 @@ function configurarBotoesConta() {
   } else {
     console.error("Botão 'Excluir' não encontrado!");
   }
+
+  if (btnResetSenha) {
+    btnResetSenha.addEventListener("click", solicitarResetSenha);
+  }
+
+  if (btnConfirmarSenhaModal) {
+    btnConfirmarSenhaModal.addEventListener("click", confirmarSenhaModal);
+  }
+
+  if (btnCancelarSenhaModal) {
+    btnCancelarSenhaModal.addEventListener("click", fecharModalSenha);
+  }
+
+  if (inputSenhaConfirmacao) {
+    inputSenhaConfirmacao.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        confirmarSenhaModal();
+      }
+    });
+  }
+
+  if (modalSenha) {
+    modalSenha.addEventListener("click", (event) => {
+      if (event.target === modalSenha) {
+        fecharModalSenha();
+      }
+    });
+  }
+}
+
+function abrirModalSenhaConfirmacao() {
+  if (!modalSenha) {
+    salvarAlteracoes(prompt("Digite sua senha para continuar:") || "");
+    return;
+  }
+
+  inputSenhaConfirmacao.value = "";
+  modalSenha.classList.add("ativo");
+  modalSenha.setAttribute("aria-hidden", "false");
+  setTimeout(() => inputSenhaConfirmacao?.focus(), 50);
+}
+
+function fecharModalSenha() {
+  if (!modalSenha) return;
+  modalSenha.classList.remove("ativo");
+  modalSenha.setAttribute("aria-hidden", "true");
+}
+
+function confirmarSenhaModal() {
+  const senha = inputSenhaConfirmacao?.value.trim();
+  if (!senha) {
+    inputSenhaConfirmacao?.focus();
+    return;
+  }
+  fecharModalSenha();
+  salvarAlteracoes(senha);
+}
+
+function solicitarResetSenha() {
+  const btnReset = document.getElementById("btnResetSenha");
+  const mensagem = document.getElementById("mensagemResetSenha");
+
+  if (!confirm("Um link de redefinição será enviado para o seu e-mail. Deseja continuar?")) {
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("acao", "solicitar_reset");
+
+  if (btnReset) {
+    btnReset.disabled = true;
+    btnReset.textContent = "Enviando...";
+  }
+
+  fetch("contaBD.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (mensagem) {
+        mensagem.textContent = data.sucesso || data.erro || "";
+        mensagem.classList.toggle("sucesso", Boolean(data.sucesso));
+        mensagem.classList.toggle("erro", Boolean(data.erro));
+      }
+      if (!data.sucesso && !data.erro) {
+        alert("Não foi possível enviar o e-mail de redefinição. Tente novamente em instantes.");
+      }
+    })
+    .catch((error) => {
+      console.error("Erro ao solicitar redefinição:", error);
+      if (mensagem) {
+        mensagem.textContent = "Erro ao enviar e-mail. Tente novamente.";
+        mensagem.classList.add("erro");
+      }
+    })
+    .finally(() => {
+      if (btnReset) {
+        btnReset.disabled = false;
+        btnReset.textContent = "Enviar link de redefinição";
+      }
+    });
 }
 
 // ================================

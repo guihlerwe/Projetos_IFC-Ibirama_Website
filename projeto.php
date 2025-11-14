@@ -4,8 +4,8 @@ session_start();
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco
@@ -42,6 +42,7 @@ $stmt->close();
 // Buscar membros do projeto (coordenador e bolsista)
 $coordenadores = [];
 $bolsistas = [];
+$voluntarios = [];
 $sqlMembros = "SELECT p.idPessoa, p.nome, p.sobrenome, p.foto_perfil, pp.tipoPessoa FROM pessoa_projeto pp JOIN pessoa p ON pp.idPessoa = p.idPessoa WHERE pp.idProjeto = ?";
 $stmtM = $conn->prepare($sqlMembros);
 $stmtM->bind_param("i", $idProjeto);
@@ -52,6 +53,8 @@ while ($row = $resM->fetch_assoc()) {
         $coordenadores[] = $row;
     } elseif ($row['tipoPessoa'] === 'bolsista') {
         $bolsistas[] = $row;
+    } elseif ($row['tipoPessoa'] === 'voluntario') {
+        $voluntarios[] = $row;
     }
 }
 $stmtM->close();
@@ -106,6 +109,34 @@ foreach ($bolsistas as &$bol) {
 }
 unset($bol);
 
+foreach ($voluntarios as &$vol) {
+    $vol['foto_src'] = gerarSrcFotoPerfil($vol['foto_perfil'] ?? null);
+}
+unset($vol);
+
+function buscarImagemProjeto(?string $pasta, string $prefixo): ?string
+{
+    if (!$pasta) {
+        return null;
+    }
+
+    $baseDir = __DIR__ . '/assets/photos/projetos/' . $pasta . '/';
+    if (!is_dir($baseDir)) {
+        return null;
+    }
+
+    $arquivos = glob($baseDir . $prefixo . '.*');
+    if (!$arquivos) {
+        return null;
+    }
+
+    $arquivo = basename($arquivos[0]);
+    return 'assets/photos/projetos/' . $pasta . '/' . $arquivo;
+}
+
+$bannerPath = buscarImagemProjeto($projeto['banner'] ?? null, 'banner');
+$capaPath = buscarImagemProjeto($projeto['capa'] ?? null, 'capa');
+
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
 ?>
@@ -144,12 +175,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 
         <div id="conteudo-projeto">
             <div id="banner">
-                <?php if (!empty($projeto['banner'])): ?>
-                    <?php
-                    $nomePastaProjeto = $projeto['banner'];
-                    $caminhoImagem = "assets/photos/projetos/{$nomePastaProjeto}/banner.jpg";
-                    ?>
-                    <img src="<?php echo htmlspecialchars($caminhoImagem); ?>" alt="Banner do projeto" id="banner-img">
+                <?php if ($bannerPath): ?>
+                    <img src="<?php echo htmlspecialchars($bannerPath); ?>" alt="Banner do projeto" id="banner-img">
                 <?php else: ?>
                     <div id="banner-placeholder">
                         <span>Banner do Projeto</span>
@@ -159,12 +186,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 
             <div id="info-projeto">
                 <div id="div-capa">
-                    <?php if (!empty($projeto['capa'])): ?>
-                        <?php
-                        $nomePastaProjeto = $projeto['capa'];
-                        $caminhoImagem = "assets/photos/projetos/{$nomePastaProjeto}/capa.jpg";
-                        ?>
-                        <img src="<?php echo htmlspecialchars($caminhoImagem); ?>" alt="Capa do projeto" id="capa-img">
+                    <?php if ($capaPath): ?>
+                        <img src="<?php echo htmlspecialchars($capaPath); ?>" alt="Capa do projeto" id="capa-img">
                     <?php else: ?>
                         <span id="capa-icon">📷</span>
                     <?php endif; ?>
@@ -182,7 +205,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                 <?php if (!empty($projeto['linkParaInscricao'])): ?>
                     <div id="link-inscricao">
                         <a href="<?php echo htmlspecialchars($projeto['linkParaInscricao']); ?>" target="_blank" class="btn-link">
-                            📝 Inscrever-se no Projeto
+                            ✓ Inscrever-se no Projeto
                         </a>
                     </div>
                 <?php endif; ?>
@@ -193,19 +216,15 @@ $tipo = $_SESSION['tipo'] ?? '';
                     <div class="secao">
                         <h2 class="subtitulo">Sobre o Projeto</h2>
                         <p class="texto-sobre"><?php echo nl2br(htmlspecialchars($projeto['textoSobre'])); ?></p>
+                        <?php if (!empty($projeto['linkSite'])): ?>
+                            <a href="<?php echo htmlspecialchars($projeto['linkSite']); ?>" target="_blank" class="link-site">
+                                → Visitar Site do Projeto
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 
-                <?php if (!empty($projeto['linkSite'])): ?>
-                    <div class="secao">
-                        <h2 class="subtitulo">Site do Projeto</h2>
-                        <a href="<?php echo htmlspecialchars($projeto['linkSite']); ?>" target="_blank" class="link-site">
-                            🌐 <?php echo htmlspecialchars($projeto['linkSite']); ?>
-                        </a>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (!empty($coordenadores) || !empty($bolsistas)): ?>
+                <?php if (!empty($coordenadores) || !empty($bolsistas) || !empty($voluntarios)): ?>
                     <div class="secao">
                         <h2 class="subtitulo">Equipe</h2>
                         <div class="equipe-container">
@@ -252,6 +271,27 @@ $tipo = $_SESSION['tipo'] ?? '';
                                     </div>
                                 </div>
                             <?php endif; ?>
+
+                            <?php if (!empty($voluntarios)): ?>
+                                <div class="equipe-categoria">
+                                    <h3 class="titulo-equipe">Voluntário(a)</h3>
+                                    <div class="membros">
+                                        <?php foreach ($voluntarios as $voluntario): ?>
+                                            <div class="membro">
+                                                <div class="foto-membro">
+                                                    <img src="<?php echo $voluntario['foto_src']; ?>"
+                                                         alt="Foto de <?php echo htmlspecialchars($voluntario['nome']); ?>"
+                                                         onclick="toggleUserInfo(<?php echo $voluntario['idPessoa']; ?>, event)"
+                                                         class="foto-perfil">
+                                                </div>
+                                                <span class="nome-membro">
+                                                    <?php echo htmlspecialchars($voluntario['nome'] . ' ' . $voluntario['sobrenome']); ?>
+                                                </span>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -260,7 +300,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                     <div class="secao">
                         <h2 class="subtitulo">Oportunidades de Bolsa</h2>
                         <a href="<?php echo htmlspecialchars($projeto['linkBolsista']); ?>" target="_blank" class="btn-link bolsa-link">
-                            💼 Inscreva-se para Bolsa
+                            ★ Inscreva-se para Bolsa
                         </a>
                     </div>
                 <?php endif; ?>
@@ -271,7 +311,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                         <div class="contatos">
                             <?php if (!empty($projeto['email'])): ?>
                                 <div class="contato-item">
-                                    <span class="icone-contato">📧</span>
+                                    <span class="icone-contato">✉</span>
                                     <a href="mailto:<?php echo htmlspecialchars($projeto['email']); ?>" class="link-contato">
                                         <?php echo htmlspecialchars($projeto['email']); ?>
                                     </a>
@@ -280,7 +320,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                             
                             <?php if (!empty($projeto['numero'])): ?>
                                 <div class="contato-item">
-                                    <span class="icone-contato">📱</span>
+                                    <span class="icone-contato">☎</span>
                                     <a href="tel:<?php echo htmlspecialchars($projeto['numero']); ?>" class="link-contato">
                                         <?php echo htmlspecialchars($projeto['numero']); ?>
                                     </a>
@@ -289,7 +329,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                             
                             <?php if (!empty($projeto['linkInstagram'])): ?>
                                 <div class="contato-item">
-                                    <span class="icone-contato">📷</span>
+                                    <span class="icone-contato">@</span>
                                     <a href="<?php echo htmlspecialchars($projeto['linkInstagram']); ?>" target="_blank" class="link-contato">
                                         Instagram
                                     </a>

@@ -286,3 +286,116 @@ input#matricula-perfil {
   box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
 }
 
+.linha-reset {
+  align-items: center;
+}
+
+.btn-reset-senha {
+  flex: 1;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px dashed var(--input-border);
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.btn-reset-senha:hover {
+  border-color: var(--input-focus);
+  background-color: rgba(30, 77, 43, 0.08);
+}
+
+.mensagem-reset {
+  min-height: 18px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-align: right;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.mensagem-reset.sucesso {
+  color: #2d8f55;
+}
+
+.mensagem-reset.erro {
+  color: #c0392b;
+}
+
+.modal-senha {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+.modal-senha.ativo {
+  display: flex;
+}
+
+.modal-senha__conteudo {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 16px;
+  width: min(400px, 100%);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: left;
+}
+
+.modal-senha__conteudo h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.modal-senha__conteudo p {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+}
+
+#inputSenhaConfirmacao {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  padding: 10px;
+  font-size: 1rem;
+  margin-bottom: 18px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+}
+
+.modal-senha__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-primario,
+.btn-secundario {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn-primario {
+  background-color: #1e4d2b;
+  color: #fff;
+}
+
+.btn-secundario {
+  background-color: rgba(0,0,0,0.05);
+  color: var(--text-primary);
+}
+
+.btn-primario:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+

@@ -4,6 +4,13 @@ header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 1); // Mudar para 0 em produção
 error_reporting(E_ALL);
 
+require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
+require_once __DIR__ . '/PHPMailer/src/SMTP.php';
+require_once __DIR__ . '/PHPMailer/src/Exception.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 session_start();
 $idPessoa = $_SESSION['idPessoa'] ?? null;
 if (!$idPessoa) {
@@ -14,8 +21,8 @@ if (!$idPessoa) {
 // Conexão com o banco
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -28,6 +35,18 @@ $conn->set_charset("utf8");
 function resposta_json($arr) {
     echo json_encode($arr, JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+const RESET_TOKEN_PREFIX = 'RS';
+const RESET_TOKEN_TOTAL_BYTES = 16; // mantém token em 32 caracteres hex
+const RESET_TOKEN_TTL = 3600; // 1 hora
+
+function gerar_token_reset(): string {
+    $expireAt = time() + max(60, RESET_TOKEN_TTL);
+    $prefix = RESET_TOKEN_PREFIX;
+    $randomLength = RESET_TOKEN_TOTAL_BYTES - strlen($prefix) - 4; // 4 bytes reservados para timestamp
+    $payload = $prefix . pack('N', $expireAt) . random_bytes($randomLength);
+    return bin2hex($payload);
 }
 
 // GET -> retorna dados do usuário
@@ -60,7 +79,7 @@ if ($acao === 'atualizar_perfil' || $acao === 'atualizar_com_foto' || $acao === 
     $curso = isset($_POST['curso']) ? trim((string)$_POST['curso']) : null;
     $area = isset($_POST['area']) ? trim((string)$_POST['area']) : null;
     $matricula = isset($_POST['matricula']) ? trim((string)$_POST['matricula']) : null;
-    $senha = isset($_POST['senha']) ? trim((string)$_POST['senha']) : '';
+    $senhaConfirmacao = isset($_POST['senha_confirmacao']) ? trim((string)$_POST['senha_confirmacao']) : '';
 
     // Validações
     if ($nome === '' || $sobrenome === '' || $email === '') {
@@ -75,13 +94,39 @@ if ($acao === 'atualizar_perfil' || $acao === 'atualizar_com_foto' || $acao === 
         resposta_json(['erro' => 'Descrição muito longa (máx 1000 caracteres).']);
     }
 
-    // Verifica email duplicado
-    $stmt = $conn->prepare("SELECT idPessoa FROM pessoa WHERE email = ? AND idPessoa != ?");
-    $stmt->bind_param("si", $email, $idPessoa);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($res && $res->num_rows > 0) {
-        resposta_json(['erro' => 'Este email já está sendo usado por outro usuário.']);
+    if ($senhaConfirmacao === '') {
+        resposta_json(['erro' => 'Informe sua senha para confirmar as alterações.']);
+    }
+
+    $stmtDadosAtuais = $conn->prepare("SELECT senha, email FROM pessoa WHERE idPessoa = ? LIMIT 1");
+    if (!$stmtDadosAtuais) {
+        resposta_json(['erro' => 'Não foi possível validar os dados atuais.']);
+    }
+    $stmtDadosAtuais->bind_param("i", $idPessoa);
+    if (!$stmtDadosAtuais->execute()) {
+        $stmtDadosAtuais->close();
+        resposta_json(['erro' => 'Falha ao buscar dados do usuário.']);
+    }
+
+    $stmtDadosAtuais->bind_result($hashAtual, $emailAtualDb);
+    $temRegistro = $stmtDadosAtuais->fetch();
+    $stmtDadosAtuais->close();
+
+    if (!$temRegistro || !$hashAtual || !password_verify($senhaConfirmacao, $hashAtual)) {
+        resposta_json(['erro' => 'Senha incorreta.']);
+    }
+
+    $emailAtual = trim((string)($emailAtualDb ?? ''));
+    $emailAlterado = strcasecmp($emailAtual, $email) !== 0;
+
+    if ($emailAlterado) {
+        $stmt = $conn->prepare("SELECT idPessoa FROM pessoa WHERE email = ? AND idPessoa != ?");
+        $stmt->bind_param("si", $email, $idPessoa);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res && $res->num_rows > 0) {
+            resposta_json(['erro' => 'Este email já está sendo usado por outro usuário.']);
+        }
     }
 
     // Processar upload de foto (se houver)
@@ -139,36 +184,26 @@ if ($acao === 'atualizar_perfil' || $acao === 'atualizar_com_foto' || $acao === 
         }
     }
 
-    // Monta query de update
+    $sql = "UPDATE pessoa SET nome = ?, sobrenome = ?, email = ?, descricao = ?, curso = ?, area = ?, matricula = ?";
+    $params = [$nome, $sobrenome, $email, $descricao, $curso, $area, $matricula];
+    $tipos = "sssssss";
+
     if ($caminhoFoto) {
-        // Atualizar COM foto
-        if ($senha !== '') {
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-            $sql = "UPDATE pessoa SET nome = ?, sobrenome = ?, email = ?, descricao = ?, senha = ?, curso = ?, area = ?, matricula = ?, foto_perfil = ? WHERE idPessoa = ?";
-            $stmt = $conn->prepare($sql);
-            if (!$stmt) resposta_json(['erro' => 'Erro interno (prepare).']);
-            $stmt->bind_param("sssssssssi", $nome, $sobrenome, $email, $descricao, $senhaHash, $curso, $area, $matricula, $caminhoFoto, $idPessoa);
-        } else {
-            $sql = "UPDATE pessoa SET nome = ?, sobrenome = ?, email = ?, descricao = ?, curso = ?, area = ?, matricula = ?, foto_perfil = ? WHERE idPessoa = ?";
-            $stmt = $conn->prepare($sql);
-            if (!$stmt) resposta_json(['erro' => 'Erro interno (prepare).']);
-            $stmt->bind_param("ssssssssi", $nome, $sobrenome, $email, $descricao, $curso, $area, $matricula, $caminhoFoto, $idPessoa);
-        }
-    } else {
-        // Atualizar SEM foto
-        if ($senha !== '') {
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-            $sql = "UPDATE pessoa SET nome = ?, sobrenome = ?, email = ?, descricao = ?, senha = ?, curso = ?, area = ?, matricula = ? WHERE idPessoa = ?";
-            $stmt = $conn->prepare($sql);
-            if (!$stmt) resposta_json(['erro' => 'Erro interno (prepare).']);
-            $stmt->bind_param("ssssssssi", $nome, $sobrenome, $email, $descricao, $senhaHash, $curso, $area, $matricula, $idPessoa);
-        } else {
-            $sql = "UPDATE pessoa SET nome = ?, sobrenome = ?, email = ?, descricao = ?, curso = ?, area = ?, matricula = ? WHERE idPessoa = ?";
-            $stmt = $conn->prepare($sql);
-            if (!$stmt) resposta_json(['erro' => 'Erro interno (prepare).']);
-            $stmt->bind_param("sssssssi", $nome, $sobrenome, $email, $descricao, $curso, $area, $matricula, $idPessoa);
-        }
+        $sql .= ", foto_perfil = ?";
+        $params[] = $caminhoFoto;
+        $tipos .= "s";
     }
+
+    $sql .= " WHERE idPessoa = ?";
+    $params[] = $idPessoa;
+    $tipos .= "i";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        resposta_json(['erro' => 'Erro interno (prepare).']);
+    }
+
+    $stmt->bind_param($tipos, ...$params);
 
     if ($stmt->execute()) {
         resposta_json(['sucesso' => 'Perfil atualizado com sucesso.']);
@@ -233,6 +268,66 @@ if ($acao === 'excluir_conta' || $acao === 'excluir') {
     } else {
         resposta_json(['erro' => 'Erro ao excluir conta: ' . $stmt->error]);
     }
+}
+
+if ($acao === 'solicitar_reset') {
+    $stmtDados = $conn->prepare("SELECT nome, email FROM pessoa WHERE idPessoa = ? LIMIT 1");
+    $stmtDados->bind_param("i", $idPessoa);
+    $stmtDados->execute();
+    $info = $stmtDados->get_result()->fetch_assoc();
+    $stmtDados->close();
+
+    if (!$info) {
+        resposta_json(['erro' => 'Usuário não encontrado.']);
+    }
+
+    $token = gerar_token_reset();
+
+    $stmtToken = $conn->prepare("UPDATE pessoa SET token = ? WHERE idPessoa = ?");
+    if (!$stmtToken) {
+        resposta_json(['erro' => 'Não foi possível gerar o token.']);
+    }
+    $stmtToken->bind_param("si", $token, $idPessoa);
+
+    if (!$stmtToken->execute()) {
+        resposta_json(['erro' => 'Erro ao salvar token de redefinição.']);
+    }
+    $stmtToken->close();
+
+    $protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+    if ($basePath === '.') {
+        $basePath = '';
+    }
+    $linkReset = $protocolo . '://' . $host . $basePath . '/redefinir_senha.php?token=' . urlencode($token);
+
+    try {
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'tls';
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 587;
+        $mail->Username = 'projetos.ifc.ibirama@gmail.com';
+        $mail->Password = 'jsfi pcrf zumq xfcv';
+        $mail->setFrom('projetos.ifc.ibirama@gmail.com', 'IFC Projetos');
+        $mail->addAddress($info['email'], $info['nome']);
+        $mail->isHTML(true);
+        $mail->Subject = 'Redefinição de senha - Projetos IFC Ibirama';
+        $mail->Body = '<p>Olá, ' . htmlspecialchars($info['nome']) . '!</p>' .
+            '<p>Recebemos uma solicitação para redefinir sua senha. Clique no botão abaixo em até 1 hora:</p>' .
+            '<p><a href="' . $linkReset . '" style="display:inline-block;padding:12px 18px;background:#1e4d2b;color:#fff;text-decoration:none;border-radius:6px;">Redefinir senha</a></p>' .
+            '<p>Se o botão não funcionar, copie e cole este endereço no navegador:</p>' .
+            '<p>' . htmlspecialchars($linkReset) . '</p>' .
+            '<p>Se você não solicitou, ignore este e-mail.</p>';
+        $mail->AltBody = "Olá, {$info['nome']}! Acesse o link para redefinir sua senha: {$linkReset}";
+        $mail->send();
+    } catch (Exception $e) {
+        resposta_json(['erro' => 'Não foi possível enviar o e-mail: ' . $mail->ErrorInfo]);
+    }
+
+    resposta_json(['sucesso' => 'Enviamos um e-mail com instruções para redefinir a senha.']);
 }
 
 resposta_json(['erro' => 'Ação inválida ou não informada.']);

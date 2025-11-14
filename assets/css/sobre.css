@@ -123,19 +123,16 @@
 }
 
 .site-link-icon {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 1px;
-    width: 16px;
-    height: 16px;
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
     margin-right: 8px;
 }
 
-.site-link-icon div {
-    background-color: #333;
+.site-link-icon img {
     width: 100%;
     height: 100%;
+    object-fit: contain;
 }
 
 .team-member-link {
@@ -166,22 +163,6 @@
         text-align: left;
     }
     
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(10px);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 100%;
-        transition: box-shadow 0.3s ease;
-        font-size: 0.5vh;
-    }
-
     .section-image {
         width: 300vw; /* 30% da largura da tela */
         max-width: 100%; /* ainda assim limita pra não ficar gigante */
@@ -208,8 +189,8 @@
         background-color: var(--text-color) !important;
     }
     
-    .site-link-icon div {
-        background-color: var(--text-color) !important;
+    .site-link-icon img {
+        filter: none;
     }
 }
 
@@ -233,8 +214,8 @@
     background-color: var(--text-color);
 }
 
-[data-theme="dark"] .site-link-icon div {
-    background-color: var(--text-color);
+[data-theme="dark"] .site-link-icon img {
+    filter: none;
 }
 
 /* Aplicação das variáveis nos elementos */
@@ -323,21 +304,16 @@ header.com-sombra{
 .login-nav {
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 40px;
     color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
 .projetos-nav:hover,
-.monitoria-nav:hover {
-    background-color: rgba(255, 255, 255, 0.08);
-}
-
-@media (prefers-color-scheme: dark) {
-    .projetos-nav:hover,
-    .monitoria-nav:hover {
-        background-color: rgba(255, 255, 255, 0.08);
-    }
+.monitoria-nav:hover,
+.sobre-nav:hover,
+.login-nav:hover {
+    background-color: var(--hover-overlay, rgba(0, 0, 0, 0.08));
 }
 
 .menu-btn {
@@ -471,20 +447,17 @@ header.com-sombra{
 }
 
 .site-link-icon {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 1px;
-    width: 16px;
-    height: 16px;
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
     margin-right: 8px;
 }
 
-.site-link-icon div {
-    background-color: var(--text-color);
+.site-link-icon img {
     width: 100%;
     height: 100%;
-    transition: background-color 0.3s ease;
+    object-fit: contain;
+    transition: filter 0.3s ease;
 }
 
 .team-member-link {
@@ -530,22 +503,6 @@ header.com-sombra{
         text-align: left;
     }
     
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: var(--header-bg);
-        backdrop-filter: blur(10px);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 100%;
-        transition: box-shadow 0.3s ease, background-color 0.3s ease;
-        font-size: 0.5vh;
-    }
-
     .section-image {
         width: 300vw;
         max-width: 100%;

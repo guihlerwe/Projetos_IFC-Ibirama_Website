@@ -45,6 +45,26 @@ body {
     color: var(--text-color);
 }
 
+.alert {
+    margin: 20px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+    border-color: #a5d6a7;
+}
+
+.alert-error {
+    background-color: #ffebee;
+    color: #b71c1c;
+    border-color: #ef9a9a;
+}
+
 .barra-pesquisar {
     margin: 20px;
     display: flex;
@@ -244,6 +264,160 @@ body {
     footer .footer-container {
         flex-direction: column;
         align-items: flex-start;
+    }
+}
+
+/* Responsividade para mobile */
+@media screen and (max-width: 768px) {
+    /* Container principal */
+    .container {
+        margin-top: 70px;
+        padding: 0 15px;
+    }
+
+    /* Grid de monitorias em 2 colunas */
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 15px 0;
+    }
+
+    /* Cards de monitoria mantêm aspect ratio */
+    .project-card {
+        border-radius: 15px;
+    }
+
+    /* Labels das monitorias */
+    .project-label {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    /* Barra de pesquisa - layout otimizado */
+    .barra-pesquisar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin: 15px 0;
+    }
+    
+    /* Input de pesquisa ocupa linha inteira */
+    .input-pesquisar {
+        grid-column: 1 / 4;
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    /* Filtros compactos lado a lado */
+    .btn-filtrar {
+        padding: 7px 8px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    /* Limpar filtros ocupa linha inteira */
+    #limpar-filtros {
+        grid-column: 1 / 4;
+        padding: 7px 12px;
+        font-size: 13px;
+    }
+
+    /* Footer com padding reduzido */
+    footer {
+        padding: 20px 15px;
+        margin-top: 20vh;
+    }
+
+    footer .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    /* Ajusta dados ativos no footer */
+    footer .Ativos #dados-ativos {
+        flex-direction: row;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Header mais compacto */
+    header {
+        padding: 12px 15px;
+    }
+
+    .logo {
+        font-size: 16px;
+        gap: 8px;
+    }
+
+    #icone-ifc {
+        width: 25px;
+        height: 22px;
+    }
+
+    /* Navegação compacta */
+    .navegador {
+        gap: 10px;
+    }
+
+    .projetos-nav,
+    .monitoria-nav {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    /* Remove animações de hover em mobile */
+    .project-card:hover {
+        transform: none;
+    }
+
+    /* Melhora interação touch */
+    .project-card {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Mensagem sem monitorias */
+    .no-projects {
+        padding: 40px 15px;
+    }
+
+    .no-projects p {
+        font-size: 16px;
+    }
+}
+
+/* Mobile muito pequeno */
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .projects-grid {
+        padding: 15px 0;
+        gap: 15px;
+    }
+
+    .project-label {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    .logo {
+        font-size: 14px;
+    }
+
+    .navegador {
+        gap: 8px;
+    }
+
+    footer .Ativos #dados-ativos {
+        gap: 15px;
+    }
+
+    .no-projects p {
+        font-size: 14px;
     }
 }
 

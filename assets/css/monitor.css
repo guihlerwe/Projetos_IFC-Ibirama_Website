@@ -84,7 +84,7 @@
 .tipo-monitoria {
     display: inline-block;
     padding: 6px 16px;
-    background-color: #006620;
+    background-color: grey;
     color: white;
     border-radius: 20px;
     font-size: 14px;
@@ -219,13 +219,13 @@
 }
 
 .monitor-email a {
-    color: #4caf50;
+    color: lightblue;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .monitor-email a:hover {
-    color: #006620;
+    color: blue;
     text-decoration: underline;
 }
 

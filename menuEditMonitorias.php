@@ -7,7 +7,7 @@ $email = $_SESSION['email'] ?? '';
 $idPessoa = $_SESSION['idPessoa'] ?? null;
 
 // Verificar se é coordenador e tem o e-mail autorizado
-if ($tipo !== 'coordenador' || $email !== 'cge@ifc.edu.br') {
+if ($tipo !== 'coordenador' || $email !== 'cge.ibirama@ifc.edu.br') {
     header('Location: principal.php');
     exit;
 }
@@ -15,8 +15,8 @@ if ($tipo !== 'coordenador' || $email !== 'cge@ifc.edu.br') {
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -26,8 +26,39 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
+function resolverCapaMonitoria(?string $pasta): string
+{
+    if (!$pasta) {
+        return 'assets/photos/default-monitoria.jpg';
+    }
+
+    $pastaLimpa = trim($pasta, '/');
+    $opcoes = [
+        'assets/photos/monitoria/' . $pastaLimpa . '/capa.jpg',
+        'assets/photos/monitorias/' . $pastaLimpa . '/capa.jpg'
+    ];
+
+    foreach ($opcoes as $opcao) {
+        if (file_exists(__DIR__ . '/' . $opcao)) {
+            return $opcao;
+        }
+    }
+
+    return $opcoes[0];
+}
+
 // Buscar todas as monitorias
 $monitorias = [];
+$statusAlert = null;
+$statusMap = [
+    'excluida' => ['class' => 'alert-success', 'texto' => 'Monitoria excluída com sucesso.'],
+    'erro' => ['class' => 'alert-error', 'texto' => 'Não foi possível excluir a monitoria. Tente novamente.'],
+    'nao-encontrada' => ['class' => 'alert-error', 'texto' => 'Monitoria não encontrada.']
+];
+$statusParam = $_GET['status'] ?? null;
+if ($statusParam && isset($statusMap[$statusParam])) {
+    $statusAlert = $statusMap[$statusParam];
+}
 $sql = "SELECT idMonitoria, nome, tipoMonitoria, capa FROM monitoria ORDER BY nome ASC";
 if ($resultado = $conn->query($sql)) {
     $monitorias = $resultado->fetch_all(MYSQLI_ASSOC);
@@ -67,6 +98,12 @@ if ($resultado = $conn->query($sql)) {
             </div>
         </header>
 
+        <?php if ($statusAlert): ?>
+            <div class="alert <?php echo htmlspecialchars($statusAlert['class']); ?>">
+                <?php echo htmlspecialchars($statusAlert['texto']); ?>
+            </div>
+        <?php endif; ?>
+
         <div class="barra-pesquisar">
             <input type="text" class="input-pesquisar" placeholder="Pesquisar" id="input-pesquisa">
             <button class="btn-filtrar tecnico" data-filtro="tecnica-integrada">Área Técnica Integrada</button>
@@ -94,10 +131,7 @@ if ($resultado = $conn->query($sql)) {
                             break;
                     }
 
-                    $imagemCapa = $placeholderCapa;
-                    if (!empty($monitoria['capa'])) {
-                        $imagemCapa = 'assets/photos/monitorias/' . $monitoria['capa'] . '/capa.jpg';
-                    }
+                    $imagemCapa = !empty($monitoria['capa']) ? resolverCapaMonitoria($monitoria['capa']) : $placeholderCapa;
 
                     $nomeCompleto = $monitoria['nome'] ?? '';
                     $nomeExibido = (strlen($nomeCompleto) > 40) ? substr($nomeCompleto, 0, 40) . '...' : $nomeCompleto;

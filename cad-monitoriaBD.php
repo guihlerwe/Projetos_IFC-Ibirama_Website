@@ -13,8 +13,8 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'coordenador') {
 // Banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco
@@ -23,6 +23,9 @@ if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
 $conn->set_charset("utf8");
+
+$baseDirMonitoria = __DIR__ . '/assets/photos/monitoria';
+$baseDirMonitoriasLegacy = __DIR__ . '/assets/photos/monitorias';
 
 // Verificar se é criação ou edição
 $idMonitoria = isset($_POST['id-monitoria']) && !empty($_POST['id-monitoria']) ? (int)$_POST['id-monitoria'] : 0;
@@ -75,7 +78,7 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] === UPLOAD_ERR_OK) {
     $nomePasta = criarNomePastaSeguro($nomeMonitoria);
     
     // Diretório de destino
-    $diretorioMonitorias = __DIR__ . '/assets/photos/monitorias/' . $nomePasta;
+    $diretorioMonitorias = $baseDirMonitoria . '/' . $nomePasta;
     if (!is_dir($diretorioMonitorias)) {
         mkdir($diretorioMonitorias, 0755, true);
     }
@@ -106,14 +109,33 @@ try {
         if ($nomePasta === null && isset($dadosAntigos['capa'])) {
             $nomePasta = $dadosAntigos['capa'];
         }
-        
-        // Se houver nova capa e o nome mudou, renomear a pasta
+
+        // Determinar caminho atual da pasta da capa (novo padrão ou legado)
+        $pastaAtual = null;
+        if (isset($dadosAntigos['capa'])) {
+            $possiveisPastas = [
+                $baseDirMonitoria . '/' . $dadosAntigos['capa'],
+                $baseDirMonitoriasLegacy . '/' . $dadosAntigos['capa']
+            ];
+            foreach ($possiveisPastas as $possivel) {
+                if (is_dir($possivel)) {
+                    $pastaAtual = $possivel;
+                    break;
+                }
+            }
+        }
+
+        // Se houver nova capa e o nome mudou, renomear/mover pasta para o novo padrão
         if ($nomePasta && isset($dadosAntigos['capa']) && $nomePasta !== $dadosAntigos['capa']) {
-            $pastaAntiga = __DIR__ . '/assets/photos/monitorias/' . $dadosAntigos['capa'];
-            $pastaNova = __DIR__ . '/assets/photos/monitorias/' . $nomePasta;
-            
-            if (is_dir($pastaAntiga) && !is_dir($pastaNova)) {
-                rename($pastaAntiga, $pastaNova);
+            $pastaNova = $baseDirMonitoria . '/' . $nomePasta;
+            if ($pastaAtual && !is_dir($pastaNova)) {
+                rename($pastaAtual, $pastaNova);
+            }
+        } elseif ($pastaAtual && strpos($pastaAtual, '/assets/photos/monitorias/') !== false) {
+            // Se não houve mudança de nome mas a pasta ainda está no diretório legado, move para o novo
+            $pastaNova = $baseDirMonitoria . '/' . $dadosAntigos['capa'];
+            if (!is_dir($pastaNova)) {
+                rename($pastaAtual, $pastaNova);
             }
         }
         
@@ -186,7 +208,7 @@ try {
     
     // Remover pasta criada se houve erro
     if ($nomePasta && !$modoEdicao) {
-        $diretorioMonitorias = __DIR__ . '/assets/photos/monitorias/' . $nomePasta;
+        $diretorioMonitorias = $baseDirMonitoria . '/' . $nomePasta;
         if (is_dir($diretorioMonitorias)) {
             // Remove a capa se existir
             $capaPath = $diretorioMonitorias . '/' . $capaArquivo;

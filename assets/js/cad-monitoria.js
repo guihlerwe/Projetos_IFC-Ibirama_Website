@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Variáveis para armazenar seleções
-    let coordenadoresSelecionados = [];
     let monitorSelecionado = null;
     const FOTO_PLACEHOLDER = '../assets/photos/fotos_perfil/sem_foto_perfil.jpg';
     
@@ -11,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fotoCapa = document.getElementById('foto-capa');
     const capaPreview = document.getElementById('capa-preview');
     const capaIcon = document.getElementById('capa-icon');
+    const capaPlaceholder = document.getElementById('capa-placeholder');
     
     if (fotoCapa) {
         fotoCapa.addEventListener('change', function(e) {
@@ -21,8 +21,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     capaPreview.src = e.target.result;
                     capaPreview.style.display = 'block';
                     if (capaIcon) capaIcon.style.display = 'none';
+                    if (capaPlaceholder) capaPlaceholder.style.display = 'none';
                 };
                 reader.readAsDataURL(file);
+            }
+            else {
+                if (capaPreview) {
+                    capaPreview.style.display = 'none';
+                    capaPreview.removeAttribute('src');
+                }
+                if (capaIcon) capaIcon.style.display = 'block';
+                if (capaPlaceholder) capaPlaceholder.style.display = 'block';
             }
         });
     }
@@ -41,12 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Configuração do modal de seleção de monitor
-    const btnSelecionarMonitor = document.querySelector('.btn-selecionar');
-    const monitorInfoContainer = document.getElementById('monitor-info-container');
+    const monitorContainer = document.getElementById('monitor-container');
+    const addMonitorCard = document.getElementById('add-monitor');
     const monitorIdInput = document.getElementById('monitor_id');
     
-    if (btnSelecionarMonitor) {
-        btnSelecionarMonitor.addEventListener('click', function() {
+    if (addMonitorCard) {
+        addMonitorCard.addEventListener('click', function() {
             abrirModalMonitor();
         });
     }
@@ -144,49 +153,67 @@ document.addEventListener('DOMContentLoaded', function() {
     function selecionarMonitor(monitor) {
         monitorSelecionado = monitor;
         monitorIdInput.value = monitor.idPessoa;
-        
-        const cursoFormatado = formatarCurso(monitor.curso);
-        
-        // Atualizar container com o monitor selecionado
-        monitorInfoContainer.innerHTML = `
-            <div class="monitor-selecionado-preview">
-                <div class="monitor-foto-preview">
-                    <img src="${monitor.foto_src}" alt="${monitor.nome}">
-                </div>
-                <div class="monitor-dados-preview">
-                    <div class="monitor-nome-preview">${monitor.nome} ${monitor.sobrenome}</div>
-                    ${cursoFormatado ? `<div class="monitor-curso-preview">${cursoFormatado}</div>` : ''}
-                </div>
-                <button type="button" class="btn-remover-monitor">Remover</button>
-            </div>
-        `;
-        
-        // Adicionar evento de remover
-        const btnRemover = monitorInfoContainer.querySelector('.btn-remover-monitor');
-        if (btnRemover) {
-            btnRemover.addEventListener('click', function() {
-                removerMonitor();
-            });
-        }
+        renderizarMonitorSelecionado();
     }
-    
-    // Função para remover monitor
+
+    function renderizarMonitorSelecionado() {
+        if (!monitorContainer) return;
+
+        monitorContainer.querySelectorAll('.membro.monitor-ativo').forEach(card => card.remove());
+
+        if (!monitorSelecionado) {
+            toggleAddMonitor(true);
+            return;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'membro monitor-ativo';
+        card.dataset.id = monitorSelecionado.idPessoa;
+        const fotoSrc = monitorSelecionado.foto_src && monitorSelecionado.foto_src !== 'null'
+            ? monitorSelecionado.foto_src
+            : FOTO_PLACEHOLDER;
+        const sobrenome = monitorSelecionado.sobrenome ? ` ${monitorSelecionado.sobrenome}` : '';
+        const nomeCompleto = `${monitorSelecionado.nome || ''}${sobrenome}`.trim();
+        const nomeCurto = nomeCompleto.length > 16 ? `${nomeCompleto.substring(0, 13)}...` : nomeCompleto || 'Monitor';
+        const cursoFormatado = formatarCurso(monitorSelecionado.curso);
+
+        card.innerHTML = `
+            <div class="foto-membro-wrapper">
+                <div class="foto-membro">
+                    <img src="${fotoSrc}" alt="${nomeCompleto}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';">
+                </div>
+                <div class="btn-remover" title="Remover monitor">
+                    <span>➖</span>
+                </div>
+            </div>
+            <div class="nome-membro" title="${nomeCompleto}">${nomeCurto}</div>
+            ${cursoFormatado ? `<div class="monitor-mini-curso">${cursoFormatado}</div>` : ''}
+        `;
+
+        const btnRemover = card.querySelector('.btn-remover');
+        if (btnRemover) {
+            btnRemover.addEventListener('click', removerMonitor);
+        }
+
+        if (monitorContainer && addMonitorCard) {
+            monitorContainer.insertBefore(card, addMonitorCard);
+        } else if (monitorContainer) {
+            monitorContainer.appendChild(card);
+        }
+
+        toggleAddMonitor(false);
+    }
+
     function removerMonitor() {
         monitorSelecionado = null;
         monitorIdInput.value = '';
-        
-        monitorInfoContainer.innerHTML = `
-            <div class="selecionar-monitor" id="selecionar-monitor">
-                <button type="button" class="btn-selecionar">+ Selecionar Monitor(a)</button>
-            </div>
-        `;
-        
-        // Re-adicionar evento de clique
-        const btnSelecionarNovo = monitorInfoContainer.querySelector('.btn-selecionar');
-        if (btnSelecionarNovo) {
-            btnSelecionarNovo.addEventListener('click', function() {
-                abrirModalMonitor();
-            });
+        monitorContainer && monitorContainer.querySelectorAll('.membro.monitor-ativo').forEach(card => card.remove());
+        toggleAddMonitor(true);
+    }
+
+    function toggleAddMonitor(mostrar) {
+        if (addMonitorCard) {
+            addMonitorCard.style.display = mostrar ? 'flex' : 'none';
         }
     }
     
@@ -244,7 +271,8 @@ function setupCustomSelect(selectId, inputId) {
     // Toggle dropdown
     selectSelected.addEventListener('click', function(e) {
         e.stopPropagation();
-        selectItems.classList.toggle('active');
+        const isOpen = selectItems.classList.toggle('active');
+        customSelect.classList.toggle('open', isOpen);
     });
     
     // Selecionar item
@@ -258,11 +286,13 @@ function setupCustomSelect(selectId, inputId) {
             selectSelected.textContent = text;
             hiddenInput.value = value;
             selectItems.classList.remove('active');
+            customSelect.classList.remove('open');
         });
     });
     
     // Fechar ao clicar fora
     document.addEventListener('click', function() {
         selectItems.classList.remove('active');
+        customSelect.classList.remove('open');
     });
 }

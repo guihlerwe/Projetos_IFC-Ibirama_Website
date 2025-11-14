@@ -223,11 +223,11 @@
 }
 
 .bolsa-link {
-    background-color: #ff6b35;
+    background-color: #006620;
 }
 
 .bolsa-link:hover {
-    background-color: #e55a2b;
+    background-color: #004d18;
 }
 
 /* Detalhes do projeto */
@@ -253,23 +253,27 @@
     color: var(--text-secondary);
     line-height: 1.7;
     text-align: justify;
+    margin-bottom: 15px;
 }
 
 .link-site {
     display: inline-block; 
-    color: #4caf50;
+    color: white;
     text-decoration: none;
     font-size: 16px;
-    padding: 8px 15px;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    border: 1px solid var(--border-color);
+    padding: 12px 20px;
+    background-color: #006620;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    border: none;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
 }
 
 .link-site:hover {
-    background-color: var(--card-hover);
-    transform: translateX(5px);
+    background-color: #004d18;
+    box-shadow: 0 4px 8px rgba(0, 102, 32, 0.3);
 }
 
 .equipe-container {
@@ -343,8 +347,9 @@
     padding: 12px 15px;
     background-color: var(--card-bg);
     border-radius: 8px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     border: 1px solid var(--border-color);
+    min-height: 50px;
 }
 
 .contato-item:hover {
@@ -354,7 +359,9 @@
 .icone-contato {
     font-size: 20px;
     width: 30px;
+    min-width: 30px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .link-contato {
@@ -362,11 +369,15 @@
     text-decoration: none;
     font-size: 16px;
     transition: color 0.3s ease;
+    cursor: pointer;
+    flex: 1;
+    word-break: break-word;
 }
 
 .link-contato:hover {
     color: #4caf50;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -391,6 +402,13 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
+    }
+
+    #link-inscricao {
+        align-self: center;
+        width: 100%;
+        display: flex;
+        justify-content: center;
     }
     
     #div-capa {

@@ -4,7 +4,8 @@ header('Content-Type: application/json');
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco

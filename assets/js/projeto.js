@@ -80,21 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Validação e formatação de links externos
+    // Validação e formatação de links externos (mantido sem ícones extras)
     const linksExternos = document.querySelectorAll('a[target="_blank"]');
-    linksExternos.forEach(function(link) {
-        // Adiciona um ícone visual para links externos
-        link.addEventListener('mouseenter', function() {
-            if (!this.querySelector('.icone-externo')) {
-                const icone = document.createElement('span');
-                icone.className = 'icone-externo';
-                icone.innerHTML = ' ↗';
-                icone.style.fontSize = '12px';
-                icone.style.opacity = '0.7';
-                this.appendChild(icone);
-            }
-        });
-    });
 
     // Tratamento de erros para imagens
     const imagens = document.querySelectorAll('img');

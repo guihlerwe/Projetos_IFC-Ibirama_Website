@@ -5,15 +5,15 @@ $tipo = $_SESSION['tipo'] ?? '';
 $email = $_SESSION['email'] ?? '';
 
 // Verificar se é coordenador e tem o e-mail autorizado
-if ($tipo !== 'coordenador' || $email !== 'cge@ifc.edu.br') {
+if ($tipo !== 'coordenador' || $email !== 'cge.ibirama@ifc.edu.br') {
     header('Location: principal.php');
     exit;
 }
 
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -78,6 +78,33 @@ function gerarSrcPerfil(?string $foto, string $placeholder)
     return '../assets/photos/fotos_perfil/' . ltrim($foto, '/');
 }
 
+function resolverCaminhoCapa(?string $pastaCapa): ?string
+{
+    if (!$pastaCapa) {
+        return null;
+    }
+
+    $pastaLimpa = trim($pastaCapa, '/');
+    $opcoes = [
+        [
+            'fs' => __DIR__ . '/assets/photos/monitoria/' . $pastaLimpa . '/capa.jpg',
+            'public' => '../assets/photos/monitoria/' . $pastaLimpa . '/capa.jpg'
+        ],
+        [
+            'fs' => __DIR__ . '/assets/photos/monitorias/' . $pastaLimpa . '/capa.jpg',
+            'public' => '../assets/photos/monitorias/' . $pastaLimpa . '/capa.jpg'
+        ]
+    ];
+
+    foreach ($opcoes as $opcao) {
+        if (file_exists($opcao['fs'])) {
+            return $opcao['public'];
+        }
+    }
+
+    return $opcoes[0]['public'];
+}
+
 foreach ($monitores as &$mon) {
     $mon['foto_src'] = gerarSrcPerfil($mon['foto_perfil'] ?? null, $placeholderPerfil);
 }
@@ -112,7 +139,7 @@ if ($idMonitoriaEditar > 0 && $idPessoaLogado && $tipo === 'coordenador') {
                 
                 // Buscar capa
                 if (!empty($dadosMonitoria['capa'])) {
-                    $capaAtual = '../assets/photos/monitorias/' . $dadosMonitoria['capa'];
+                    $capaAtual = resolverCaminhoCapa($dadosMonitoria['capa']);
                 }
                 
                 // Buscar monitor vinculado
@@ -142,6 +169,7 @@ if ($idMonitoriaEditar > 0 && $idPessoaLogado && $tipo === 'coordenador') {
 }
 
 $monitoriaEditData = null;
+$monitorSelecionadoAtual = $monitoresMonitoria[0] ?? null;
 if ($modoEdicao && $monitoriaSelecionada) {
     // Processar dias da semana (assumindo que está armazenado como string separada por vírgulas)
     $diasSemana = !empty($monitoriaSelecionada['diasSemana']) ? explode(',', $monitoriaSelecionada['diasSemana']) : [];
@@ -206,11 +234,12 @@ if ($modoEdicao && $monitoriaSelecionada) {
             <!-- Cabeçalho: Capa + Tipo e Nome -->
             <div class="monitoria-header-form">
                 <div class="form-group-capa">
-                    <label class="form-label">Capa da Monitoria *</label>
+                    <label class="form-label">Capa da Monitoria * <span class="label-hint">(proporção 16:9)</span></label>
                     <div id="div-capa">
                         <label id="upload-capa">
                             <input type="file" id="foto-capa" name="capa" accept="image/*" hidden <?php echo !$modoEdicao ? 'required' : ''; ?>>
                             <span id="capa-icon"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>📷</span>
+                            <span id="capa-placeholder" class="capa-placeholder"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>Clique para enviar<br>imagem horizontal</span>
                             <img id="capa-preview" <?php if ($modoEdicao && $capaAtual) { echo 'src="' . htmlspecialchars($capaAtual) . '" style="display:block; width:100%; height:100%; object-fit:cover;"'; } else { echo 'style="display: none;"'; } ?>>
                         </label>
                     </div>
@@ -251,12 +280,18 @@ if ($modoEdicao && $monitoriaSelecionada) {
             <div class="form-section">
                 <h2 class="section-title">Monitor(a)</h2>
                 <div class="form-group">
-                    <div id="monitor-info-container">
-                        <div class="selecionar-monitor" id="selecionar-monitor">
-                            <button type="button" class="btn-selecionar">+ Selecionar Monitor(a)</button>
+                    <div id="monitor-info-container" class="monitor-picker">
+                        <div class="membros monitor-membros" id="monitor-container">
+                            <div class="membro add-membro" id="add-monitor">
+                                <div class="foto-membro foto-add">
+                                    <span>➕</span>
+                                </div>
+                                <div class="nome-membro">Selecionar</div>
+                            </div>
                         </div>
+                        <p class="monitor-picker-hint">Selecione apenas um monitor. Você pode removê-lo para escolher outro.</p>
                     </div>
-                    <input type="hidden" name="monitor_id" id="monitor_id" required>
+                    <input type="hidden" name="monitor_id" id="monitor_id" value="<?php echo $monitorSelecionadoAtual ? (int) $monitorSelecionadoAtual['idPessoa'] : ''; ?>" required>
                 </div>
             </div>
 
@@ -312,6 +347,9 @@ if ($modoEdicao && $monitoriaSelecionada) {
             <!-- Botões de ação -->
             <div class="form-actions">
                 <button type="button" class="btn-cancelar" onclick="window.location.href='principal.php'">Cancelar</button>
+                <?php if ($modoEdicao): ?>
+                    <button type="submit" class="btn-excluir" formaction="excluir_monitoria.php" formmethod="POST" onclick="return confirm('Tem certeza que deseja excluir esta monitoria? Esta ação não poderá ser desfeita.');">Excluir Monitoria</button>
+                <?php endif; ?>
                 <button type="submit" class="btn-salvar"><?php echo $modoEdicao ? 'Salvar Alterações' : 'Criar Monitoria'; ?></button>
             </div>
         </form>

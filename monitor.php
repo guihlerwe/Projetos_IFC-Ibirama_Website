@@ -7,8 +7,8 @@ $idPessoaLogado = $_SESSION['idPessoa'] ?? null;
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -17,6 +17,27 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset("utf8");
+
+function resolverCapaMonitoria(?string $pasta): string
+{
+    if (!$pasta) {
+        return 'assets/photos/default-monitoria.jpg';
+    }
+
+    $pastaLimpa = trim($pasta, '/');
+    $opcoes = [
+        'assets/photos/monitoria/' . $pastaLimpa . '/capa.jpg',
+        'assets/photos/monitorias/' . $pastaLimpa . '/capa.jpg'
+    ];
+
+    foreach ($opcoes as $opcao) {
+        if (file_exists(__DIR__ . '/' . $opcao)) {
+            return $opcao;
+        }
+    }
+
+    return $opcoes[0];
+}
 
 $id = $_GET['id'] ?? null;
 $monitoria = null;
@@ -138,10 +159,9 @@ if (!$monitoria) {
 }
 
 // Preparar dados para exibição
-$capaPath = !empty($monitoria['capa']) ? 'assets/photos/monitorias/' . $monitoria['capa'] . '/capa.jpg' : 'assets/photos/default-monitoria.jpg';
+$capaPath = !empty($monitoria['capa']) ? resolverCapaMonitoria($monitoria['capa']) : 'assets/photos/default-monitoria.jpg';
 $fotoMonitor = $monitor ? gerarSrcPerfil($monitor['foto_perfil'] ?? null, $placeholderPerfil) : $placeholderPerfil;
 $nomeMonitor = $monitor ? $monitor['nome'] . ' ' . $monitor['sobrenome'] : 'Monitor não informado';
-$emailMonitorPessoal = $monitor['email'] ?? '';
 $emailMonitoria = $monitoria['email'] ?? 'Não informado';
 $cursoMonitor = $monitor && !empty($monitor['curso']) ? formatarCurso($monitor['curso']) : '';
 $descricaoMonitor = $monitor['descricao'] ?? ''; // Nova linha

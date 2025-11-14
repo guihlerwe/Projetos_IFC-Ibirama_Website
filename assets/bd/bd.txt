@@ -30,7 +30,7 @@ CREATE TABLE pessoa (
   sobrenome VARCHAR(45) NOT NULL,
   email VARCHAR(45) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
-  tipo ENUM('aluno', 'coordenador', 'bolsista', 'colaborador') DEFAULT 'aluno',
+  tipo ENUM('aluno', 'coordenador', 'bolsista', 'colaborador', 'voluntario') DEFAULT 'aluno',
   curso ENUM('administracao', 'informatica', 'vestuario', 'moda', 'gestao-comercial') NULL,
   matricula VARCHAR(20) NULL,
   area ENUM('ciencias-naturais', 'ciencias-humanas', 'linguagens', 'matematica', 'tecnico-administrativo') NULL,
@@ -77,3 +77,9 @@ CREATE TABLE IF NOT EXISTS `monitoria_pessoa` (
   CONSTRAINT `fk_monitoria_pessoa_monitoria` FOREIGN KEY (`idMonitoria`) REFERENCES `monitoria` (`idMonitoria`) ON DELETE CASCADE,
   CONSTRAINT `fk_monitoria_pessoa_pessoa` FOREIGN KEY (`idPessoa`) REFERENCES `pessoa` (`idPessoa`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+USE website;
+ALTER TABLE pessoa
+MODIFY COLUMN tipo ENUM('aluno','coordenador','bolsista','colaborador','voluntario')
+DEFAULT 'aluno';

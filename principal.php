@@ -6,8 +6,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -20,6 +20,36 @@ $conn->set_charset("utf8");
 // Buscar todos os projetos cadastrados
 $sql = "SELECT idProjeto, nome, tipo, categoria, capa, textoSobre, anoInicio FROM projeto ORDER BY nome ASC";
 $resultado = $conn->query($sql);
+
+// Contar bolsistas (pessoas com tipo 'bolsista')
+$sqlBolsistas = "SELECT COUNT(*) as total FROM pessoa WHERE tipo = 'bolsista'";
+$resultBolsistas = $conn->query($sqlBolsistas);
+$numBolsistas = $resultBolsistas->fetch_assoc()['total'];
+
+// Contar coordenadores (pessoas com tipo 'coordenador')
+$sqlCoordenadores = "SELECT COUNT(*) as total FROM pessoa WHERE tipo = 'coordenador'";
+$resultCoordenadores = $conn->query($sqlCoordenadores);
+$numCoordenadores = $resultCoordenadores->fetch_assoc()['total'];
+
+function buscarImagemDeProjeto(?string $pasta, string $prefixo): ?string
+{
+    if (!$pasta) {
+        return null;
+    }
+
+    $baseDir = __DIR__ . '/assets/photos/projetos/' . $pasta . '/';
+    if (!is_dir($baseDir)) {
+        return null;
+    }
+
+    $arquivos = glob($baseDir . $prefixo . '.*');
+    if (!$arquivos) {
+        return null;
+    }
+
+    $arquivo = basename($arquivos[0]);
+    return 'assets/photos/projetos/' . $pasta . '/' . $arquivo;
+}
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +129,7 @@ $resultado = $conn->query($sql);
                     }         
                     // Caminho da imagem de capa
                     $nomePastaProjeto = $projeto['capa'];
-                    $imagemCapa = !empty($nomePastaProjeto) ? 'assets/photos/projetos/' . $nomePastaProjeto . '/capa.jpg' : 'assets/photos/campus-image.jpg';
+                    $imagemCapa = buscarImagemDeProjeto($nomePastaProjeto, 'capa') ?? 'assets/photos/campus-image.jpg';
                     
                     // Limitar o texto do nome para não quebrar o layout
                     $nomeExibido = strlen($projeto['nome']) > 40 ? substr($projeto['nome'], 0, 40) . '...' : $projeto['nome'];
@@ -185,18 +215,18 @@ $resultado = $conn->query($sql);
     <div class="Ativos">
         <h2>Dados Atuais</h2>
         <div id="dados-ativos">
-            <p id="num-projetos">
-                <span>Projetos</span>
-                <h1><?php echo isset($resultado) ? $resultado->num_rows : 0; ?></h1>
-            </p>
-            <p id="num-bolsistas">
-                <span>Bolsistas</span>
-                <h1>18</h1>
-            </p>
-            <p id="num-coordenadores">
-                <span>Coordenadores</span>
-                <h1>4</h1>
-            </p>
+            <div class="stat-item">
+                <div class="stat-number"><?php echo isset($resultado) ? $resultado->num_rows : 0; ?></div>
+                <div class="stat-label">Projetos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number"><?php echo $numBolsistas; ?></div>
+                <div class="stat-label">Bolsistas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number"><?php echo $numCoordenadores; ?></div>
+                <div class="stat-label">Coordenadores</div>
+            </div>
         </div>
     </div>
     <div class="acesso-info">

@@ -164,11 +164,12 @@ body {
     cursor: pointer;
     border: 1px solid var(--input-border);
     border-radius: 20px;
-    padding: 6px 12px;
+    padding: 8px 16px;
     background-color: var(--card-bg);
     color: var(--text-color);
     user-select: none;
     min-width: 150px;
+    transition: all 0.3s ease;
 }
 
 /* Texto selecionado */
@@ -319,6 +320,146 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+.project-delete-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: rgba(211, 47, 47, 0.95);
+    color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.project-delete-btn:hover {
+    background: #b71c1c;
+    transform: translateY(-1px);
+}
+
+.project-delete-btn:focus {
+    outline: 2px solid rgba(183, 28, 28, 0.7);
+    outline-offset: 2px;
+}
+
+.delete-feedback {
+    margin: 0 20px 20px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border-left: 4px solid;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.delete-feedback.success {
+    border-color: #2e7d32;
+    color: #1b5e20;
+    background: #e8f5e9;
+}
+
+.delete-feedback.error {
+    border-color: #c62828;
+    color: #8e0000;
+    background: #ffebee;
+}
+
+.delete-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 2000;
+    padding: 20px;
+}
+
+.delete-modal.open {
+    display: flex;
+}
+
+.delete-modal__dialog {
+    width: min(420px, 100%);
+    background: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.delete-modal__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.delete-modal__text {
+    margin: 10px 0 18px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.delete-modal__dialog label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+#delete-confirm-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.delete-modal__error {
+    min-height: 18px;
+    font-size: 13px;
+    color: #c62828;
+}
+
+.delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.delete-modal__secondary,
+.delete-modal__cta {
+    border: none;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.delete-modal__secondary {
+    background: var(--nav-hover);
+    color: var(--text-color);
+}
+
+.delete-modal__cta {
+    background: #c62828;
+    color: #fff;
+}
+
+.delete-modal__cta:hover {
+    background: #b71c1c;
+}
+
 @media (max-width: 600px) {
     footer .footer-container {
         flex-direction: column;
@@ -438,41 +579,39 @@ a:hover {
         left: 8px;
     }
 
-    /* Barra de pesquisa - mantém em linha quando possível */
+    /* Barra de pesquisa - layout otimizado */
     .barra-pesquisar {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
         margin: 15px 0;
     }
     
-    /* Input de pesquisa ocupa 2 colunas */
+    /* Input de pesquisa ocupa linha inteira */
     .input-pesquisar {
-        grid-column: 1 / 3;
+        grid-column: 1 / 5;
         width: 100%;
         padding: 8px 12px;
         font-size: 14px;
     }
     
-    /* Filtros em 2 colunas */
+    /* Filtros compactos lado a lado */
     .btn-filtrar {
-        padding: 8px 12px;
-        font-size: 13px;
+        padding: 7px 8px;
+        font-size: 11px;
         white-space: nowrap;
     }
     
-    /* Select customizado ocupa 2 colunas */
-    .custom-select,
-    #categorias-filtrar {
-        grid-column: 1 / 3;
-        padding: 8px 30px 8px 12px;
-        font-size: 14px;
+    /* Select customizado na mesma linha */
+    .custom-select {
+        padding: 7px 10px;
+        font-size: 11px;
     }
 
-    /* Limpar filtros ocupa 2 colunas */
+    /* Limpar filtros ocupa linha inteira */
     #limpar-filtros {
-        grid-column: 1 / 3;
-        padding: 8px 12px;
+        grid-column: 1 / 5;
+        padding: 7px 12px;
         font-size: 13px;
     }
 
@@ -483,14 +622,24 @@ a:hover {
     }
 
     footer .footer-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
 
     /* Ajusta dados ativos no footer */
     footer .Ativos #dados-ativos {
-        flex-direction: column;
-        gap: 30px;
+        flex-direction: row;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    footer .Ativos #dados-ativos p {
+        min-width: 80px;
+    }
+
+    footer .Ativos #dados-ativos h1 {
+        font-size: 2em;
     }
 
     /* Header mais compacto */
@@ -552,6 +701,22 @@ a:hover {
 
     .navegador {
         gap: 8px;
+    }
+
+    footer .Ativos #dados-ativos {
+        gap: 15px;
+    }
+
+    footer .Ativos #dados-ativos p {
+        min-width: 70px;
+    }
+
+    footer .Ativos #dados-ativos h1 {
+        font-size: 1.8em;
+    }
+
+    footer .Ativos #dados-ativos span {
+        font-size: 0.85em;
     }
 }
 
