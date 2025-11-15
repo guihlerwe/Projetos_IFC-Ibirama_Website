@@ -12,8 +12,8 @@ if ($tipo !== 'coordenador' || $email !== 'cge.ibirama@ifc.edu.br') {
 
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
+//$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -239,7 +239,7 @@ if ($modoEdicao && $monitoriaSelecionada) {
                         <label id="upload-capa">
                             <input type="file" id="foto-capa" name="capa" accept="image/*" hidden <?php echo !$modoEdicao ? 'required' : ''; ?>>
                             <span id="capa-icon"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>📷</span>
-                            <span id="capa-placeholder" class="capa-placeholder"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>>Clique para enviar<br>imagem horizontal</span>
+                            <span id="capa-placeholder" class="capa-placeholder"<?php echo ($modoEdicao && $capaAtual) ? ' style="display:none;"' : ''; ?>> </span>
                             <img id="capa-preview" <?php if ($modoEdicao && $capaAtual) { echo 'src="' . htmlspecialchars($capaAtual) . '" style="display:block; width:100%; height:100%; object-fit:cover;"'; } else { echo 'style="display: none;"'; } ?>>
                         </label>
                     </div>

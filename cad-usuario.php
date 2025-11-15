@@ -2,8 +2,8 @@
 // ===== Conexão com o banco =====
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
+//$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $mail->addAddress($email, $nome);
                         $mail->isHTML(true);
                         $mail->Subject = 'Confirme seu cadastro';
-                        $linkConfirmacao = "http://localhost:8080/confirmar.php?token=$token";
+                        $linkConfirmacao = "http://localhost:8080/confirmar_usuario.php?token=$token";
                         $mail->Body = "
                             <h2>Olá, $nome!</h2>
                             <p>Obrigado por se cadastrar no site de Projetos do IFC.</p>

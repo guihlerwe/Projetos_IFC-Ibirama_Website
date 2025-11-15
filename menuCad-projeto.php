@@ -5,8 +5,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'root';
-$senha = 'Gui@15600';
+$senha = 'root';
+//$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -20,7 +20,7 @@ $idProjetoEditar = isset($_GET['idProjeto']) ? (int) $_GET['idProjeto'] : 0;
 
 // Buscar coordenadores para popular o select, excluindo os já vinculados ao projeto
 $coordenadores = [];
-$sql = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil 
+$sql = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil, p.curso, p.tipo 
         FROM pessoa p 
         WHERE p.tipo = 'coordenador' 
         AND (? = 0 OR p.idPessoa NOT IN (
@@ -43,7 +43,7 @@ $stmt->close();
 
 // Buscar bolsistas para popular o select, excluindo os já vinculados ao projeto
 $bolsistas = [];
-$sqlb = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil 
+$sqlb = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil, p.curso, p.tipo 
          FROM pessoa p 
          WHERE p.tipo IN ('bolsista', 'aluno')
          AND (? = 0 OR p.idPessoa NOT IN (
@@ -66,9 +66,9 @@ $stmt->close();
 
 // Buscar voluntários elegíveis (alunos, voluntários ou bolsistas) para o projeto
 $voluntarios = [];
-$sqlv = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil 
+$sqlv = "SELECT p.idPessoa, p.nome, p.sobrenome, p.email, p.foto_perfil, p.curso, p.tipo 
          FROM pessoa p 
-         WHERE p.tipo IN ('voluntario', 'aluno', 'bolsista')
+         WHERE p.tipo IN ('aluno')
          AND (? = 0 OR p.idPessoa NOT IN (
              SELECT pp.idPessoa 
              FROM pessoa_projeto pp 
@@ -200,7 +200,7 @@ if ($idProjetoEditar > 0 && $idPessoaLogado && $tipo === 'coordenador') {
                 $bannerAtual = buscarImagemProjeto($dadosProjeto['banner'] ?? null, 'banner');
                 $capaAtual = buscarImagemProjeto($dadosProjeto['capa'] ?? null, 'capa');
 
-                $stmtEquipe = $conn->prepare("SELECT pe.idPessoa, pe.nome, pe.sobrenome, pe.email, pe.foto_perfil, pp.tipoPessoa FROM pessoa_projeto pp INNER JOIN pessoa pe ON pe.idPessoa = pp.idPessoa WHERE pp.idProjeto = ? ORDER BY pe.nome, pe.sobrenome");
+                $stmtEquipe = $conn->prepare("SELECT pe.idPessoa, pe.nome, pe.sobrenome, pe.email, pe.foto_perfil, pe.curso, pe.tipo, pp.tipoPessoa FROM pessoa_projeto pp INNER JOIN pessoa pe ON pe.idPessoa = pp.idPessoa WHERE pp.idProjeto = ? ORDER BY pe.nome, pe.sobrenome");
                 if ($stmtEquipe) {
                     $stmtEquipe->bind_param('i', $idProjetoEditar);
                     if ($stmtEquipe->execute()) {

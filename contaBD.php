@@ -21,8 +21,8 @@ if (!$idPessoa) {
 // Conexão com o banco
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
-//$senha = 'root';
+//$senha = 'Gui@15600';
+$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -243,14 +243,32 @@ if ($acao === 'remover_foto' || $acao === 'removerfoto') {
 // EXCLUIR CONTA
 // ================================
 if ($acao === 'excluir_conta' || $acao === 'excluir') {
+    $senhaConfirmacao = isset($_POST['senha_confirmacao']) ? trim((string)$_POST['senha_confirmacao']) : '';
+
+    if ($senhaConfirmacao === '') {
+        resposta_json(['erro' => 'Informe sua senha para confirmar a exclusão da conta.']);
+    }
+
+    // Verificar senha
+    $stmtDadosAtuais = $conn->prepare("SELECT senha, foto_perfil FROM pessoa WHERE idPessoa = ? LIMIT 1");
+    if (!$stmtDadosAtuais) {
+        resposta_json(['erro' => 'Não foi possível validar os dados atuais.']);
+    }
+    $stmtDadosAtuais->bind_param("i", $idPessoa);
+    if (!$stmtDadosAtuais->execute()) {
+        $stmtDadosAtuais->close();
+        resposta_json(['erro' => 'Falha ao buscar dados do usuário.']);
+    }
+
+    $stmtDadosAtuais->bind_result($hashAtual, $foto);
+    $temRegistro = $stmtDadosAtuais->fetch();
+    $stmtDadosAtuais->close();
+
+    if (!$temRegistro || !$hashAtual || !password_verify($senhaConfirmacao, $hashAtual)) {
+        resposta_json(['erro' => 'Senha incorreta.']);
+    }
+
     // Remove foto física
-    $stmt = $conn->prepare("SELECT foto_perfil FROM pessoa WHERE idPessoa = ?");
-    $stmt->bind_param("i", $idPessoa);
-    $stmt->execute();
-    $r = $stmt->get_result();
-    $linha = $r->fetch_assoc();
-    $foto = $linha['foto_perfil'] ?? null;
-    
     if ($foto) {
         $caminhoFoto = __DIR__ . '/' . $foto;
         if (file_exists($caminhoFoto)) {

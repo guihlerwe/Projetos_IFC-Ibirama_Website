@@ -11,6 +11,7 @@ let modalSenha;
 let inputSenhaConfirmacao;
 let btnConfirmarSenhaModal;
 let btnCancelarSenhaModal;
+let acaoAtual = null; // 'salvar' ou 'excluir'
 
 // ================================
 // 1. Salvar alterações da conta
@@ -21,6 +22,7 @@ function salvarAlteracoes(senhaConfirmada) {
   
   if (!form) {
     console.error("Formulário não encontrado!");
+    alert("❌ Erro: Formulário não encontrado.");
     return;
   }
 
@@ -55,10 +57,7 @@ function salvarAlteracoes(senhaConfirmada) {
   formData.append("acao", "atualizar_perfil");
   formData.append("senha_confirmacao", senhaConfirmada);
 
-  // Se o input de foto estiver fora do <form> (como em menuConta.php),
-  // o FormData(form) não o incluirá automaticamente. Tenta adicionar
-  // o arquivo manualmente a partir do input ou da variável global usada
-  // no HTML (`arquivoFotoSelecionado`).
+  // Adicionar foto se houver
   try {
     const inputFoto = document.getElementById('inputFotoPerfil');
     if (inputFoto && inputFoto.files && inputFoto.files[0]) {
@@ -67,7 +66,6 @@ function salvarAlteracoes(senhaConfirmada) {
       formData.append('foto', arquivoFotoSelecionado);
     }
   } catch (e) {
-    // não fatal — apenas log para debug
     console.debug('Não foi possível anexar foto ao FormData:', e);
   }
 
@@ -81,20 +79,29 @@ function salvarAlteracoes(senhaConfirmada) {
     method: "POST",
     body: formData,
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
       if (data.sucesso) {
-        alert("✅ Alterações salvas com sucesso!");
+        alert("✅ " + data.sucesso);
         location.reload();
+      } else if (data.erro) {
+        alert("⚠️ " + data.erro);
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = textoOriginal;
       } else {
-        alert("⚠️ Erro ao salvar: " + (data.erro || "Tente novamente."));
+        alert("⚠️ Resposta inesperada do servidor.");
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = textoOriginal;
       }
     })
     .catch((error) => {
       console.error("Erro na requisição:", error);
       alert("❌ Erro de comunicação com o servidor.");
-    })
-    .finally(() => {
       btnSalvar.disabled = false;
       btnSalvar.textContent = textoOriginal;
     });
@@ -103,44 +110,75 @@ function salvarAlteracoes(senhaConfirmada) {
 // ================================
 // 2. Excluir conta
 // ================================
-function excluirConta() {
-  if (!confirm("⚠️ Tem certeza de que deseja excluir sua conta permanentemente?\n\nEsta ação NÃO pode ser desfeita!")) {
+function excluirConta(senhaConfirmada) {
+  if (!senhaConfirmada) {
+    alert("⚠️ É necessário informar sua senha para excluir a conta.");
+    return;
+  }
+
+  // Confirmação adicional
+  if (!confirm("⚠️ ATENÇÃO: Tem certeza de que deseja excluir sua conta permanentemente?\n\nEsta ação NÃO pode ser desfeita!\n\nTodos os seus dados serão apagados.")) {
     return;
   }
 
   // Segunda confirmação
-  if (!confirm("Esta é sua última chance! Confirma a exclusão da conta?")) {
+  if (!confirm("⚠️ ÚLTIMA CHANCE!\n\nDigite OK no próximo passo para confirmar a exclusão definitiva da sua conta.")) {
+    return;
+  }
+
+  const confirmacaoFinal = prompt("Digite OK em MAIÚSCULAS para confirmar a exclusão:");
+  if (confirmacaoFinal !== "OK") {
+    alert("Exclusão cancelada.");
     return;
   }
 
   const formData = new FormData();
   formData.append("acao", "excluir_conta");
+  formData.append("senha_confirmacao", senhaConfirmada);
 
   const btnExcluir = document.getElementById("btnExcluir");
-  const textoOriginal = btnExcluir.textContent;
-  btnExcluir.disabled = true;
-  btnExcluir.textContent = "Excluindo...";
+  const textoOriginal = btnExcluir ? btnExcluir.textContent : '';
+  
+  if (btnExcluir) {
+    btnExcluir.disabled = true;
+    btnExcluir.textContent = "Excluindo...";
+  }
 
   fetch("contaBD.php", {
     method: "POST",
     body: formData,
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
       if (data.sucesso) {
-        alert("🗑️ Conta excluída com sucesso!");
-        window.location.href = "../login.php";
+        alert("🗑️ " + data.sucesso + "\n\nVocê será redirecionado para a página de login.");
+        window.location.href = "login.php";
+      } else if (data.erro) {
+        alert("⚠️ " + data.erro);
+        if (btnExcluir) {
+          btnExcluir.disabled = false;
+          btnExcluir.textContent = textoOriginal;
+        }
       } else {
-        alert("⚠️ Erro ao excluir: " + (data.erro || "Tente novamente."));
-        btnExcluir.disabled = false;
-        btnExcluir.textContent = textoOriginal;
+        alert("⚠️ Resposta inesperada do servidor.");
+        if (btnExcluir) {
+          btnExcluir.disabled = false;
+          btnExcluir.textContent = textoOriginal;
+        }
       }
     })
     .catch((error) => {
       console.error("Erro na exclusão:", error);
       alert("❌ Erro de comunicação com o servidor.");
-      btnExcluir.disabled = false;
-      btnExcluir.textContent = textoOriginal;
+      if (btnExcluir) {
+        btnExcluir.disabled = false;
+        btnExcluir.textContent = textoOriginal;
+      }
     });
 }
 
@@ -158,13 +196,21 @@ function configurarBotoesConta() {
   btnCancelarSenhaModal = document.getElementById("btnCancelarSenha");
 
   if (btnSalvar) {
-    btnSalvar.addEventListener("click", abrirModalSenhaConfirmacao);
+    btnSalvar.addEventListener("click", (e) => {
+      e.preventDefault();
+      acaoAtual = 'salvar';
+      abrirModalSenhaConfirmacao('salvar');
+    });
   } else {
     console.error("Botão 'Salvar' não encontrado!");
   }
 
   if (btnExcluir) {
-    btnExcluir.addEventListener("click", excluirConta);
+    btnExcluir.addEventListener("click", (e) => {
+      e.preventDefault();
+      acaoAtual = 'excluir';
+      abrirModalSenhaConfirmacao('excluir');
+    });
   } else {
     console.error("Botão 'Excluir' não encontrado!");
   }
@@ -174,11 +220,17 @@ function configurarBotoesConta() {
   }
 
   if (btnConfirmarSenhaModal) {
-    btnConfirmarSenhaModal.addEventListener("click", confirmarSenhaModal);
+    btnConfirmarSenhaModal.addEventListener("click", (e) => {
+      e.preventDefault();
+      confirmarSenhaModal();
+    });
   }
 
   if (btnCancelarSenhaModal) {
-    btnCancelarSenhaModal.addEventListener("click", fecharModalSenha);
+    btnCancelarSenhaModal.addEventListener("click", (e) => {
+      e.preventDefault();
+      fecharModalSenha();
+    });
   }
 
   if (inputSenhaConfirmacao) {
@@ -199,32 +251,84 @@ function configurarBotoesConta() {
   }
 }
 
-function abrirModalSenhaConfirmacao() {
+function abrirModalSenhaConfirmacao(acao) {
+  acaoAtual = acao;
+  
   if (!modalSenha) {
-    salvarAlteracoes(prompt("Digite sua senha para continuar:") || "");
+    const senha = prompt("Digite sua senha para continuar:") || "";
+    if (senha.trim() === "") {
+      alert("⚠️ Senha não informada.");
+      return;
+    }
+    
+    if (acao === 'salvar') {
+      salvarAlteracoes(senha);
+    } else if (acao === 'excluir') {
+      excluirConta(senha);
+    }
     return;
+  }
+
+  // Atualizar texto do modal conforme a ação
+  const modalTitulo = modalSenha.querySelector('h3');
+  const modalTexto = modalSenha.querySelector('p');
+  
+  if (acao === 'excluir') {
+    if (modalTitulo) modalTitulo.textContent = 'Confirme sua senha para excluir';
+    if (modalTexto) modalTexto.textContent = 'Por segurança, digite sua senha atual para excluir sua conta permanentemente.';
+  } else {
+    if (modalTitulo) modalTitulo.textContent = 'Confirme sua senha';
+    if (modalTexto) modalTexto.textContent = 'Por segurança, digite sua senha atual para salvar as alterações da conta.';
   }
 
   inputSenhaConfirmacao.value = "";
   modalSenha.classList.add("ativo");
   modalSenha.setAttribute("aria-hidden", "false");
-  setTimeout(() => inputSenhaConfirmacao?.focus(), 50);
+  setTimeout(() => inputSenhaConfirmacao?.focus(), 100);
 }
 
 function fecharModalSenha() {
   if (!modalSenha) return;
   modalSenha.classList.remove("ativo");
   modalSenha.setAttribute("aria-hidden", "true");
+  if (inputSenhaConfirmacao) {
+    inputSenhaConfirmacao.value = "";
+  }
+  acaoAtual = null;
 }
 
 function confirmarSenhaModal() {
-  const senha = inputSenhaConfirmacao?.value.trim();
-  if (!senha) {
-    inputSenhaConfirmacao?.focus();
+  if (!inputSenhaConfirmacao) {
+    alert("⚠️ Campo de senha não encontrado.");
     return;
   }
+
+  const senha = inputSenhaConfirmacao.value.trim();
+  
+  if (senha === "") {
+    alert("⚠️ Por favor, digite sua senha.");
+    inputSenhaConfirmacao.focus();
+    return;
+  }
+  
+  console.log("Ação atual:", acaoAtual); // Debug
+  console.log("Senha fornecida:", senha ? "***" : "vazia"); // Debug
+  
+  // SALVAR A AÇÃO ANTES DE FECHAR O MODAL
+  const acaoParaExecutar = acaoAtual;
+  
   fecharModalSenha();
-  salvarAlteracoes(senha);
+  
+  if (acaoParaExecutar === 'salvar') {
+    console.log("Executando salvarAlteracoes"); // Debug
+    salvarAlteracoes(senha);
+  } else if (acaoParaExecutar === 'excluir') {
+    console.log("Executando excluirConta"); // Debug
+    excluirConta(senha);
+  } else {
+    console.error("Ação não definida. Valor:", acaoParaExecutar);
+    alert("⚠️ Erro: Ação não definida.");
+  }
 }
 
 function solicitarResetSenha() {
@@ -253,6 +357,12 @@ function solicitarResetSenha() {
         mensagem.textContent = data.sucesso || data.erro || "";
         mensagem.classList.toggle("sucesso", Boolean(data.sucesso));
         mensagem.classList.toggle("erro", Boolean(data.erro));
+      } else {
+        if (data.sucesso) {
+          alert("✅ " + data.sucesso);
+        } else if (data.erro) {
+          alert("⚠️ " + data.erro);
+        }
       }
       if (!data.sucesso && !data.erro) {
         alert("Não foi possível enviar o e-mail de redefinição. Tente novamente em instantes.");
@@ -263,6 +373,8 @@ function solicitarResetSenha() {
       if (mensagem) {
         mensagem.textContent = "Erro ao enviar e-mail. Tente novamente.";
         mensagem.classList.add("erro");
+      } else {
+        alert("❌ Erro ao enviar e-mail. Tente novamente.");
       }
     })
     .finally(() => {
