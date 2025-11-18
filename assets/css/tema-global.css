@@ -345,10 +345,11 @@ footer .footer-container {
 }
 
 footer .Sobre {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     padding: 30px 0;
-    size: 30px;
-
 }
 
 footer .Ativos {
@@ -359,52 +360,57 @@ footer .Ativos {
 footer .Ativos #dados-ativos {
     display: flex;
     justify-content: center;
-    gap: 80px;
+    gap: 60px;
     margin-top: 20px;
+    margin-bottom: 40px; /* Adiciona espaço abaixo dos dados ativos */
 }
 
 footer .Ativos #dados-ativos .stat-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    min-width: 120px; /* Largura mínima fixa para cada item */
+    text-align: center;
 }
 
 footer .Ativos #dados-ativos .stat-number {
-    font-size: 3em;
+    font-size: 2.5rem;
     font-weight: bold;
-    line-height: 1;
-    color: var(--footer-text);
+    color: var(--cor-principal);
 }
 
 footer .Ativos #dados-ativos .stat-label {
-    font-size: 0.75em;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    color: var(--footer-text);
-    font-weight: 500;
-    white-space: nowrap;
+    font-size: 1rem;
+    color: var(--cor-texto);
+    margin-top: 8px;
+    white-space: nowrap; /* Evita quebra de linha no label */
 }
 
 footer .acesso-info{
     justify-content: center;
     text-align: center;
 }
-#Sobre h2 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer; /* faz o cursor de link aparecer no h2 inteiro */
+
+#Sobre {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    margin: 0;
 }
 
-#Sobre h2 .arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
+#Sobre .arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
 }
 
-/* quando o mouse passa pelo h2 inteiro, anima só a seta */
-#Sobre h2:hover .arrow {
-  transform: translate(6px, -6px);
+#Sobre:hover .arrow {
+    transform: translate(6px, -6px);
+}
+
+#License {
+    text-align: center;
+    display: block;
 }
 
 .login-nav.logado {

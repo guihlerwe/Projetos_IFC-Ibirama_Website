@@ -100,6 +100,14 @@ form {
     border-radius: 32px 32px 0 0;
 }
 
+.imagem-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
 #foto-ifc {
     width: 100%;
     height: 100%;
@@ -119,6 +127,7 @@ form {
     text-shadow: 0 22px 40px rgba(15, 23, 42, 0.5);
     font-weight: 700;
     letter-spacing: 0.04em;
+    z-index: 2; 
 }
 
 .form-body {
@@ -365,6 +374,26 @@ fieldset.grupo {
 .toggle-switch input[type="radio"]#toggle-aluno:checked ~ .toggle-option:first-of-type,
 .toggle-switch input[type="radio"]#toggle-coordenador:checked ~ .toggle-option:last-of-type {
     color: #ffffff;
+}
+
+/* Garantir que a opção NÃO selecionada seja visível no modo claro */
+.toggle-switch input[type="radio"]#toggle-coordenador:checked ~ .toggle-option:first-of-type {
+    color: #666666;
+}
+
+.toggle-switch input[type="radio"]#toggle-aluno:checked ~ .toggle-option:last-of-type {
+    color: #666666;
+}
+
+/* No modo escuro, a opção NÃO selecionada fica com cor mais clara */
+@media (prefers-color-scheme: dark) {
+    .toggle-switch input[type="radio"]#toggle-coordenador:checked ~ .toggle-option:first-of-type {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .toggle-switch input[type="radio"]#toggle-aluno:checked ~ .toggle-option:last-of-type {
+        color: rgba(255, 255, 255, 0.6);
+    }
 }
 
 .toggle-slider {

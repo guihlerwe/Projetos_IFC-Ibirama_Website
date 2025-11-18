@@ -133,6 +133,7 @@ $conn->close();
         }
         h1 {
             margin-top: 0;
+            margin-bottom: 24px; 
             font-size: 1.8rem;
             text-align: center;
         }

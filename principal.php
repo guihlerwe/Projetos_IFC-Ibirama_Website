@@ -206,12 +206,12 @@ function buscarImagemDeProjeto(?string $pasta, string $prefixo): ?string
         </div>
     </div>
     <div class="Sobre">
-  <h2 id="Sobre">
-    Sobre este site
-    <span class="arrow">↗</span>
-  </h2>
-  <span id="License"><i>Licença M.I.T.2025</i></span>
-</div>
+        <h2 id="Sobre">
+            Sobre este site
+            <span class="arrow">↗</span>
+        </h2>
+        <span id="License"><i>Licença M.I.T.2025</i></span>
+    </div>
     <div class="Ativos">
         <h2>Dados Atuais</h2>
         <div id="dados-ativos">
