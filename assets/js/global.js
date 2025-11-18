@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM totalmente carregado e analisado');
 

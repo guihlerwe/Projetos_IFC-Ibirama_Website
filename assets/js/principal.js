@@ -1,11 +1,16 @@
+// Copyright (c) [year] [fullname]
+// 
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
+
 // Funcionalidade quando o DOM carregar
 document.addEventListener("DOMContentLoaded", function () {
     
-    // ===== Gerenciar menu do usuário logado =====
+    //Gerenciar menu do usuário logado
     const nome = sessionStorage.getItem("usuarioLogado");
     const loginNav = document.querySelector('.login-nav');
 
-    // ===== Adicionar evento de clique nos cards de projeto =====
+    //Adicionar evento de clique nos cards de projeto
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -16,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ===== Funcionalidade de filtros e pesquisa =====
+    //Funcionalidade de filtros e pesquisa
     setupFiltros();
     setupPesquisa();
     setupCategorias();
@@ -32,11 +37,11 @@ function normalizeString(str) {
         .replace(/\s+/g, "-"); // troca espaço por hífen
 }
 
-// ===== Variáveis globais para filtros =====
+//Variáveis globais para filtros
 let filtroAtivoTipo = '';
 let filtroAtivoCategoria = '';
 
-// ===== Filtro por tipo (ensino, pesquisa, extensão) =====
+// Filtro por tipo (ensino, pesquisa, extensão)
 function setupFiltros() {
     const botoesFiltro = document.querySelectorAll('.btn-filtrar[data-filtro]');
 
@@ -58,7 +63,7 @@ function setupFiltros() {
     });
 }
 
-// ===== Pesquisa por nome =====
+// Pesquisa por nome 
 function setupPesquisa() {
     const inputPesquisa = document.getElementById('input-pesquisa');
     const projectCards = document.querySelectorAll('.project-card');
@@ -81,7 +86,7 @@ function setupPesquisa() {
     }
 }
 
-// ===== Dropdown de categorias =====
+// Dropdown de categorias
 function setupCategorias() {
     const selectBox = document.getElementById("categorias-filtrar");
     const selected = selectBox.querySelector(".select-selected");
@@ -119,7 +124,7 @@ function setupCategorias() {
     });
 }
 
-// ===== Botão para limpar filtros =====
+// Botão para limpar filtros 
 function setupBotaoLimpar() {
     const btnLimpar = document.getElementById("limpar-filtros");
     if (btnLimpar) {
@@ -140,7 +145,7 @@ function setupBotaoLimpar() {
     }
 }
 
-// ===== Aplicar filtros combinados =====
+// Aplicar filtros combinados 
 function aplicarFiltros() {
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach(card => {

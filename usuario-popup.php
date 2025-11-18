@@ -1,11 +1,19 @@
+/*
+    Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
+    
+    This source code is licensed under the MIT license found in the
+    LICENSE file in the root directory of this source tree.
+*/
+
+
 <?php
 header('Content-Type: application/json');
 
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco

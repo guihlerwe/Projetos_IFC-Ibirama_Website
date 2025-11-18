@@ -1,3 +1,11 @@
+/*
+    Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
+    
+    This source code is licensed under the MIT license found in the
+    LICENSE file in the root directory of this source tree.
+*/
+
+
 <?php
 // contaBD.php
 header('Content-Type: application/json; charset=utf-8');
@@ -21,8 +29,8 @@ if (!$idPessoa) {
 // Conexão com o banco
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'Gui@15600';
-$senha = 'root';
+$senha = 'Gui@15600';
+//$senha = 'root';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -322,6 +330,7 @@ if ($acao === 'solicitar_reset') {
 
     try {
         $mail = new PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
         $mail->isSMTP();
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';

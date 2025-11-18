@@ -1,3 +1,11 @@
+/*
+    Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
+    
+    This source code is licensed under the MIT license found in the
+    LICENSE file in the root directory of this source tree.
+*/
+
+
 <?php
 session_start();
 $nome = $_SESSION['nome'] ?? '';
@@ -6,8 +14,8 @@ $tipo = $_SESSION['tipo'] ?? '';
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+//$senha = 'root';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);

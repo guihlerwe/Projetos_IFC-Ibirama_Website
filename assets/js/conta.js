@@ -1,6 +1,7 @@
-// ================================
-//  CONTA.JS - Corrigido 2025-11
-// ================================
+// Copyright (c) [year] [fullname]
+// 
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
 
 document.addEventListener("DOMContentLoaded", () => {
   inicializarSelectsPersonalizados();
@@ -13,9 +14,7 @@ let btnConfirmarSenhaModal;
 let btnCancelarSenhaModal;
 let acaoAtual = null; // 'salvar' ou 'excluir'
 
-// ================================
 // 1. Salvar alterações da conta
-// ================================
 function salvarAlteracoes(senhaConfirmada) {
   const form = document.getElementById("formConta");
   const descricao = document.getElementById("descricao");
@@ -107,9 +106,7 @@ function salvarAlteracoes(senhaConfirmada) {
     });
 }
 
-// ================================
 // 2. Excluir conta
-// ================================
 function excluirConta(senhaConfirmada) {
   if (!senhaConfirmada) {
     alert("⚠️ É necessário informar sua senha para excluir a conta.");
@@ -182,9 +179,7 @@ function excluirConta(senhaConfirmada) {
     });
 }
 
-// ================================
 // 3. Configurar botões
-// ================================
 function configurarBotoesConta() {
   const btnSalvar = document.getElementById("btnSalvar");
   const btnExcluir = document.getElementById("btnExcluir");
@@ -385,9 +380,8 @@ function solicitarResetSenha() {
     });
 }
 
-// ================================
+
 // 4. Selects personalizados
-// ================================
 function inicializarSelectsPersonalizados() {
   const selects = document.querySelectorAll('.custom-select');
   
@@ -456,9 +450,7 @@ function fecharTodosSelects() {
   document.querySelectorAll('.custom-select.open').forEach(s => s.classList.remove('open'));
 }
 
-// ================================
 // 5. Validação de email
-// ================================
 function validarEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
