@@ -160,8 +160,7 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 ### 📞 Contact
 
 For questions or suggestions, contact:
-- Email: projetos.ifc.ibirama@gmail.com
-- IFC Ibirama Website: https://ibirama.ifc.edu.br/
+- Email: guiihlerwe@icloud.com
 
 ---
 
@@ -319,8 +318,7 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar
 ### 📞 Contato
 
 Para dúvidas ou sugestões, entre em contato:
-- Email: projetos.ifc.ibirama@gmail.com
-- Site do IFC Ibirama: https://ibirama.ifc.edu.br/
+- Email: guiihlerwe@icloud.com
 
 ---
 
