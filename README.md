@@ -1,7 +1,5 @@
 # IFC Ibirama Projects Monitoring Website / Site de Monitoramento de Projetos do IFC Ibirama
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]([https://opensource.org/licenses/MIT](https://github.com/guihlerwe/Projetos_IFC-Ibirama_Website/blob/main/LICENSE.TXT))
-
 [English](#english) | [Português](#português)
 
 ---
