@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,7 @@
 */
 
 
-<?php
+
     // Conexão com o banco
     $host = 'localhost';
     $usuario = 'root';
@@ -19,6 +20,9 @@
         die("Erro na conexão: " . $conn->connect_error);
     }
     $conn->set_charset("utf8");
+
+    // Limpeza automática de contas não verificadas
+    $conn->query("DELETE FROM pessoa WHERE confirmado = 0 AND token_criado_em IS NOT NULL AND token_criado_em < DATE_SUB(NOW(), INTERVAL 10 MINUTE)");
 
     // Pega o token da URL
     $token = $_GET['token'] ?? '';

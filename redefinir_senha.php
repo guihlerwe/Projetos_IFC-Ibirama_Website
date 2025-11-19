@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,6 @@
 */
 
 
-<?php
 session_start();
 
 $host = 'localhost';
@@ -122,8 +122,20 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" id="favicon" href="" type="image/png">
     <title>Redefinir senha</title>
     <link rel="stylesheet" href="assets/css/tema-global.css">
+    <script>
+        (function() {
+            const favicon = document.getElementById('favicon');
+            const updateFavicon = () => {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                favicon.href = isDark ? 'assets/photos/ifc-logo-branco.png' : 'assets/photos/ifc-logo-preto.png';
+            };
+            updateFavicon();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+        })();
+    </script>
     <style>
         body {
             background: var(--primary-bg, #f7f7f7);

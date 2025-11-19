@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,7 @@
 */
 
 
-<?php
+
 session_start();
 $nome = $_SESSION['nome'] ?? '';
 $sobrenome = $_SESSION['sobrenome'] ?? '';
@@ -138,10 +139,22 @@ if ($idPessoa) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" id="favicon" href="" type="image/png">
     <link rel="stylesheet" href="../assets/css/tema-global.css">
     <link rel="stylesheet" href="../assets/css/principal.css">
     <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1, user-scalable=no">
     <title>Projetos do Campus Ibirama</title>
+    <script>
+        (function() {
+            const favicon = document.getElementById('favicon');
+            const updateFavicon = () => {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                favicon.href = isDark ? '../assets/photos/ifc-logo-branco.png' : '../assets/photos/ifc-logo-preto.png';
+            };
+            updateFavicon();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+        })();
+    </script>
 </head>
 
 <body>

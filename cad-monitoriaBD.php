@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,6 @@
 */
 
 
-<?php
 session_start();
 
 error_reporting(E_ALL);

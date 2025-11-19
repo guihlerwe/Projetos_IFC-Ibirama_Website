@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,7 @@
 */
 
 
-<?php
+
 // contaBD.php
 header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 1); // Mudar para 0 em produção

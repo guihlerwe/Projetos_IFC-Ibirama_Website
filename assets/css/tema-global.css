@@ -1,4 +1,9 @@
-
+/*
+    Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
+    
+    This source code is licensed under the MIT license found in the
+    LICENSE file in the root directory of this source tree.
+*/
 
 * {
     margin: 0;
@@ -208,7 +213,8 @@ header.com-sombra {
 }
 
 .projetos-nav,
-.monitoria-nav{
+.monitoria-nav,
+.login-nav{
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 40px;
@@ -216,7 +222,8 @@ header.com-sombra {
 }
 
 .projetos-nav:hover,
-.monitoria-nav:hover {
+.monitoria-nav:hover,
+.login-nav:hover {
     background-color: var(--hover-overlay);
 }
 
@@ -251,6 +258,7 @@ header.com-sombra {
 .menu-dropdown {
     position: relative;
     display: inline-block;
+    vertical-align: middle;
 }
 
 .dropdown-content {
@@ -417,6 +425,10 @@ footer .acesso-info{
 
 .login-nav.logado {
     cursor: default;
+}
+
+.login-nav.logado:hover {
+    background-color: transparent;
 }
 
 @media screen and (max-width: 768px) {

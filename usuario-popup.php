@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,7 @@
 */
 
 
-<?php
+
 header('Content-Type: application/json');
 
 // Configuração do banco de dados

@@ -34,6 +34,8 @@ CREATE TABLE pessoa (
   curso ENUM('administracao', 'informatica', 'vestuario', 'moda', 'gestao-comercial') NULL,
   matricula VARCHAR(20) NULL,
   area ENUM('ciencias-naturais', 'ciencias-humanas', 'linguagens', 'matematica', 'tecnico-administrativo') NULL,
+  confirmado TINYINT(1) DEFAULT 0 AFTER area,
+  token_criado_em DATETIME DEFAULT NULL AFTER token,
   PRIMARY KEY (idPessoa)
 );
 
@@ -83,3 +85,15 @@ USE website;
 ALTER TABLE pessoa
 MODIFY COLUMN tipo ENUM('aluno','coordenador','bolsista','colaborador','voluntario')
 DEFAULT 'aluno';
+
+-- Adicionar coluna para timestamp de criação do token
+ALTER TABLE pessoa
+ADD COLUMN token_criado_em DATETIME DEFAULT NULL AFTER token;
+
+-- Adicionar coluna confirmado (caso não exista)
+ALTER TABLE pessoa
+ADD COLUMN confirmado TINYINT(1) DEFAULT 0 AFTER area;
+
+-- Adicionar coluna token (caso não exista)
+ALTER TABLE pessoa
+ADD COLUMN token VARCHAR(255) DEFAULT NULL AFTER confirmado;

@@ -1,3 +1,5 @@
+<?php
+
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +8,7 @@
 */
 
 
-<?php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

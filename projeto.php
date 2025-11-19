@@ -1,3 +1,5 @@
+<?php
+
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +8,6 @@
 */
 
 
-<?php
 session_start();
 
 // Configuração do banco de dados
@@ -153,12 +154,24 @@ $tipo = $_SESSION['tipo'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" id="favicon" href="" type="image/png">
     <link rel="stylesheet" href="assets/css/tema-global.css">
     <link rel="stylesheet" href="assets/css/projeto.css">
     <!-- Adicionar os arquivos CSS e JS necessários -->
     <link rel="stylesheet" href="assets/css/popup.css">
     <script src="assets/js/popup.js"></script>
     <title><?php echo htmlspecialchars($projeto['nome']); ?></title>
+    <script>
+        (function() {
+            const favicon = document.getElementById('favicon');
+            const updateFavicon = () => {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                favicon.href = isDark ? 'assets/photos/ifc-logo-branco.png' : 'assets/photos/ifc-logo-preto.png';
+            };
+            updateFavicon();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+        })();
+    </script>
 </head>
 <body>
     <script>
@@ -210,7 +223,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                     </div>
                     <h1 id="nome-projeto"><?php echo htmlspecialchars($projeto['nome']); ?></h1>
                 </div>
-                <?php if (!empty($projeto['linkParaInscricao'])): ?>
+                <?php if (!empty($projeto['linkParaInscricao']) && (!empty($nome) || $projeto['tipo'] === 'extensao')): ?>
                     <div id="link-inscricao">
                         <a href="<?php echo htmlspecialchars($projeto['linkParaInscricao']); ?>" target="_blank" class="btn-link">
                             ✓ Inscrever-se no Projeto
@@ -304,7 +317,7 @@ $tipo = $_SESSION['tipo'] ?? '';
                     </div>
                 <?php endif; ?>
 
-                <?php if (!empty($projeto['linkBolsista'])): ?>
+                <?php if (!empty($projeto['linkBolsista']) && !empty($nome)): ?>
                     <div class="secao">
                         <h2 class="subtitulo">Oportunidades de Bolsa</h2>
                         <a href="<?php echo htmlspecialchars($projeto['linkBolsista']); ?>" target="_blank" class="btn-link bolsa-link">

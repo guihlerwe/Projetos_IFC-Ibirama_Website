@@ -1,5 +1,12 @@
 <?php
 
+/*
+    Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
+    
+    This source code is licensed under the MIT license found in the
+    LICENSE file in the root directory of this source tree.
+*/
+
 session_start();
 $nome = $_SESSION['nome'] ?? '';
 $tipo = $_SESSION['tipo'] ?? '';
@@ -59,10 +66,22 @@ function buscarImagemDeProjeto(?string $pasta, string $prefixo): ?string
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" id="favicon" href="" type="image/png">
     <link rel="stylesheet" href="../assets/css/tema-global.css">
     <link rel="stylesheet" href="../assets/css/principal.css">
     <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1, user-scalable=no">
     <title>Projetos do Campus Ibirama</title>
+    <script>
+        (function() {
+            const favicon = document.getElementById('favicon');
+            const updateFavicon = () => {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                favicon.href = isDark ? '../assets/photos/ifc-logo-branco.png' : '../assets/photos/ifc-logo-preto.png';
+            };
+            updateFavicon();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+        })();
+    </script>
 </head>
 
 <body>

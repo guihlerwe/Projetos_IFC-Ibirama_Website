@@ -1,3 +1,7 @@
+// Copyright (c) [year] [fullname]
+// 
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM totalmente carregado e analisado');
@@ -13,14 +17,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // Verificar se o usuário está logado
+  const usuarioLogado = sessionStorage.getItem('usuarioLogado');
+  const monitoriaNav = document.querySelector(".monitoria-nav");
+  
+  // Ocultar botão de monitoria se não estiver logado
+  if (!usuarioLogado && monitoriaNav) {
+    monitoriaNav.style.display = 'none';
+  }
 
   document.querySelector(".projetos-nav").addEventListener("click", function() {
     window.location.href = "principal.php";
   });
   
-  document.querySelector(".monitoria-nav").addEventListener("click", function() {
-    window.location.href = "monitorias.php";
-  });
+  if (monitoriaNav) {
+    monitoriaNav.addEventListener("click", function() {
+      window.location.href = "monitorias.php";
+    });
+  }
     
   const sobreLink = document.querySelector(".Sobre");
     if (sobreLink) {

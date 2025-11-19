@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,7 @@
 */
 
 
-<?php
+
 // ===== Conexão com o banco =====
 $host = 'localhost';
 $usuario = 'root';
@@ -19,6 +20,19 @@ if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
 $conn->set_charset("utf8");
+
+// ===== Limpeza automática de contas não verificadas =====
+function limparContasNaoVerificadas($conn) {
+    // Excluir contas não confirmadas criadas há mais de 10 minutos
+    $sql = "DELETE FROM pessoa WHERE confirmado = 0 AND token_criado_em IS NOT NULL AND token_criado_em < DATE_SUB(NOW(), INTERVAL 10 MINUTE)";
+    $result = $conn->query($sql);
+    if ($result && $conn->affected_rows > 0) {
+        error_log("🧹 Limpeza automática: " . $conn->affected_rows . " conta(s) não verificada(s) excluída(s)");
+    }
+}
+
+// Executar limpeza automática
+limparContasNaoVerificadas($conn);
 
 // PHPMailer sem composer
 require 'PHPMailer/src/PHPMailer.php';
@@ -54,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
         $token = bin2hex(random_bytes(16));
+        $tokenCriadoEm = date('Y-m-d H:i:s');
 
         $verifica = explode('@', $email);
         $dominio = $verifica[1] ?? '';
@@ -75,10 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmtExiste->num_rows > 0) {
                     $mensagem = "Este e-mail já está cadastrado. Utilize outro endereço ou recupere o acesso.";
                 } else {
-                    $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, curso, matricula, area, confirmado, token) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
+                    $sql = "INSERT INTO pessoa (nome, sobrenome, email, senha, tipo, curso, matricula, area, confirmado, token, token_criado_em) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("sssssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $curso, $matricula, $area, $token);
+                    $stmt->bind_param("ssssssssss", $nome, $sobrenome, $email, $senhaHash, $tipo, $curso, $matricula, $area, $token, $tokenCriadoEm);
 
                     if ($stmt->execute()) {
                         $mail = new PHPMailer();
@@ -138,9 +153,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" id="favicon" href="" type="image/png">
     <link rel="stylesheet" href="assets/css/tema-global.css">
     <link rel="stylesheet" href="assets/css/cad-usuario.css">
     <title>Cadastrar-se como aluno</title>
+    <script>
+        (function() {
+            const favicon = document.getElementById('favicon');
+            const updateFavicon = () => {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                favicon.href = isDark ? 'assets/photos/ifc-logo-branco.png' : 'assets/photos/ifc-logo-preto.png';
+            };
+            updateFavicon();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+        })();
+    </script>
 </head>
 <body>
 

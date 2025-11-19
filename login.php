@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -6,7 +7,6 @@
 */
 
 
-<?php
 session_start();
 
 // conexão
@@ -21,6 +21,9 @@ $conn = new mysqli($host, $usuario, $senha, $banco);
 if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
+
+// Limpeza automática de contas não verificadas (mais de 10 minutos)
+$conn->query("DELETE FROM pessoa WHERE confirmado = 0 AND token_criado_em IS NOT NULL AND token_criado_em < DATE_SUB(NOW(), INTERVAL 10 MINUTE)");
 
 // Processar login antes de exibir o HTML
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -68,9 +71,21 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" id="favicon" href="" type="image/png">
     <link rel="stylesheet" href="assets/css/tema-global.css"> 
     <link rel="stylesheet" href="assets/css/login.css">
     <title>Entrar</title>
+    <script>
+        (function() {
+            const favicon = document.getElementById('favicon');
+            const updateFavicon = () => {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                favicon.href = isDark ? 'assets/photos/ifc-logo-branco.png' : 'assets/photos/ifc-logo-preto.png';
+            };
+            updateFavicon();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+        })();
+    </script>
 </head>
 <body>
 

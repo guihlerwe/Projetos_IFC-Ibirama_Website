@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2025 Guilherme Raimundo & Gabriella Schmilla Sandner
     
@@ -5,8 +6,6 @@
     LICENSE file in the root directory of this source tree.
 */
 
-
-<?php
 session_start();
 // Debug
 echo json_encode(['debug' => $_SESSION]);
