@@ -16,8 +16,7 @@ ini_set('display_errors', 1);
 // banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
-//$senha = 'root';
+$senha = 'yourpasswordhere';
 $banco = 'website';
 
 // conexão com o banco

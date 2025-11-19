@@ -20,8 +20,7 @@ if ($tipo !== 'coordenador' || $email !== 'cge.ibirama@ifc.edu.br') {
 
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'root';
-//$senha = 'Gui@15600';
+$senha = 'yourpasswordhere';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);

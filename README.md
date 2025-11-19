@@ -44,15 +44,26 @@ cd Projetos_IFC-Ibirama_Website
 
 2. **Configure the database**
 
-Open MySQL Workbench and execute the following scripts in order:
-- First: `assets/bd/bd.txt` (creates tables and structure)
-- Then: `assets/bd/adicionar_token_criado_em.sql` (adds verification token column)
+Open MySQL Workbench and execute the database creation script:
 
-Or via command line:
+**Option 1: Using MySQL Workbench (Recommended)**
+- Open MySQL Workbench and connect to your MySQL server
+- Go to `File` → `Open SQL Script`
+- Navigate to `assets/creating the db/UseThisForTheDB.txt`
+- Click on the lightning bolt icon (⚡) to execute the entire script
+- This will create the `website` database with all tables and relationships
+
+After creating the database, execute the token column addition script:
 ```bash
-mysql -u root -p < assets/bd/bd.txt
 mysql -u root -p < assets/bd/adicionar_token_criado_em.sql
 ```
+
+**Note**: The main database script (`UseThisForTheDB.txt`) creates all necessary tables including:
+- `pessoa` (users)
+- `projeto` (projects)
+- `monitoria` (tutoring)
+- `pessoa_projeto` (user-project relationships)
+- `monitoria_pessoa` (tutoring-user relationships)
 
 3. **Configure database credentials**
 
@@ -202,15 +213,27 @@ cd Projetos_IFC-Ibirama_Website
 
 2. **Configure o banco de dados**
 
-Abra o MySQL Workbench e execute os seguintes scripts na ordem:
-- Primeiro: `assets/bd/bd.txt` (cria tabelas e estrutura)
-- Depois: `assets/bd/adicionar_token_criado_em.sql` (adiciona coluna de token de verificação)
+Abra o MySQL Workbench e execute o script de criação do banco:
 
-Ou via linha de comando:
+**Opção 1: Usando MySQL Workbench (Recomendado)**
+- Abra o MySQL Workbench e conecte-se ao seu servidor MySQL
+- Vá em `File` → `Open SQL Script`
+- Navegue até `assets/creating the db/UseThisForTheDB.txt`
+- Clique no ícone de raio (⚡) para executar todo o script
+- Isso criará o banco `website` com todas as tabelas e relacionamentos
+
+
+Após criar o banco de dados, execute o script de adição da coluna de token:
 ```bash
-mysql -u root -p < assets/bd/bd.txt
 mysql -u root -p < assets/bd/adicionar_token_criado_em.sql
 ```
+
+**Nota**: O script principal do banco (`UseThisForTheDB.txt`) cria todas as tabelas necessárias incluindo:
+- `pessoa` (usuários)
+- `projeto` (projetos)
+- `monitoria` (monitorias)
+- `pessoa_projeto` (relacionamentos usuário-projeto)
+- `monitoria_pessoa` (relacionamentos monitoria-usuário)
 
 3. **Configure as credenciais do banco**
 

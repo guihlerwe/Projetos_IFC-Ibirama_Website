@@ -27,8 +27,7 @@ $idMonitoria = (int) $_POST['id-monitoria'];
 
 $host = 'localhost';
 $usuario = 'root';
-//$senha = 'root';
-$senha = 'Gui@15600';
+$senha = 'yourpasswordhere';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
