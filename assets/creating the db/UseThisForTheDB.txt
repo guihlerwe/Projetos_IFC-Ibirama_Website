@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `website`.`pessoa` (
   `email` VARCHAR(45) NOT NULL,
   `senha` VARCHAR(255) NOT NULL,
   `curso` ENUM('administracao', 'informatica', 'vestuario', 'moda', 'ciencias-naturais', 'ciencias-humanas', 'linguagens', 'matematica') NULL DEFAULT NULL,
-  `tipo` ENUM('aluno', 'coordenador', 'bolsista', 'colaborador', 'voluntario') NULL DEFAULT 'aluno',
+  `tipo` ENUM('aluno', 'coordenador', 'bolsista', 'voluntario') NULL DEFAULT 'aluno',
   `area` ENUM('ciencias-naturais', 'ciencias-humanas', 'linguagens', 'matematica', 'administracao', 'informatica', 'vestuario', 'tecnico-administrativo') NULL DEFAULT NULL,
   `matricula` VARCHAR(50) NULL DEFAULT NULL,
   `confirmado` TINYINT(1) NULL DEFAULT '0',
