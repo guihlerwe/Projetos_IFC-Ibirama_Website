@@ -13,7 +13,7 @@ header('Content-Type: application/json');
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
+$senha = 'YOUR_PASSWORD';
 $banco = 'website';
 
 // Conexão com o banco
