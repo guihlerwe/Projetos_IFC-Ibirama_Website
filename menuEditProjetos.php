@@ -34,7 +34,7 @@ if (isset($_SESSION['delete_feedback'])) {
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'yourpasswordhere';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);

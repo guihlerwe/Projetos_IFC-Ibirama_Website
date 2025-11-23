@@ -13,7 +13,7 @@ session_start();
 // Configuração do banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'yourpasswordhere';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco

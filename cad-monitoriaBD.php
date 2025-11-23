@@ -21,7 +21,7 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'coordenador') {
 // Banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'yourpasswordhere';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 // Conexão com o banco

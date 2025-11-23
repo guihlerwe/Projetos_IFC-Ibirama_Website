@@ -12,7 +12,7 @@ session_start();
 // conexão
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'yourpasswordhere';
+$senha = 'Gui@15600';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['sobrenome'] = $usuario['sobrenome'] ?? '';
             $_SESSION['tipo'] = $usuario['tipo'];
             $_SESSION['idPessoa'] = $usuario['idPessoa'];
-            $_SESSION['email'] = $usuario['email']; // ADICIONAR ESTA LINHA
+            $_SESSION['email'] = $usuario['email']; 
             $_SESSION['curso'] = $usuario['curso'] ?? '';
 
             // Redirecionar para a página principal
