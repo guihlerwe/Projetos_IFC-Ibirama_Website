@@ -16,7 +16,7 @@ $idPessoaLogado = $_SESSION['idPessoa'] ?? null;
 // Conexão com o banco de dados
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'Gui@15600';
+$senha = 'YOUR_PASSWORD';
 $banco = 'website';
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
