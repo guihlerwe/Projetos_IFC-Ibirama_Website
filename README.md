@@ -38,7 +38,7 @@ Este projeto é uma plataforma web projetada para centralizar e facilitar o aces
 
 1. **Clone o repositório**
 ```bash
-git clone https://github.com/guihlerwe/Projetos_IFC-Ibirama_Website.git
+git clone https://github.com/g-mundo/Projetos_IFC-Ibirama_Website.git
 cd Projetos_IFC-Ibirama_Website
 ```
 
@@ -151,7 +151,7 @@ O PHPMailer está incluído no diretório `PHPMailer/` com todos os arquivos e l
 ### Autores
 
 - **Gabriella Schmilla Sandner** - [LinkedIn](https://www.linkedin.com/in/gabriella-sandner-0a5737363)
-- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/guihlerwe/)
+- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/raimundo08guilherme/)
 
 ### Coordenador
 
@@ -164,12 +164,6 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE.TXT](
 ### Contribuindo
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
-
-### Contato
-
-Para dúvidas ou sugestões, entre em contato:
-- Email: guiihlerwe@icloud.com
-
 ---
 
 ## English
@@ -206,7 +200,7 @@ This project is a web platform designed to centralize and facilitate access to i
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/guihlerwe/Projetos_IFC-Ibirama_Website.git
+git clone https://github.com/g-mundo/Projetos_IFC-Ibirama_Website.git
 cd Projetos_IFC-Ibirama_Website
 ```
 
@@ -319,7 +313,7 @@ PHPMailer is included in the `PHPMailer/` directory with all necessary files and
 ### Authors
 
 - **Gabriella Schmilla Sandner** - [LinkedIn](https://www.linkedin.com/in/gabriella-sandner-0a5737363)
-- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/guihlerwe/)
+- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/raimundo08guilherme/)
 
 ### Coordinator
 
@@ -333,11 +327,5 @@ This project is licensed under the MIT License - see the [LICENSE.TXT](LICENSE.T
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
-### Contact
-
-For questions or suggestions, contact:
-- Email: guiihlerwe@icloud.com
-
----
 
 **Copyright © 2025 Guilherme Raimundo & Gabriella Schmilla Sandner**
