@@ -151,7 +151,7 @@ O PHPMailer está incluído no diretório `PHPMailer/` com todos os arquivos e l
 ### Autores
 
 - **Gabriella Schmilla Sandner** - [LinkedIn](https://www.linkedin.com/in/gabriella-sandner-0a5737363)
-- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/raimundo08guilherme/)
+- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/raimund08guilherme/)
 
 ### Coordenador
 
@@ -313,7 +313,7 @@ PHPMailer is included in the `PHPMailer/` directory with all necessary files and
 ### Authors
 
 - **Gabriella Schmilla Sandner** - [LinkedIn](https://www.linkedin.com/in/gabriella-sandner-0a5737363)
-- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/raimundo08guilherme/)
+- **Guilherme Raimundo** - [LinkedIn](https://www.linkedin.com/in/raimund08guilherme/)
 
 ### Coordinator
 
